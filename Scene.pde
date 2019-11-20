@@ -11,7 +11,7 @@ class Scene extends State //<>//
 
     enterTransition = new SceneTransition();
     leaveTransition = new SceneTransition();
-    
+
     sceneEnterTransition = (SceneTransition)enterTransition;
     sceneLeaveTransition = (SceneTransition)leaveTransition;
 
@@ -31,6 +31,7 @@ class Scene extends State //<>//
 
   public void doStepWhileInState(float delta)
   {
+    tint(255);
     image( background, 0, 0, width, height );
   }
 

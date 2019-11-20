@@ -4,7 +4,7 @@
 class GroundHallwayScene extends Scene
 {
   ImageButton appleButton = new ImageButton( "apple.png", 325, 366 );
-  ImageButton  downButton = new ImageButton( "arrowDown.png", 320, 700, "arrowDown outline.png" );
+  ImageButton  downButton = new ImageButton( "arrowDown.png", round(908 * widthRatio), round(997 * heightRatio), "arrowDown outline.png" );
 
   GroundHallwayScene() {
     super( "Ground_Hallway.png" );
@@ -13,11 +13,9 @@ class GroundHallwayScene extends Scene
   public void doStepWhileInState(float delta)
   {
     super.doStepWhileInState(delta);
-    if ( ! isAppleTaken ) {
-      appleButton.display();
-    }
+    
     downButton.display();
-
+    
     super.endDisplay();
   }
 

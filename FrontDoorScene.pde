@@ -1,6 +1,4 @@
- //<>//
-
-class FrontDoorScene extends Scene
+class FrontDoorScene extends Scene //<>//
 {
   //ImageButton   upButton = new ImageButton( "arrowUp.png", 320, 550, "arrowUp outline.png");
   //ImageButton downButton = new ImageButton( "arrowDown.png", 320, 700, "arrowDown outline.png");
@@ -12,7 +10,8 @@ class FrontDoorScene extends Scene
   int powerDownAlpha = 0;
   Ani blinkWindow;
   int blinkCount = 0;
-  final int BLINK_MAX = 6;
+  final int BLINK_MAX = 3;
+  boolean blinkAlreadyRan = false;
 
   FrontDoorScene() {
     super( "House_front_zoomed.png" );
@@ -21,21 +20,20 @@ class FrontDoorScene extends Scene
 
     window01Button.overlayColor = color(0, 0, 255);
 
-    blinkWindow = new Ani(this, 0.1, 0, "powerDownAlpha", 255, Ani.LINEAR, this, "onEnd:blinkWindowOn");
+    blinkWindow = new Ani(this, 0.100, 0, "powerDownAlpha", 255, Ani.LINEAR, this, "onEnd:blinkWindowOn");
     blinkWindow.pause();
   }
 
 
   public void doStepWhileInState(float delta)
   {
-    tint(255);
     super.doStepWhileInState(delta);
     //upButton.display();
     //downButton.display();
 
     window01Button.display();
 
-    tint(255, blinkCount >= BLINK_MAX ? 255 : powerDownAlpha);
+    tint(255, blinkCount >= BLINK_MAX ? 0 : powerDownAlpha);
     image(powerDownWindow, 237 * widthRatio, 196 * heightRatio, powerDownWindow.width * widthRatio, powerDownWindow.height * heightRatio);
 
     super.endDisplay();
@@ -50,10 +48,11 @@ class FrontDoorScene extends Scene
     //}
 
     if ( window01Button.isPointInside( mouseX, mouseY ) ) {
-      if (powerDownAlpha == 0 && blinkWindow.isPlaying() == false)
+      if (blinkAlreadyRan == false) {
+        blinkAlreadyRan = true;
         blinkWindow.start();
-      else if (blinkWindow.isPlaying() == false){
-        stateHandler.changeStateTo( GROUND_HALLWAY_SCENE );
+      } else if (blinkAlreadyRan == true && blinkWindow.isPlaying() == false) {
+        stateHandler.changeStateTo( GROUND_HALLWAY_SCENE ); //<>//
       }
     }
   }

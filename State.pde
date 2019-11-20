@@ -264,6 +264,7 @@ class StateHandler
   }
 
   void enterStateAfterTransition() {
-
+    //currentState.enterTransition.enabled = false;
+    //currentState.enterTransition.isPlaying = false;
   }
 }

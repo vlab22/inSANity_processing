@@ -2,8 +2,6 @@
 
 boolean isAppleTaken = false;
 
-
-
 // ============ STATE HANDLER AND STATES ============
 StateHandler stateHandler = new StateHandler( "Example game" );
 
