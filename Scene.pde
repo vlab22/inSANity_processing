@@ -18,7 +18,7 @@ class Scene extends State
     }
 
 
-    public void doStepWhileInState()
+    public void doStepWhileInState(float delta)
     {
         image( background, 0, 0, width, height );
     }

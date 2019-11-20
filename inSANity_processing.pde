@@ -14,7 +14,7 @@ final State FOREST_SCENE = new ForestScene();
 
 
 void setup() {
-    size( 800, 800 );
+    size( 800, 800, P2D );
     noStroke();
     stateHandler = new StateHandler( "Example game" );
     stateHandler.changeStateTo( RIVER_SCENE );
@@ -22,7 +22,8 @@ void setup() {
 
 
 void draw() {
-    stateHandler.executeCurrentStateStep();
+    float delta = 1 / frameRate;
+    stateHandler.executeCurrentStateStep(delta);
 }
 
 

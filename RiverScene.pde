@@ -11,9 +11,9 @@ class RiverScene extends Scene
         super( "river.png" );
     }
 
-    public void doStepWhileInState()
+    public void doStepWhileInState(float delta)
     {
-        super.doStepWhileInState();
+        super.doStepWhileInState(delta);
         rightButton.display();
         if ( isAppleTaken ) {
             upButton.display();

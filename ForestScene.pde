@@ -8,9 +8,9 @@ class ForestScene extends Scene
         super( "forest.png" );  
     }
 
-    public void doStepWhileInState()
+    public void doStepWhileInState(float delta)
     {
-        super.doStepWhileInState();
+        super.doStepWhileInState(delta);
         resetButton.display();
     }
 

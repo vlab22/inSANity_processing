@@ -10,9 +10,9 @@ class LawnScene extends Scene
     }
 
     
-    public void doStepWhileInState()
+    public void doStepWhileInState(float delta)
     {
-        super.doStepWhileInState();
+        super.doStepWhileInState(delta);
         upButton.display();
         downButton.display();
     }

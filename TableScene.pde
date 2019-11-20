@@ -10,9 +10,9 @@ class TableScene extends Scene
         super( "table_with_apples.png" );
     }
 
-    public void doStepWhileInState()
+    public void doStepWhileInState(float delta)
     {
-        super.doStepWhileInState();
+        super.doStepWhileInState(delta);
         if ( ! isAppleTaken ) {
             appleButton.display();
         }

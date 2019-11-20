@@ -28,7 +28,7 @@ class State
     String getName() { return name; }
 
     public void enterState( State oldState ) {}    
-    public void doStepWhileInState()         {} 
+    public void doStepWhileInState(float delta)         {} 
     public void leaveState( State newState ) {} 
 
     public void handleMousePressed()  {} //<>//
@@ -63,7 +63,7 @@ class EmbeddedState extends State {
         super();
     }
 
-    public void doStepWhileInState()
+    public void doStepWhileInState(float delta)
     {
         draw();
         loop(); // to prevent stuck programs because the original
@@ -140,10 +140,10 @@ class StateHandler
     void handleKeyPressed()  { if ( currentState != null ) currentState.handleKeyPressed();  }
     void handleKeyReleased() { if ( currentState != null ) currentState.handleKeyReleased(); }
 
-    void executeCurrentStateStep()
+    void executeCurrentStateStep(float delta)
     {
         if ( currentState != null ) {
-            currentState.doStepWhileInState();
+            currentState.doStepWhileInState(delta);
             changeStateIfNecessary();
             traceIfChanged( name , getStateName() );  // remove for no tracing
         }
