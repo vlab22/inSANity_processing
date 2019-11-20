@@ -1,25 +1,46 @@
-
-
-
-class Scene extends State
+class Scene extends State //<>//
 {
-    PImage background;
-    String filename;
+  PImage background;
+  String filename;
+
+  SceneTransition sceneEnterTransition;
+  SceneTransition sceneLeaveTransition;
+
+  Scene( String backgroundFilename ) {
+    filename = backgroundFilename;
+
+    enterTransition = new SceneTransition();
+    leaveTransition = new SceneTransition();
     
-    Scene( String backgroundFilename ) {
-        filename = backgroundFilename;
+    sceneEnterTransition = (SceneTransition)enterTransition;
+    sceneLeaveTransition = (SceneTransition)leaveTransition;
+
+    sceneEnterTransition.to = 0;
+    sceneEnterTransition.start = 255;
+    sceneEnterTransition.easing = AniConstants.QUAD_IN;
+    sceneEnterTransition.callBackName = "onEnd:enterStateAfterTransition";
+  }
+
+  void enterState( State oldState )
+  {
+    if ( background == null ) {
+      background = loadImage( filename );
     }
-        
-    void enterState( State oldState )
-    {
-        if ( background == null ) {
-            background = loadImage( filename );
-        }
-    }
+  }
 
 
-    public void doStepWhileInState(float delta)
-    {
-        image( background, 0, 0, width, height );
+  public void doStepWhileInState(float delta)
+  {
+    image( background, 0, 0, width, height );
+
+    endDisplay();
+  }
+
+  void endDisplay() {
+    if (sceneLeaveTransition.enabled == true) {
+      sceneLeaveTransition.display();
+    } else if (sceneEnterTransition.enabled == true) {
+      sceneEnterTransition.display();
     }
+  }
 }

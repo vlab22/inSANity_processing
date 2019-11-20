@@ -1,29 +1,36 @@
-// ============ VARIABLES ============
+// ============ VARIABLES ============ //<>//
 
 boolean isAppleTaken = false;
 
 
 
 // ============ STATE HANDLER AND STATES ============
-StateHandler stateHandler;
+StateHandler stateHandler = new StateHandler( "Example game" );
+;
 
-final State  RIVER_SCENE = new  RiverScene();
-final State   LAWN_SCENE = new   LawnScene();
-final State  TABLE_SCENE = new  TableScene();
-final State FOREST_SCENE = new ForestScene();
-
+State  RIVER_SCENE; 
+State   LAWN_SCENE;
+State  TABLE_SCENE; 
+State FOREST_SCENE; 
 
 void setup() {
-    size( 800, 800, P2D );
-    noStroke();
-    stateHandler = new StateHandler( "Example game" );
-    stateHandler.changeStateTo( RIVER_SCENE );
+  size( 800, 800, P2D );
+  noStroke();
+
+  Ani.init(this);
+
+  RIVER_SCENE = new  RiverScene();
+  LAWN_SCENE = new   LawnScene();
+  TABLE_SCENE = new  TableScene();
+  FOREST_SCENE = new ForestScene();
+
+  stateHandler.changeStateTo( RIVER_SCENE );
 }
 
 
 void draw() {
-    float delta = 1 / frameRate;
-    stateHandler.executeCurrentStateStep(delta);
+  float delta = 1 / frameRate;
+  stateHandler.executeCurrentStateStep(delta);
 }
 
 
@@ -33,20 +40,34 @@ void draw() {
 // otherwise use the handleKeyPressed in the state itself
 
 void keyPressed() {
-    stateHandler.handleKeyPressed();
+  stateHandler.handleKeyPressed();
 }
 
 
 void keyReleased() {
-    stateHandler.handleKeyReleased();
+  stateHandler.handleKeyReleased();
 }
 
-void keyTyped()      { stateHandler.handleKeyTyped();      }
+void keyTyped() { 
+  stateHandler.handleKeyTyped();
+}
 
-void mousePressed()  { stateHandler.handleMousePressed();  } //<>//
-void mouseClicked()  { stateHandler.handleMouseClicked();  }
-void mouseReleased() { stateHandler.handleMouseReleased(); }
-void mouseDragged()  { stateHandler.handleMouseDragged();  }
-void mouseMoved()    { stateHandler.handleMouseMoved();    }
+void mousePressed() { 
+  stateHandler.handleMousePressed();
+}
+void mouseClicked() { 
+  stateHandler.handleMouseClicked();
+}
+void mouseReleased() { 
+  stateHandler.handleMouseReleased();
+}
+void mouseDragged() { 
+  stateHandler.handleMouseDragged();
+}
+void mouseMoved() { 
+  stateHandler.handleMouseMoved();
+}
 
-void mouseWheel(MouseEvent event) { stateHandler.handleMouseWheel( event ); }
+void mouseWheel(MouseEvent event) { 
+  stateHandler.handleMouseWheel( event );
+}

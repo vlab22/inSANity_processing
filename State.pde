@@ -1,4 +1,4 @@
-// ============ State template classes ============
+// ============ State template classes ============ //<>// //<>// //<>// //<>// //<>// //<>// //<>//
 
 // Do not change anything here unless you know what
 // you are doing!
@@ -8,41 +8,57 @@
 
 class State
 {
-    private String name;
+  private String name;
 
-    protected State( String stateName )
-    {
-        name = stateName;
-        println( "new State() : " + name );
-    }
+  public StateTransition enterTransition;
+  public StateTransition leaveTransition;
 
-
-    protected State()
-    {
-        String className = this.getClass().getSimpleName();
-        name = className;
-        println( "new State() : " + name );
-   }
+  protected State( String stateName )
+  {
+    name = stateName;
+    println( "new State() : " + name );
+  }
 
 
-    String getName() { return name; }
+  protected State()
+  {
+    String className = this.getClass().getSimpleName();
+    name = className;
+    println( "new State() : " + name );
+  }
 
-    public void enterState( State oldState ) {}    
-    public void doStepWhileInState(float delta)         {} 
-    public void leaveState( State newState ) {} 
 
-    public void handleMousePressed()  {} //<>//
-    public void handleMouseClicked()  {}
-    public void handleMouseReleased() {}
-    public void handleMouseDragged()  {}
-    public void handleMouseMoved()    {}
+  String getName() { 
+    return name;
+  }
 
-    public void handleMouseWheel( MouseEvent mouseEvent ) {}
+  public void enterState( State oldState ) {
+  }    
+  public void doStepWhileInState(float delta) {
+  } 
+  public void leaveState( State newState ) {
+  } 
 
-    public void handleKeyTyped()    {}
-    public void handleKeyPressed()  {}
-    public void handleKeyReleased() {}
+  public void handleMousePressed() {
+  }
+  public void handleMouseClicked() {
+  }
+  public void handleMouseReleased() {
+  }
+  public void handleMouseDragged() {
+  }
+  public void handleMouseMoved() {
+  }
 
+  public void handleMouseWheel( MouseEvent mouseEvent ) {
+  }
+
+  public void handleKeyTyped() {
+  }
+  public void handleKeyPressed() {
+  }
+  public void handleKeyReleased() {
+  }
 }
 
 
@@ -53,50 +69,78 @@ class State
 // you still can use enterState end leaveState
 
 class EmbeddedState extends State {
-    EmbeddedState( String stateName )
-    {
-        super( stateName );
-        setup();
-    }
+  EmbeddedState( String stateName )
+  {
+    super( stateName );
+    setup();
+  }
 
-    protected EmbeddedState() {
-        super();
-    }
+  protected EmbeddedState() {
+    super();
+  }
 
-    public void doStepWhileInState(float delta)
-    {
-        draw();
-        loop(); // to prevent stuck programs because the original
-                // program contained noLoop()
-    }
+  public void doStepWhileInState(float delta)
+  {
+    draw();
+    loop(); // to prevent stuck programs because the original
+    // program contained noLoop()
+  }
 
-    void setup() {}
-    void draw()  {}
+  void setup() {
+  }
+  void draw() {
+  }
 
-    void mousePressed()  {}
-    void mouseClicked()  {}
-    void mouseReleased() {}
-    void mouseDragged()  {}
-    void mouseMoved()    {}
+  void mousePressed() {
+  }
+  void mouseClicked() {
+  }
+  void mouseReleased() {
+  }
+  void mouseDragged() {
+  }
+  void mouseMoved() {
+  }
 
-    void mouseWheel( MouseEvent event ) {}
+  void mouseWheel( MouseEvent event ) {
+  }
 
-    void keyTyped()    {}
-    void keyPressed()  {}
-    void keyReleased() {}
+  void keyTyped() {
+  }
+  void keyPressed() {
+  }
+  void keyReleased() {
+  }
 
-    void handleMousePressed()  { mousePressed();  } //<>//
-    void handleMouseClicked()  { mouseClicked();  }
-    void handleMouseReleased() { mouseReleased(); }
-    void handleMouseDragged()  { mouseDragged();  }
-    void handleMouseMoved()    { mouseMoved();    }
+  void handleMousePressed() { 
+    mousePressed();
+  }
+  void handleMouseClicked() { 
+    mouseClicked();
+  }
+  void handleMouseReleased() { 
+    mouseReleased();
+  }
+  void handleMouseDragged() { 
+    mouseDragged();
+  }
+  void handleMouseMoved() { 
+    mouseMoved();
+  }
 
-    void handleMouseWheel(MouseEvent mouseEvent) { mouseWheel( mouseEvent ); }
+  void handleMouseWheel(MouseEvent mouseEvent) { 
+    mouseWheel( mouseEvent );
+  }
 
-    void handleKeyTyped()    { keyTyped();    }
-    void handleKeyPressed()  { keyPressed();  }
-    void handleKeyReleased() { keyReleased(); }
-
+  void handleKeyTyped() { 
+    keyTyped();
+  }
+  void handleKeyPressed() { 
+    keyPressed();
+  }
+  void handleKeyReleased() { 
+    keyReleased();
+  }
 }
 
 
@@ -109,66 +153,117 @@ class EmbeddedState extends State {
 
 class StateHandler
 {
-    private String  name;
-    private State   currentState      = null;
-    private State   nextState         = null;
-    private long    nsAtStateStart;
+  private String  name;
+  private State   currentState      = null;
+  private State   nextState         = null;
+  private long    nsAtStateStart;
 
-    protected StateHandler( String handlerName )
-    {
-        name = handlerName;
+  protected StateHandler( String handlerName )
+  {
+    name = handlerName;
+  }
+
+
+  String getName() { 
+    return name;
+  }
+
+  String getStateName() { 
+    return currentState != null ? currentState.getName() : "" ;
+  }
+  long   secondsInState() { 
+    return ( System.nanoTime() - nsAtStateStart ) / 1000000000 ;
+  }
+  long   milliSecondsInState() { 
+    return ( System.nanoTime() - nsAtStateStart ) /    1000000 ;
+  }
+
+
+  void handleMousePressed() { 
+    if ( currentState != null ) currentState.handleMousePressed();
+  }
+  void handleMouseClicked() { 
+    if ( currentState != null ) currentState.handleMouseClicked();
+  }
+  void handleMouseReleased() { 
+    if ( currentState != null ) currentState.handleMouseReleased();
+  }
+  void handleMouseDragged() { 
+    if ( currentState != null ) currentState.handleMouseDragged();
+  }
+  void handleMouseMoved() { 
+    if ( currentState != null ) currentState.handleMouseMoved();
+  }
+
+  void handleMouseWheel(MouseEvent event) { 
+    currentState.handleMouseWheel( event );
+  }
+
+
+  void handleKeyTyped() { 
+    if ( currentState != null ) currentState.handleKeyTyped();
+  }
+  void handleKeyPressed() { 
+    if ( currentState != null ) currentState.handleKeyPressed();
+  }
+  void handleKeyReleased() { 
+    if ( currentState != null ) currentState.handleKeyReleased();
+  }
+
+  void executeCurrentStateStep(float delta)
+  {
+    if ( currentState != null ) {
+      currentState.doStepWhileInState(delta);
+      changeStateIfNecessary();
+      traceIfChanged( name, getStateName() );  // remove for no tracing
     }
+  }
 
 
-    String getName()             { return name; }
-
-    String getStateName()        { return currentState != null ? currentState.getName() : "" ;  }
-    long   secondsInState()      { return ( System.nanoTime() - nsAtStateStart ) / 1000000000 ; }
-    long   milliSecondsInState() { return ( System.nanoTime() - nsAtStateStart ) /    1000000 ; }
-
-
-    void handleMousePressed()  { if ( currentState != null ) currentState.handleMousePressed();  }
-    void handleMouseClicked()  { if ( currentState != null ) currentState.handleMouseClicked();  }
-    void handleMouseReleased() { if ( currentState != null ) currentState.handleMouseReleased(); }
-    void handleMouseDragged()  { if ( currentState != null ) currentState.handleMouseDragged();  }
-    void handleMouseMoved()    { if ( currentState != null ) currentState.handleMouseMoved();    }
-
-    void handleMouseWheel(MouseEvent event) { currentState.handleMouseWheel( event ); }
+  public void changeStateTo( State newState )
+  {
+    if ( currentState != newState && newState != null ) {
+      nsAtStateStart = System.nanoTime();
+      nextState = newState;
+      changeStateIfNecessary();
+    }
+  }
 
 
-    void handleKeyTyped()    { if ( currentState != null ) currentState.handleKeyTyped();    }
-    void handleKeyPressed()  { if ( currentState != null ) currentState.handleKeyPressed();  }
-    void handleKeyReleased() { if ( currentState != null ) currentState.handleKeyReleased(); }
-
-    void executeCurrentStateStep(float delta)
-    {
-        if ( currentState != null ) {
-            currentState.doStepWhileInState(delta);
-            changeStateIfNecessary();
-            traceIfChanged( name , getStateName() );  // remove for no tracing
+  private void changeStateIfNecessary()
+  {
+    if ( nextState != null && nextState != currentState) {
+      if ( currentState != null ) {
+        if (currentState.leaveTransition != null) {
+          if (currentState.leaveTransition.isPlaying == false)
+            currentState.leaveTransition.execute();
+        } else {
+          currentState.leaveState( nextState );
         }
+      } else {
+        nextState.enterState( currentState );
+        currentState = nextState;
+        nextState = null;
+      }
+    }
+  }
+
+  void leaveStateAfterTransition() {
+    nextState.enterState( currentState );
+    currentState = nextState;
+    nextState = null;
+
+    if (currentState != null && currentState.enterTransition != null) {
+      currentState.enterTransition.execute(); //<>//
+    } else {
+      
     }
 
+    currentState.leaveTransition.isPlaying = false;
+    currentState.leaveTransition.enabled = false;
+  }
 
-    public void changeStateTo( State newState )
-    {
-        if ( currentState != newState && newState != null ) {
-            nsAtStateStart = System.nanoTime();
-            nextState = newState;
-            changeStateIfNecessary();
-        }
-    }
+  void enterStateAfterTransition() {
 
-   
-    private void changeStateIfNecessary()
-    {
-        if ( nextState != null ) {
-            if ( currentState != null ) {
-                currentState.leaveState( nextState );
-            }
-            nextState.enterState( currentState );
-            currentState = nextState;
-            nextState = null;
-        }
-    }
+  }
 }
