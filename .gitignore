@@ -1,2 +1,12 @@
+<<<<<<< HEAD
 *.DS_Store
 desktop.ini
+=======
+.DS_Store
+applet
+application.linux32
+application.linux64
+application.windows32
+application.windows64
+application.macosx
+>>>>>>> 64e80b5a8a80e9cb21d123686e482d4b875bb6b6
