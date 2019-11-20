@@ -254,7 +254,7 @@ class StateHandler
     nextState = null;
 
     if (currentState != null && currentState.enterTransition != null) {
-      currentState.enterTransition.execute(); //<>//
+      currentState.enterTransition.execute();
     } else {
       
     }

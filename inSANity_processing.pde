@@ -6,32 +6,39 @@ boolean isAppleTaken = false;
 
 // ============ STATE HANDLER AND STATES ============
 StateHandler stateHandler = new StateHandler( "Example game" );
-;
 
-State  RIVER_SCENE; 
-State   LAWN_SCENE;
-State  TABLE_SCENE; 
+State  FRONTHOUSE_SCENE; 
+State   FRONTDOOR_SCENE;
+State  GROUND_HALLWAY_SCENE; 
 State FOREST_SCENE; 
 
+float widthRatio;
+float heightRatio;
+
 void setup() {
-  size( 800, 800, P2D );
+
+  //fullScreen(P2D);
+  size( 1280, 720, P2D );
   noStroke();
+
+  widthRatio = 1280.0 / 1920;
+  heightRatio = 720.0 / 1080;
 
   Ani.init(this);
 
-  RIVER_SCENE = new  RiverScene();
-  LAWN_SCENE = new   LawnScene();
-  TABLE_SCENE = new  TableScene();
+  FRONTHOUSE_SCENE = new  FrontHouseScene();
+  FRONTDOOR_SCENE = new   FrontDoorScene();
+  GROUND_HALLWAY_SCENE = new  GroundHallwayScene();
   FOREST_SCENE = new ForestScene();
 
-  stateHandler.changeStateTo( RIVER_SCENE );
+  stateHandler.changeStateTo( FRONTHOUSE_SCENE );
 }
 
 
 void draw() {
   float delta = 1 / frameRate;
   stateHandler.executeCurrentStateStep(delta);
-  
+
   surface.setTitle(mouseX + ", " + mouseY);
 }
 

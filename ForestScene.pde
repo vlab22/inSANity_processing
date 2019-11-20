@@ -19,7 +19,7 @@ class ForestScene extends Scene
   void handleMousePressed() {
     if ( resetButton.isPointInside( mouseX, mouseY ) ) {
       isAppleTaken = false;
-      stateHandler.changeStateTo( RIVER_SCENE );
+      stateHandler.changeStateTo( FRONTHOUSE_SCENE );
     }
   }
 }

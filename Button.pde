@@ -1,4 +1,4 @@
-import de.looksgood.ani.*;
+import de.looksgood.ani.*; //<>//
 
 class ImageButton {
   int x;
@@ -15,12 +15,24 @@ class ImageButton {
   Ani anim;
   int playDir;
 
+  int colliderWidth = 100;
+  int colliderHeight = 100;
+
+  color overlayColor = color(255, 0, 0);
+
   ImageButton( String buttonImageFilename, int newX, int newY ) {
     buttonFilename = buttonImageFilename;
     x = newX;
     y = newY;
 
-    buttonImage = loadImage( buttonFilename );
+    if (buttonFilename != null) {
+      buttonImage = loadImage( buttonFilename );
+    }
+
+    if (buttonImage != null) {
+      colliderWidth = buttonImage.width;
+      colliderHeight = buttonImage.height;
+    }
 
     anim = new Ani(this, onHoverTweenDuration, 0, "alpha", to, Ani.QUAD_OUT);
   }
@@ -28,10 +40,14 @@ class ImageButton {
   ImageButton( String buttonImageFilename, int newX, int newY, String onHoverButtonImageFilename ) {
     this(buttonImageFilename, newX, newY);
     onHoverButtonImage = loadImage( onHoverButtonImageFilename );
+
+    colliderWidth = onHoverButtonImage.width;
+    colliderHeight = onHoverButtonImage.height;
   }
 
   void display() {
-    image( buttonImage, x, y );
+    if (buttonImage != null)
+      image( buttonImage, x, y, buttonImage.width * widthRatio, buttonImage.height * heightRatio);
 
     if (onHoverButtonImage != null) {
       if (alpha < 255 && isPointInside(mouseX, mouseY) && playDir != 1) {
@@ -50,14 +66,15 @@ class ImageButton {
         println("anim to 0");
       }
       pushStyle();
-      tint(255, alpha);
-      image(onHoverButtonImage, x, y);
+      tint(overlayColor, alpha);
+      imageMode(CORNER);
+      image(onHoverButtonImage, x, y, onHoverButtonImage.width * widthRatio, onHoverButtonImage.height * heightRatio);
       popStyle();
     }
   }
 
   boolean isPointInside( int px, int py ) {
-    return isPointInRectangle( px, py, x, y, buttonImage.width, buttonImage.height );
+    return isPointInRectangle( px, py, x, y, colliderWidth * widthRatio, colliderHeight * heightRatio );
   }
 }
 
