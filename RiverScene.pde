@@ -3,8 +3,8 @@
 
 class RiverScene extends Scene
 {
-    ImageButton    upButton = new ImageButton(    "arrowUp.png", 190, 490 );
-    ImageButton rightButton = new ImageButton( "arrowRight.png", 700, 485 );
+    ImageButton    upButton = new ImageButton(    "arrowUp.png", 190, 490, "arrowUp outline.png" );
+    ImageButton rightButton = new ImageButton( "arrowRight.png", 700, 485, "arrowRight blue outline.png" );
     HintButton   hintButton = new  HintButton(       "hint.png", "Find the apple", 190, 490 );
 
     RiverScene() {
@@ -20,6 +20,8 @@ class RiverScene extends Scene
         } else {
             hintButton.display();
         }
+        
+        super.endDisplay();
     }
 
     void handleMousePressed() {

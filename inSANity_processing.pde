@@ -31,6 +31,8 @@ void setup() {
 void draw() {
   float delta = 1 / frameRate;
   stateHandler.executeCurrentStateStep(delta);
+  
+  surface.setTitle(mouseX + ", " + mouseY);
 }
 
 
