@@ -18,13 +18,6 @@ abstract class SceneWithTransition extends Scene
     sceneEnterTransition.callBackName = "onEnd:enterStateAfterTransition";
   }
 
-  void enterState( State oldState )
-  {
-    if ( background == null ) {
-      background = loadImage( filename );
-    }
-  }
-
   void TransitionDisplay() {
     if (sceneLeaveTransition.enabled == true) {
       sceneLeaveTransition.display();
@@ -34,4 +27,8 @@ abstract class SceneWithTransition extends Scene
   }
 
   abstract void changeState(State state);
+  
+  void changeStateEnd(State state) {
+    
+  }
 }

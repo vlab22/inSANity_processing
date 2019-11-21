@@ -8,13 +8,16 @@ PApplet thisApplet = this;
 // ============ STATE HANDLER AND STATES ============
 StateHandler stateHandler = new StateHandler( "inSANity Game" );
 
-State  FRONTHOUSE_SCENE; 
-State   FRONTDOOR_SCENE;
-State  GROUND_HALLWAY_SCENE; 
+State FRONTHOUSE_SCENE; 
+State FRONTDOOR_SCENE;
+State GROUND_HALLWAY_SCENE; 
 State FOREST_SCENE; 
 State LIVINGROOM_SCENE;
 State LIVINGROOM_CHIMNEY_SCENE;
 State HALLWAY2_ATTIC_SCENE;
+State SAM_BEDROOM_SCENE;
+
+State TEST_SCENE;
 
 float widthRatio = 1;
 float heightRatio = 1;
@@ -22,11 +25,12 @@ float heightRatio = 1;
 void setup() {
 
   //fullScreen(P2D);
+  //size( 1920, 1280, P2D );
   size( 1280, 720, P2D );
   noStroke();
 
-  widthRatio = 1280.0 / 1920;
-  heightRatio = 720.0 / 1080;
+  widthRatio = width / 1920.0;
+  heightRatio = height / 1080.0;
 
   Ani.init(this);
 
@@ -37,9 +41,11 @@ void setup() {
   LIVINGROOM_SCENE = new LivingRoomScene();
   LIVINGROOM_CHIMNEY_SCENE = new LivingRoomChimneyScene();
   HALLWAY2_ATTIC_SCENE = new Hallway2AtticScene();
+  SAM_BEDROOM_SCENE = new SamBedRoomScene();
+  TEST_SCENE = new TestScene();
 
   //stateHandler.changeStateTo( FRONTHOUSE_SCENE );
-  stateHandler.changeStateTo( LIVINGROOM_SCENE );
+  stateHandler.changeStateTo( GROUND_HALLWAY_SCENE );
 }
 
 
