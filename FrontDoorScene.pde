@@ -1,24 +1,35 @@
-class FrontDoorScene extends Scene //<>//
+import processing.sound.*; //<>// //<>//
+
+class FrontDoorScene extends SceneWithTransition
 {
   //ImageButton   upButton = new ImageButton( "arrowUp.png", 320, 550, "arrowUp outline.png");
   //ImageButton downButton = new ImageButton( "arrowDown.png", 320, 700, "arrowDown outline.png");
   //ImageButton window01Button = new ImageButton( null, 480, 296, "lawn window 00 overlay.png");
 
-  ImageButton window01Button = new ImageButton( null, round(659 * widthRatio), round(196 * heightRatio), "House_front_zoomed front door overlay.png");
+  ImageButton doorButton = new ImageButton( null, round(659 * widthRatio), round(196 * heightRatio), "House_front_zoomed front door overlay.png");
 
   PImage powerDownWindow;
+  PImage powerDownWallLight;
   int powerDownAlpha = 0;
   Ani blinkWindow;
   int blinkCount = 0;
-  final int BLINK_MAX = 3;
+  final int BLINK_MAX = 5;
   boolean blinkAlreadyRan = false;
+
+  SoundClip frontDoorOpenSoundClip;
+  SoundClip footStepsSoundClip;
+  SoundClip lightBlinkSoundClip;
 
   FrontDoorScene() {
     super( "House_front_zoomed.png" );
 
     powerDownWindow = loadImage("House_front_zoomed power off window.png");
+    powerDownWallLight = loadImage("House_front_zoomed wall light off.png");
 
-    window01Button.overlayColor = color(0, 0, 255);
+
+    frontDoorOpenSoundClip = new SoundClip("53280__the-bizniss__front-door-open.wav");
+    footStepsSoundClip = new SoundClip("footstep01 0.800 seconds.wav");
+    lightBlinkSoundClip = new SoundClip("light blink 01.wav");
 
     blinkWindow = new Ani(this, 0.100, 0, "powerDownAlpha", 255, Ani.LINEAR, this, "onEnd:blinkWindowOn");
     blinkWindow.pause();
@@ -31,28 +42,25 @@ class FrontDoorScene extends Scene //<>//
     //upButton.display();
     //downButton.display();
 
-    window01Button.display();
+    doorButton.display();
 
     tint(255, blinkCount >= BLINK_MAX ? 0 : powerDownAlpha);
     image(powerDownWindow, 237 * widthRatio, 196 * heightRatio, powerDownWindow.width * widthRatio, powerDownWindow.height * heightRatio);
+    image(powerDownWallLight, 1308 * widthRatio, 189 * heightRatio, powerDownWallLight.width * widthRatio, powerDownWallLight.height * heightRatio);
 
-    super.endDisplay();
+
+    super.TransitionDisplay();
   }
 
   void handleMousePressed() {
-    //if ( upButton.isPointInside( mouseX, mouseY ) ) {
-    //  stateHandler.changeStateTo( TABLE_SCENE );
-    //}
-    //if ( downButton.isPointInside( mouseX, mouseY ) ) {
-    //  stateHandler.changeStateTo( RIVER_SCENE );
-    //}
 
-    if ( window01Button.isPointInside( mouseX, mouseY ) ) {
+    if ( doorButton.isPointInside( mouseX, mouseY ) ) {
       if (blinkAlreadyRan == false) {
         blinkAlreadyRan = true;
+        lightBlinkSoundClip.play();
         blinkWindow.start();
       } else if (blinkAlreadyRan == true && blinkWindow.isPlaying() == false) {
-        stateHandler.changeStateTo( GROUND_HALLWAY_SCENE ); //<>//
+        changeToNextSceneAfterDelay();
       }
     }
   }
@@ -65,11 +73,18 @@ class FrontDoorScene extends Scene //<>//
       blinkWindow.setDelay(0);
       blinkWindow.start();
     } else {
-      Ani.to(this, 1.3, "powerDownAlpha", 255, Ani.LINEAR, this, "onEnd:changeToNextSceneAfterDelay");
+      Ani.to(this, 0.5, "powerDownAlpha", 255, Ani.LINEAR, this, "onEnd:changeToNextSceneAfterDelay");
     }
   }
 
   void changeToNextSceneAfterDelay() {
-    stateHandler.changeStateTo( GROUND_HALLWAY_SCENE );
+    changeState( GROUND_HALLWAY_SCENE );
+  }
+
+  void changeState(State state) {
+    stateHandler.changeStateTo( state );
+    footStepsSoundClip.play();
+    frontDoorOpenSoundClip.play();
+    footStepsSoundClip.play();
   }
 }

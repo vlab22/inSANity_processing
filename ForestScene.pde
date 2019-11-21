@@ -1,6 +1,6 @@
 
 
-class ForestScene extends Scene
+class ForestScene extends SceneWithTransition
 {
   TextButton resetButton = new TextButton( 320, 500, "Reset", 50 );
 
@@ -13,13 +13,17 @@ class ForestScene extends Scene
     super.doStepWhileInState(delta);
     resetButton.display();
 
-    super.endDisplay();
+    super.TransitionDisplay();
   }
 
   void handleMousePressed() {
     if ( resetButton.isPointInside( mouseX, mouseY ) ) {
       isAppleTaken = false;
-      stateHandler.changeStateTo( FRONTHOUSE_SCENE );
+      changeState(FRONTHOUSE_SCENE);
     }
+  }
+  
+  void changeState(State state) {
+    stateHandler.changeStateTo( state );
   }
 }

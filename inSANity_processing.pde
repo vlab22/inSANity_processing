@@ -2,16 +2,22 @@
 
 boolean isAppleTaken = false;
 
+//Global Reference to PApplet to be used inside classes
+PApplet thisApplet = this; 
+
 // ============ STATE HANDLER AND STATES ============
-StateHandler stateHandler = new StateHandler( "Example game" );
+StateHandler stateHandler = new StateHandler( "inSANity Game" );
 
 State  FRONTHOUSE_SCENE; 
 State   FRONTDOOR_SCENE;
 State  GROUND_HALLWAY_SCENE; 
 State FOREST_SCENE; 
+State LIVINGROOM_SCENE;
+State LIVINGROOM_CHIMNEY_SCENE;
+State HALLWAY2_ATTIC_SCENE;
 
-float widthRatio;
-float heightRatio;
+float widthRatio = 1;
+float heightRatio = 1;
 
 void setup() {
 
@@ -28,8 +34,12 @@ void setup() {
   FRONTDOOR_SCENE = new   FrontDoorScene();
   GROUND_HALLWAY_SCENE = new  GroundHallwayScene();
   FOREST_SCENE = new ForestScene();
+  LIVINGROOM_SCENE = new LivingRoomScene();
+  LIVINGROOM_CHIMNEY_SCENE = new LivingRoomChimneyScene();
+  HALLWAY2_ATTIC_SCENE = new Hallway2AtticScene();
 
-  stateHandler.changeStateTo( FRONTHOUSE_SCENE );
+  //stateHandler.changeStateTo( FRONTHOUSE_SCENE );
+  stateHandler.changeStateTo( LIVINGROOM_SCENE );
 }
 
 

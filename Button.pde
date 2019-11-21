@@ -56,14 +56,12 @@ class ImageButton {
         anim.setEnd(to);
         playDir = 1;
         anim.start();
-        println("anim to 255");
       } else if (alpha > 0 && isPointInside(mouseX, mouseY) == false && playDir != -1) {
         to = 0;
         anim.setBegin(alpha);
         anim.setEnd(to);
         playDir = -1;
         anim.start();
-        println("anim to 0");
       }
       pushStyle();
       tint(overlayColor, alpha);
