@@ -28,9 +28,9 @@ float heightRatio = 1;
 
 void setup() {
 
-  //fullScreen(P2D);
+  fullScreen(P2D);
   //size( 1920, 1280, P2D );
-  size( 1280, 720, P2D );
+  //size( 1280, 720, P2D );
   noStroke();
 
   widthRatio = width / 1920.0;
@@ -39,6 +39,9 @@ void setup() {
   Ani.init(this);
 
   waiter = new Waiter();
+
+  playerHasFlashLight = false;
+  playerHasBatteries = false;
 
   FRONTHOUSE_SCENE = new  FrontHouseScene();
   FRONTDOOR_SCENE = new   FrontDoorScene();
@@ -50,8 +53,8 @@ void setup() {
   SAM_BEDROOM_SCENE = new SamBedRoomScene();
   TEST_SCENE = new TestScene();
 
-  //stateHandler.changeStateTo( FRONTHOUSE_SCENE );
-  stateHandler.changeStateTo( GROUND_HALLWAY_SCENE );
+  stateHandler.changeStateTo( FRONTHOUSE_SCENE );
+  //stateHandler.changeStateTo( HALLWAY2_ATTIC_SCENE );
 }
 
 
@@ -77,6 +80,10 @@ void keyPressed() {
 
 void keyReleased() {
   stateHandler.handleKeyReleased();
+
+  if (key == 'r') {
+    frameCount = -1;
+  }
 }
 
 void keyTyped() { 

@@ -1,18 +1,22 @@
 import processing.sound.*;
+import ddf.minim.*;
 
 class SoundClip {
-  SoundFile soundFile;
+
+  Minim minim;
+  AudioPlayer player;
 
   SoundClip(String pSoundFile) {
-    soundFile = new SoundFile(thisApplet, pSoundFile);
+    minim = new Minim(thisApplet);
+    player = minim.loadFile(pSoundFile);
   }
-  
+
   boolean play() {
-    if (soundFile != null && soundFile.isPlaying() == false) {
-      soundFile.play();
+    if (player != null && player.isPlaying() == false) {
+      player.play();
       return true;
     }
-    
+
     return false;
   }
 }

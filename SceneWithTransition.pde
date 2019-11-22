@@ -14,7 +14,7 @@ abstract class SceneWithTransition extends Scene
 
     sceneEnterTransition.to = 0;
     sceneEnterTransition.start = 255;
-    sceneEnterTransition.easing = AniConstants.QUAD_IN;
+    sceneEnterTransition.easing = Ani.QUAD_IN;
     sceneEnterTransition.callBackName = "onEnd:enterStateAfterTransition";
   }
 
@@ -27,8 +27,7 @@ abstract class SceneWithTransition extends Scene
   }
 
   abstract void changeState(State state);
-  
+
   void changeStateEnd(State state) {
-    
   }
 }

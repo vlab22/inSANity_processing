@@ -148,7 +148,8 @@ class TextBox {
   boolean autoCenter = true;
 
   TextBox() {
-    font = createFont("Gaiatype", textSize, true);
+    //font = createFont("Gaiatype", textSize, true);
+    font = loadFont("Gaiatype-32.vlw");
 
     text = "The quick brown fox\r\njumps over the lazy dog!";
 

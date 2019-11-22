@@ -13,7 +13,7 @@ class LivingRoomScene extends SceneWithTransition implements IAnim { //<>// //<>
   State nextState;
 
   LivingRoomScene() {
-    super("Living_room.png");
+    super("Living_room concept-Recovered-Recovered.png");
 
     background = loadImage( filename );
 

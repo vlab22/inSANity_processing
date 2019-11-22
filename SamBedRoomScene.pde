@@ -2,9 +2,15 @@ class SamBedRoomScene extends SceneWithTransition implements IWaiter {
 
   ImageButton backButton = new ImageButton( "arrowDown.png", round(825 * widthRatio), round(997 * heightRatio), "arrowDown outline.png" );
 
+  ImageButton mirrorPlaceButton = new ImageButton( null, round(853 * widthRatio), round(410 * heightRatio), "Sam_bedroom mirror overlay.png");
+
+  ImageButton paintPlaceButton = new ImageButton( null, round(537 * widthRatio), round(311 * heightRatio), "Sam_bedroom paint overlay.png");
+  
   SoundClip footStepsSoundClip;
 
   TextBoxWithFader placeText = new TextBoxWithFader("It's too dark, I remember to have a flashlight\r\nin the garage", false);
+
+
 
   boolean isFlashLightOn;
 
@@ -69,11 +75,12 @@ class SamBedRoomScene extends SceneWithTransition implements IWaiter {
       rect(0, 0, width, height);
     }
 
+    mirrorPlaceButton.display();
+    paintPlaceButton.display();
+
     backButton.display();
 
     placeText.display();
-
-
 
     super.TransitionDisplay();
   }

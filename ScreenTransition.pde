@@ -43,8 +43,6 @@ public class SceneTransition extends StateTransition {
     isPlaying = true;
     enabled = true;
     animation = Ani.to(this, duration, delay, "alpha", float(to), easing, callBackObject, callBackName);
-    
-    println(this, "executed");
   }
 
   public void display() {
