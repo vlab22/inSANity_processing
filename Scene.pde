@@ -1,4 +1,4 @@
-abstract class Scene extends State //<>// //<>//
+abstract class Scene extends State //<>//
 {
   PImage background;
   String filename;
@@ -17,6 +17,7 @@ abstract class Scene extends State //<>// //<>//
   public void doStepWhileInState(float delta)
   {
     tint(255);
+    imageMode(CORNER);
     image( background, 0, 0, width, height );
   }
 }

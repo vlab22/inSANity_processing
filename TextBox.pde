@@ -12,6 +12,9 @@ class TextBoxWithFader {  //<>//
 
   private IAnim animHandler;
 
+  boolean enabled = true;
+  boolean disableAfterHide;
+
   TextBoxWithFader() {
     textBox = new TextBox();
     alpha = 0;
@@ -20,24 +23,46 @@ class TextBoxWithFader {  //<>//
     textBox.borderColor = (textBox.borderColor & 0xffffff) | (alpha << 24);
     textBox.textColor = (textBox.textColor & 0xffffff) | (alpha << 24);
 
+    this.showDuration = 1;
+    this.hideDuration = 0.2;
+    this.delay = 0.2;
+
     anim = new Ani(this, 0.2, 0, "alpha", 255, Ani.QUAD_OUT, this, "onUpdate:update");
+    anim.end();
   }
 
   TextBoxWithFader(float duration, float delay) {
     this();
     this.showDuration = duration;
-    this.hideDuration = duration * 0.5;
     this.delay = delay;
   }
 
-  TextBoxWithFader(String text, float duration, float delay) {
-    this( duration, delay);
+  TextBoxWithFader(String text, float showDuration, float delay) {
+    this( showDuration, delay);
     textBox.setText(text);
   }
 
-  TextBoxWithFader(String text, float duration, float delay, IAnim handler) {
-    this(text, duration, delay);
+  TextBoxWithFader(String text, float showDuration, float hideDuration, float delay) {
+    this(text, showDuration, delay);
+    this.hideDuration = hideDuration;
+  }
+
+  TextBoxWithFader(String text, float showDuration, float hideDuration, float delay, boolean disableAfterHide) {
+    this(text, showDuration, hideDuration, delay);
+    this.disableAfterHide = disableAfterHide;
+  }
+
+  TextBoxWithFader(String text, float showDuration, float hideDuration, float delay, boolean disableAfterHide, IAnim handler) {
+    this(text, showDuration, hideDuration, delay, disableAfterHide);
     animHandler = handler;
+  }
+
+  TextBoxWithFader(String text) {
+    this(text, 1, 0.2, 0.2, true);
+  }
+
+  TextBoxWithFader(String text, boolean disableAfterHide) {
+    this(text, 1, 0.2, 0.2, disableAfterHide);
   }
 
   void show() {
@@ -50,24 +75,25 @@ class TextBoxWithFader {  //<>//
   }
 
   void hide() {
-    setFrom(255);
-    setTo(0);
-    setDuration(hideDuration);
-    setDelay(0);
-    anim.setCallback("onEnd:onHide");
-    anim.start();
+    if (alpha > 0) {
+      //      setFrom(255);
+      setTo(0);
+      setDuration(hideDuration);
+      setDelay(0);
+      anim.setCallback("onEnd:onHide");
+      anim.start();
+    }
   }
 
   void display() {
-    textBox.display();
+    if (enabled)
+      textBox.display();
   }
 
   void update() {
     textBox.bgColor = (textBox.bgColor & 0xffffff) | (alpha << 24);
     textBox.borderColor = (textBox.borderColor & 0xffffff) | (alpha << 24);
     textBox.textColor = (textBox.textColor & 0xffffff) | (alpha << 24);
-
-    println("text box alpha: " + alpha);
   }
 
   void onShow() {
@@ -76,6 +102,9 @@ class TextBoxWithFader {  //<>//
   }
 
   void onHide() {
+    if (disableAfterHide) {
+      this.enabled = false;
+    }
     if (animHandler != null)
       animHandler.onAnimEnd(animHandler);
   }

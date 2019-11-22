@@ -18,7 +18,6 @@ class ForestScene extends SceneWithTransition
 
   void handleMousePressed() {
     if ( resetButton.isPointInside( mouseX, mouseY ) ) {
-      isAppleTaken = false;
       changeState(FRONTHOUSE_SCENE);
     }
   }

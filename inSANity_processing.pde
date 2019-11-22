@@ -1,9 +1,13 @@
 // ============ VARIABLES ============ //<>//
 
-boolean isAppleTaken = false;
+boolean playerHasFlashLight = false;
+boolean playerHasBatteries = false;
 
 //Global Reference to PApplet to be used inside classes
 PApplet thisApplet = this; 
+
+//Waiter, class to wait for a amount of seconds
+Waiter waiter;
 
 // ============ STATE HANDLER AND STATES ============
 StateHandler stateHandler = new StateHandler( "inSANity Game" );
@@ -34,12 +38,14 @@ void setup() {
 
   Ani.init(this);
 
+  waiter = new Waiter();
+
   FRONTHOUSE_SCENE = new  FrontHouseScene();
   FRONTDOOR_SCENE = new   FrontDoorScene();
   GROUND_HALLWAY_SCENE = new  GroundHallwayScene();
   FOREST_SCENE = new ForestScene();
   LIVINGROOM_SCENE = new LivingRoomScene();
-  LIVINGROOM_CHIMNEY_SCENE = new LivingRoomChimneyScene();
+  LIVINGROOM_CHIMNEY_SCENE = new LivingRoomFireplaceScene();
   HALLWAY2_ATTIC_SCENE = new Hallway2AtticScene();
   SAM_BEDROOM_SCENE = new SamBedRoomScene();
   TEST_SCENE = new TestScene();
@@ -52,6 +58,8 @@ void setup() {
 void draw() {
   float delta = 1 / frameRate;
   stateHandler.executeCurrentStateStep(delta);
+
+  waiter.step(delta);
 
   surface.setTitle(mouseX + ", " + mouseY);
 }

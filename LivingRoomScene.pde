@@ -5,10 +5,11 @@ class LivingRoomScene extends SceneWithTransition implements IAnim { //<>// //<>
   ImageButton fireplaceButton = new ImageButton( null, round(93 * widthRatio), round(405 * heightRatio), "Living_room fireplace outline.png");
 
   boolean firePlaceTextEnabled = true;
+
   TextBoxWithFader firePlaceText;
 
   SoundClip footStepsSoundClip;
-  
+
   State nextState;
 
   LivingRoomScene() {
@@ -18,15 +19,12 @@ class LivingRoomScene extends SceneWithTransition implements IAnim { //<>// //<>
 
     footStepsSoundClip = new SoundClip("footstep01 0.800 seconds.wav");
 
-    firePlaceText = new TextBoxWithFader("That pictures over the Fireplace...", 1, 1, this);
-    //"That pictures over the Fireplace...",
+    firePlaceText = new TextBoxWithFader("That pictures over the Fireplace...");
   }
 
   void enterState(State oldState) {
     super.enterState(oldState);
-    if (firePlaceTextEnabled == true) {
-      firePlaceText.show();
-    }
+    firePlaceText.show();
   }
 
   public void doStepWhileInState(float delta)
@@ -52,8 +50,10 @@ class LivingRoomScene extends SceneWithTransition implements IAnim { //<>// //<>
   }
 
   void changeState(State state) {
+    stateHandler.changeStateTo( state );
     nextState = state;
     footStepsSoundClip.play();
+
     firePlaceText.hide();
   }
 
@@ -61,6 +61,6 @@ class LivingRoomScene extends SceneWithTransition implements IAnim { //<>// //<>
   }
 
   void onAnimEnd(Object obj) {
-    stateHandler.changeStateTo( nextState );
+    //stateHandler.changeStateTo( nextState );
   }
 }
