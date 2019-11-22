@@ -9,6 +9,9 @@ PApplet thisApplet = this;
 //Waiter, class to wait for a amount of seconds
 Waiter waiter;
 
+//Inventory
+InventoryPanel invPanel;
+
 // ============ STATE HANDLER AND STATES ============
 StateHandler stateHandler = new StateHandler( "inSANity Game" );
 
@@ -28,9 +31,9 @@ float heightRatio = 1;
 
 void setup() {
 
-  fullScreen(P2D);
+  //fullScreen(P2D);
   //size( 1920, 1280, P2D );
-  //size( 1280, 720, P2D );
+  size( 1280, 720, P2D );
   noStroke();
 
   widthRatio = width / 1920.0;
@@ -53,14 +56,19 @@ void setup() {
   SAM_BEDROOM_SCENE = new SamBedRoomScene();
   TEST_SCENE = new TestScene();
 
-  stateHandler.changeStateTo( FRONTHOUSE_SCENE );
-  //stateHandler.changeStateTo( HALLWAY2_ATTIC_SCENE );
+  //stateHandler.changeStateTo( FRONTHOUSE_SCENE );
+  stateHandler.changeStateTo( GROUND_HALLWAY_SCENE );
+  
+  invPanel = new InventoryPanel();
 }
 
 
 void draw() {
   float delta = 1 / frameRate;
+ 
   stateHandler.executeCurrentStateStep(delta);
+  
+  invPanel.display(delta);
 
   waiter.step(delta);
 
