@@ -36,7 +36,7 @@ class SamBedRoomScene extends SceneWithTransition implements IWaiter {
       placeText.hideDuration = 3;
       waiter.waitForSeconds(2, this, 0, null);
     }
-    
+
     playerHasFlashLight = true;
     playerHasBatteries = true;
   }
@@ -47,23 +47,25 @@ class SamBedRoomScene extends SceneWithTransition implements IWaiter {
 
     rectMode(CORNER);
     noStroke();
+
+    float blackAlpha = 0.975 * 255; //to set alpha of image and filler rects
+
     if (isFlashLightOn) {
       pushStyle();
-      float blackAlpha = 0.975 * 255;
       tint(1, blackAlpha);
       imageMode(CENTER);
       image(flashLightImage, mouseX, mouseY);
       popStyle();
 
+      //Fill screen with 4 rectangles sorrounding the flashlight image
       fill(1, 1, 1, blackAlpha);
-      noStroke();
       rectMode(CORNER);
       rect(0, 0, width, mouseY - flashLightImage.height * 0.5);
       rect(0, mouseY + flashLightImage.height * 0.5, width, height - mouseY + flashLightImage.height * 0.5);
       rect(0, mouseY - flashLightImage.height * 0.5, mouseX - flashLightImage.width * 0.5, flashLightImage.height);
       rect(mouseX + flashLightImage.width * 0.5, mouseY - flashLightImage.height * 0.5, width - mouseX + flashLightImage.width * 0.5, flashLightImage.height);
     } else {
-      fill(1, 1, 1, 0.975 * 255);
+      fill(1, 1, 1, blackAlpha);
       rect(0, 0, width, height);
     }
 
