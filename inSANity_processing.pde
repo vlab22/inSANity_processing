@@ -1,4 +1,4 @@
-// ============ VARIABLES ============ //<>//
+// ============ VARIABLES ============ //<>// //<>//
 
 boolean playerHasFlashLight = false;
 boolean playerHasBatteries = false;

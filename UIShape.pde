@@ -1,8 +1,6 @@
 class UISprite extends UIShape {
 
   PImage image;
-  
-  int alpha = 255;
 
   boolean enabled = true;
 
@@ -36,6 +34,8 @@ class UISprite extends UIShape {
 abstract class UIShape {
   color c = #FFFFFF;
   color strokeColor = #111111;
+  int alpha = 255;
+  
   int x;
   int y;
   int w;

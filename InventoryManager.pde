@@ -1,4 +1,4 @@
-class InventoryManager implements IWaiter { //<>//
+class InventoryManager implements IWaiter { //<>// //<>// //<>//
 
   final int MAX_QUANTITY = 4; 
 
@@ -166,27 +166,19 @@ class InventoryPanel {
 
       InventoryPanelItem panelItem = panelItems[i];
       UISprite sprite = panelItem.sprite;
-      
+
       float posX = 2 * widthRatio + i * sprite.w;
       float posY = 26 * heightRatio; 
-      
+
       translate(posX, posY);
       panelItem.display(delta, x + posX, y + posY);
-
-      if (panelItem.item.multi) {
-        textFont(itemQuantityFont, TEXT_QUANTITY_FONT_SIZE * heightRatio);
-        textAlign(CENTER, CENTER);
-        float textSize = textWidth(str(panelItem.item.quantity));
-
-        text(panelItem.item.quantity, sprite.w - textSize - 4 * widthRatio, sprite.h - (TEXT_QUANTITY_FONT_SIZE + 4) * heightRatio);
-      }
     }
 
     popMatrix();
   }
 
   void addItem(InventoryItem item, int slot) {
-    InventoryPanelItem panelItem = new InventoryPanelItem(item);
+    InventoryPanelItem panelItem = new InventoryPanelItem(item, itemQuantityFont, TEXT_QUANTITY_FONT_SIZE);
     panelItems[slot] = panelItem;
   }
 
@@ -228,25 +220,61 @@ class InventoryPanelItem {
 
   Bounds bounds;
 
-  InventoryPanelItem(InventoryItem pItem) {
-    int slot = pItem.slot;
+  Ani anim;
+
+  PFont itemFont;
+  int itemFontSize = 12;
+
+  InventoryPanelItem(InventoryItem pItem, PFont pItemFont, int pItemFontSize) {
     item = pItem;
+    item.quantity = 99;
     sprite = new UISprite(0, 0, item.name + ".png");
     outlineSprite = new UISprite(sprite.x, sprite.y, item.name + " outline.png");
-    bounds = new Bounds(sprite.x, sprite.y, sprite.w, sprite.h);
+    outlineSprite.alpha = 0;
+
+    bounds = new Bounds(sprite.x, sprite.y, sprite.w, sprite.h, 20 * widthRatio, 20 * heightRatio, -20 * 2 * widthRatio, -20 * 2 * heightRatio);
+
+    itemFont = pItemFont;
+    itemFontSize = pItemFontSize;
   }
 
   void display(float delta, float panelX, float panelY) {
     bounds.updateBounds(panelX, panelY);
+
+    outlineSprite.display(delta);
     sprite.display(delta);
 
+    if (item.multi) {
+      fill(255);
+      textFont(itemFont, itemFontSize * heightRatio);
+      textAlign(LEFT, CENTER);
+      float textSize = textWidth(str(item.quantity));
+
+      text(item.quantity, sprite.w - textSize - 4 * widthRatio, sprite.h - (itemFontSize + 4) * heightRatio);
+    }
+
+    if (bounds.isPointInside(mouseX, mouseY)) {
+      if (outlineSprite.alpha <= 0 && (anim == null || anim.isPlaying() == false)) {
+        if (anim != null) anim.end();
+        anim = Ani.to(outlineSprite, 0.4, 0, "alpha", 255, Ani.CUBIC_OUT, this, "onUpdate:onUp");
+        anim.start();
+      }
+    } else if (outlineSprite.alpha > 0 && (anim != null && anim.getEnd() == 255)) {
+      anim.end();
+      anim = Ani.to(outlineSprite, 0.4, 0, "alpha", 0, Ani.CUBIC_OUT, this, "onUpdate:onUp");
+      anim.start();
+    }
+
+    //Debug Bounds
     popMatrix();
+    fill(1, 1, 1, 30);
+    noStroke();
     rect(bounds.x, bounds.y, bounds.w, bounds.h);
     pushMatrix();
-    
-    if (bounds.isPointInside(mouseX, mouseY)) {
-      
-    }
+  }
+
+  void onUp() {
+    //println("update outline", outlineSprite.alpha, frameCount);
   }
 }
 
@@ -256,16 +284,42 @@ class Bounds {
   float w;
   float h;
 
+  float offsetX;
+  float offsetY;
+  private float offsetW;
+  private float offsetH;
+
+  private float initialX;
+  private float initialY;
+
   Bounds(float pX, float pY, float pW, float pH) {
-    x = pX;
-    y = pY;
-    w = pW;
-    h = pH;
+    this(pX, pY, pW, pH, 0, 0, 0, 0);
+  }
+
+  Bounds(float pX, float pY, float pW, float pH, float pOffsetX, float pOffsetY, float pOffsetW, float pOffsetH) {
+    x = pX + pOffsetX;
+    y = pY + pOffsetY;
+    w = pW + pOffsetW;
+    h = pH + pOffsetH;
+
+    initialX = x;
+    initialY = y;
+
+    offsetW = pOffsetW;
+    offsetH = pOffsetH;
   }
 
   void updateBounds(float parentX, float parentY) {
-    x = parentX;
-    y = parentY;
+    x = initialX + parentX + offsetX;
+    y = initialY + parentY + offsetY;
+  }
+
+  void addOffsetWH(float pOffsetW, float pOffsetH) {
+    offsetW = pOffsetW;
+    offsetH = pOffsetH;
+
+    w = w + offsetW;
+    h = h + offsetH;
   }
 
   boolean isPointInside( int px, int py ) {

@@ -1,4 +1,4 @@
-class TextBoxWithFader {  //<>//
+class TextBoxWithFader {  //<>// //<>//
 
   private int alpha;
 

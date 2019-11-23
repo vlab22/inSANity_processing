@@ -1,4 +1,4 @@
-class LivingRoomScene extends SceneWithTransition implements IAnim { //<>// //<>//
+class LivingRoomScene extends SceneWithTransition implements IAnim { //<>// //<>// //<>//
 
   ImageButton backButton = new ImageButton( "arrowDown.png", round(908 * widthRatio), round(997 * heightRatio), "arrowDown outline.png" );
 

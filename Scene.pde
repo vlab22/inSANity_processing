@@ -1,4 +1,4 @@
-abstract class Scene extends State //<>//
+abstract class Scene extends State //<>// //<>//
 {
   PImage background;
   String filename;
