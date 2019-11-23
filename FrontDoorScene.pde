@@ -26,7 +26,6 @@ class FrontDoorScene extends SceneWithTransition
     powerDownWindow = loadImage("House_front_zoomed power off window.png");
     powerDownWallLight = loadImage("House_front_zoomed wall light off.png");
 
-
     frontDoorOpenSoundClip = new SoundClip("53280__the-bizniss__front-door-open.wav");
     footStepsSoundClip = new SoundClip("footstep01 0.800 seconds.wav");
     lightBlinkSoundClip = new SoundClip("light blink 01.wav");

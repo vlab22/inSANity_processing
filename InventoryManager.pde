@@ -1,4 +1,4 @@
-class InventoryManager implements IWaiter { //<>// //<>// //<>//
+class InventoryManager implements IWaiter {  //<>//
 
   final int MAX_QUANTITY = 4; 
 
@@ -8,6 +8,7 @@ class InventoryManager implements IWaiter { //<>// //<>// //<>//
   InventoryItem[] items;
 
   final HashMap<String, Boolean> allowMultiples = new HashMap<String, Boolean>();
+  final HashMap<String, String> itemsDisplayNames = new HashMap<String, String>();
 
   ArrayList<UISprite> movingSprites;
   ArrayList<Ani[]> movingAnims;
@@ -16,9 +17,13 @@ class InventoryManager implements IWaiter { //<>// //<>// //<>//
 
   InventoryManager(InventoryPanel pInventoryPanel) {
 
-    allowMultiples.put("diary_item", true);
+    allowMultiples.put("notes_item", true);
     allowMultiples.put("flashlight_item", false);
     allowMultiples.put("battery_item", false);
+
+    itemsDisplayNames.put("notes_item", "Old Notes");
+    itemsDisplayNames.put("flashlight_item", "Flash/Black Light");
+    itemsDisplayNames.put("battery_item", "Batteries");
 
     inventoryPanel = pInventoryPanel;
 
@@ -59,6 +64,7 @@ class InventoryManager implements IWaiter { //<>// //<>// //<>//
     if (item == null) {
       item = new InventoryItem();
       item.name = itemName;
+      item.displayName = itemsDisplayNames.get(itemName);
       item.multi = allow;
       item.quantity = 1;
       item.slot = freeSlot;
@@ -191,23 +197,32 @@ class InventoryPanel {
         opened = false;
         Ani.to(this, OPEN_CLOSE_ANIM_DURATION, 0, "y", closeY, Ani.CUBIC_OUT);
       }
+    }
 
-      println("insd");
+    for (int i = 0; i < panelItems.length; i++) {
+      if (panelItems[i] == null)
+        continue;
+
+      InventoryPanelItem panelItem = panelItems[i];
+      if (panelItem.bounds.isPointInside(mouseX, mouseY)) {
+        println("invitem", panelItem.item.name, "clicked");
+        
+        //Create/Enable Inv Item
+        usableItemManager.enableUsableItem(panelItem.item.name);
+        
+        break;
+      }
     }
   }
 
   boolean isPointInsideEnableButton( int px, int py ) {
     return isPointInRectangle( px, py, x, y, bgImage.colliderW, bgImage.colliderH);
   }
-
-  boolean isPointInsidePanelItem( int px, int py, InventoryPanelItem panelItem ) {
-
-    return isPointInRectangle( px, py, x, y, bgImage.colliderW, bgImage.colliderH);
-  }
 }
 
 class InventoryItem {
   String name;
+  String displayName;
   boolean multi;
   int quantity;
   int slot;
@@ -227,7 +242,6 @@ class InventoryPanelItem {
 
   InventoryPanelItem(InventoryItem pItem, PFont pItemFont, int pItemFontSize) {
     item = pItem;
-    item.quantity = 99;
     sprite = new UISprite(0, 0, item.name + ".png");
     outlineSprite = new UISprite(sprite.x, sprite.y, item.name + " outline.png");
     outlineSprite.alpha = 0;
@@ -325,4 +339,8 @@ class Bounds {
   boolean isPointInside( int px, int py ) {
     return isPointInRectangle( px, py, x, y, w, h);
   }
+}
+
+interface IAction {
+  void execute(Object obj);
 }

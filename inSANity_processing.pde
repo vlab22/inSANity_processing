@@ -17,6 +17,9 @@ Waiter waiter;
 InventoryPanel invPanel;
 InventoryManager invManager;
 
+//Usable Items
+UsableItemManager usableItemManager;
+
 // ============ STATE HANDLER AND STATES ============
 StateHandler stateHandler = new StateHandler( "inSANity Game" );
 
@@ -65,6 +68,8 @@ void setup() {
 
   invPanel = new InventoryPanel();
   invManager = new InventoryManager(invPanel);
+  
+  usableItemManager = new UsableItemManager();
 }
 
 
@@ -72,6 +77,8 @@ void draw() {
   float delta = 1 / frameRate;
 
   stateHandler.executeCurrentStateStep(delta);
+
+  //usableItemManager.step(delta);
 
   invManager.display(delta);
 

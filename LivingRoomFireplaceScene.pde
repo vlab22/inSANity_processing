@@ -1,7 +1,7 @@
 class LivingRoomFireplaceScene extends SceneWithTransition {
 
   ImageButton backButton = new ImageButton( "arrowDown.png", round(908 * widthRatio), round(997 * heightRatio), "arrowDown outline.png" );
-  ImageButton diaryButton = new ImageButton( null, round(620 * widthRatio), round(976 * heightRatio), "Living_room_Chimney_Photo diaty overlay.png" );
+  ImageButton diaryButton = new ImageButton( null, round(620 * widthRatio), round(976 * heightRatio), "Living_room_Chimney_Photo diary overlay.png" );
 
   UISprite diarySprite = new UISprite(round(620 * widthRatio), round(976 * heightRatio), "Living_room_Chimney_Photo diary object.png");
 
@@ -51,7 +51,7 @@ class LivingRoomFireplaceScene extends SceneWithTransition {
     }
     if ( diaryInScene == true && diaryButton.isPointInside( mouseX, mouseY ) ) {
       diaryInScene = false;
-      invManager.PickUpItem("diary_item", diarySprite);
+      invManager.PickUpItem("notes_item", diarySprite);
     }
   }
 

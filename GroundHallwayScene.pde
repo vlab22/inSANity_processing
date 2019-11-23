@@ -1,6 +1,3 @@
-
-
-
 class GroundHallwayScene extends SceneWithTransition
 {
   ImageButton appleButton = new ImageButton( "apple.png", 325, 366 );

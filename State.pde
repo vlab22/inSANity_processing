@@ -13,6 +13,8 @@ class State
   public StateTransition enterTransition;
   public StateTransition leaveTransition;
 
+  boolean allowMousePressed = true;
+
   protected State( String stateName )
   {
     name = stateName;
@@ -180,7 +182,10 @@ class StateHandler
 
 
   void handleMousePressed() { 
-    if ( currentState != null ) currentState.handleMousePressed();
+    if ( currentState != null ) {
+      if (currentState.allowMousePressed == true)
+        currentState.handleMousePressed();
+    }
   }
   void handleMouseClicked() { 
     if ( currentState != null ) currentState.handleMouseClicked();
@@ -256,7 +261,6 @@ class StateHandler
     if (currentState != null && currentState.enterTransition != null) {
       currentState.enterTransition.execute();
     } else {
-      
     }
 
     currentState.leaveTransition.isPlaying = false;
