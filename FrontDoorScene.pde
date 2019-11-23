@@ -39,8 +39,6 @@ class FrontDoorScene extends SceneWithTransition
   public void doStepWhileInState(float delta)
   {
     super.doStepWhileInState(delta);
-    //upButton.display();
-    //downButton.display();
 
     doorButton.display();
 
@@ -48,8 +46,7 @@ class FrontDoorScene extends SceneWithTransition
     image(powerDownWindow, 237 * widthRatio, 196 * heightRatio, powerDownWindow.width * widthRatio, powerDownWindow.height * heightRatio);
     image(powerDownWallLight, 1308 * widthRatio, 189 * heightRatio, powerDownWallLight.width * widthRatio, powerDownWallLight.height * heightRatio);
 
-
-    super.TransitionDisplay();
+    super.TransitionDisplay(delta);
   }
 
   void handleMousePressed() {

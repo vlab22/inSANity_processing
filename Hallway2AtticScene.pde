@@ -22,7 +22,7 @@ class Hallway2AtticScene extends SceneWithTransition {
     samDoorsButton.display();
     parentDoorsButton.display();
 
-    super.TransitionDisplay();
+    super.TransitionDisplay(delta);
   }
 
   void handleMousePressed() {

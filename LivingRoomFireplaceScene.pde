@@ -3,11 +3,15 @@ class LivingRoomFireplaceScene extends SceneWithTransition {
   ImageButton backButton = new ImageButton( "arrowDown.png", round(908 * widthRatio), round(997 * heightRatio), "arrowDown outline.png" );
   ImageButton diaryButton = new ImageButton( null, round(620 * widthRatio), round(976 * heightRatio), "Living_room_Chimney_Photo diaty overlay.png" );
 
+  UISprite diarySprite = new UISprite(round(620 * widthRatio), round(976 * heightRatio), "Living_room_Chimney_Photo diary object.png");
+
   SoundClip footStepsSoundClip;
 
   boolean placeTextEnabled = true;
 
   TextBoxWithFader placeText;
+
+  boolean diaryInScene = true;
 
   LivingRoomFireplaceScene() {
     super("Living_room_Chimney_Photo.png");
@@ -30,16 +34,24 @@ class LivingRoomFireplaceScene extends SceneWithTransition {
     super.doStepWhileInState(delta);
 
     backButton.display();
-    diaryButton.display();
+
+    diarySprite.display(delta);
+
+    if (diaryInScene == true)
+      diaryButton.display();
 
     placeText.display();
 
-    super.TransitionDisplay();
+    super.TransitionDisplay(delta);
   }
 
   void handleMousePressed() {
     if ( backButton.isPointInside( mouseX, mouseY ) ) {
       changeState( LIVINGROOM_SCENE );
+    }
+    if ( diaryInScene == true && diaryButton.isPointInside( mouseX, mouseY ) ) {
+      diaryInScene = false;
+      invManager.PickUpItem("diary_item", diarySprite);
     }
   }
 

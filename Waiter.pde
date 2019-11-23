@@ -5,9 +5,7 @@ import java.util.Stack;
 class Waiter {
 
   HashMap<Integer, WaitTime> waiterTime;
-
   ArrayList<Integer> waiterTimeToRemove;
-
   HashMap<Integer, WaitTime> waitTimeStack;
 
   WaitTime[] waiters;

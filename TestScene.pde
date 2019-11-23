@@ -54,7 +54,7 @@ class TestScene extends SceneWithTransition {
 
     //textBoxWithFader.display();
 
-    super.TransitionDisplay();
+    super.TransitionDisplay(delta);
   }
 
   void handleMousePressed() {

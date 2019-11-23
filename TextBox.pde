@@ -149,7 +149,7 @@ class TextBox {
 
   TextBox() {
     //font = createFont("Gaiatype", textSize, true);
-    font = loadFont("Gaiatype-32.vlw");
+    font = loadFont(MAIN_FONT_32);
 
     text = "The quick brown fox\r\njumps over the lazy dog!";
 
@@ -201,6 +201,6 @@ class TextBox {
 
   void centralize() {
     updateBoxSize();
-    boxPosition = new PVector(width/2 - boxWidth/2, height - boxHeight - 100 * heightRatio);
+    boxPosition = new PVector(width/2 - boxWidth/2, height - boxHeight - 170 * heightRatio);
   }
 }

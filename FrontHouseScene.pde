@@ -16,7 +16,7 @@ class FrontHouseScene extends SceneWithTransition
     super.doStepWhileInState(delta);
     houseFrontDoorButton.display();
 
-    super.TransitionDisplay();
+    super.TransitionDisplay(delta);
   }
 
   void handleMousePressed() {

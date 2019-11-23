@@ -3,6 +3,10 @@
 boolean playerHasFlashLight = false;
 boolean playerHasBatteries = false;
 
+//Fonts
+String MAIN_FONT_32 = "Gaiatype-32.vlw";
+String MAIN_FONT_12 = "Gaiatype-12.vlw";
+
 //Global Reference to PApplet to be used inside classes
 PApplet thisApplet = this; 
 
@@ -11,6 +15,7 @@ Waiter waiter;
 
 //Inventory
 InventoryPanel invPanel;
+InventoryManager invManager;
 
 // ============ STATE HANDLER AND STATES ============
 StateHandler stateHandler = new StateHandler( "inSANity Game" );
@@ -49,7 +54,6 @@ void setup() {
   FRONTHOUSE_SCENE = new  FrontHouseScene();
   FRONTDOOR_SCENE = new   FrontDoorScene();
   GROUND_HALLWAY_SCENE = new  GroundHallwayScene();
-  FOREST_SCENE = new ForestScene();
   LIVINGROOM_SCENE = new LivingRoomScene();
   LIVINGROOM_CHIMNEY_SCENE = new LivingRoomFireplaceScene();
   HALLWAY2_ATTIC_SCENE = new Hallway2AtticScene();
@@ -57,18 +61,19 @@ void setup() {
   TEST_SCENE = new TestScene();
 
   //stateHandler.changeStateTo( FRONTHOUSE_SCENE );
-  stateHandler.changeStateTo( GROUND_HALLWAY_SCENE );
-  
+  stateHandler.changeStateTo( LIVINGROOM_SCENE );
+
   invPanel = new InventoryPanel();
+  invManager = new InventoryManager(invPanel);
 }
 
 
 void draw() {
   float delta = 1 / frameRate;
- 
+
   stateHandler.executeCurrentStateStep(delta);
-  
-  invPanel.display(delta);
+
+  invManager.display(delta);
 
   waiter.step(delta);
 
@@ -99,6 +104,7 @@ void keyTyped() {
 }
 
 void mousePressed() { 
+  invPanel.handleMousePressed();
   stateHandler.handleMousePressed();
 }
 void mouseClicked() { 

@@ -36,7 +36,7 @@ class LivingRoomScene extends SceneWithTransition implements IAnim { //<>// //<>
 
     firePlaceText.display();
 
-    super.TransitionDisplay();
+    super.TransitionDisplay(delta);
   }
 
   void handleMousePressed() {

@@ -25,7 +25,7 @@ class GroundHallwayScene extends SceneWithTransition
     toUpstairsButton.display();
     toLivingRoomButton.display();
 
-    super.TransitionDisplay();
+    super.TransitionDisplay(delta);
   }
 
   void handleMousePressed() {

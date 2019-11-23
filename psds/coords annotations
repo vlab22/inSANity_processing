@@ -8,7 +8,7 @@ front door wall light 1308 189
 
 living room - collider fireplace 93 405
 
-living room fireplace - diary overlay 620 976
+living room fireplace - diary overlay 620 976 w 303 104
 
 Hallway2 Room Attic - sam room overlay 1132 198
 
@@ -18,4 +18,12 @@ Sam Room - mirror collider - 853 410
 
 Sam Room - paint collider - 537 311
 
-inventory size pos 0 924 w 615 156
+inventory size pos 0 899 w 615 181
+
+inventory close collider pos 0 1055 w 613 179
+
+inventory open collider pos 0 899 w 613 179
+
+inventory item position gap 2, 26
+
+inventory item size 154 152

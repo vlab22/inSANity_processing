@@ -10,8 +10,6 @@ class SamBedRoomScene extends SceneWithTransition implements IWaiter {
 
   TextBoxWithFader placeText = new TextBoxWithFader("It's too dark, I remember to have a flashlight\r\nin the garage", false);
 
-
-
   boolean isFlashLightOn;
 
   PImage flashLightImage;
@@ -82,7 +80,7 @@ class SamBedRoomScene extends SceneWithTransition implements IWaiter {
 
     placeText.display();
 
-    super.TransitionDisplay();
+    super.TransitionDisplay(delta);
   }
 
   void handleMousePressed() {

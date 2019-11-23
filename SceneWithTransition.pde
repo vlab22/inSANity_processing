@@ -1,4 +1,16 @@
-abstract class SceneWithTransition extends Scene
+abstract class SceneWithInventory extends Scene
+{
+  SceneWithInventory( String backgroundFilename ) {
+    super(backgroundFilename);
+  }
+
+  public void doStepWhileInState(float delta)
+  {
+    super.doStepWhileInState(delta);
+  }
+}
+
+abstract class SceneWithTransition extends SceneWithInventory
 {
   SceneTransition sceneEnterTransition;
   SceneTransition sceneLeaveTransition;
@@ -18,7 +30,15 @@ abstract class SceneWithTransition extends Scene
     sceneEnterTransition.callBackName = "onEnd:enterStateAfterTransition";
   }
 
-  void TransitionDisplay() {
+  public void doStepWhileInState(float delta)
+  {
+    super.doStepWhileInState(delta);
+  }
+
+  void TransitionDisplay(float delta) {
+
+    invPanel.display(delta);
+
     if (sceneLeaveTransition.enabled == true) {
       sceneLeaveTransition.display();
     } else if (sceneEnterTransition.enabled == true) {
