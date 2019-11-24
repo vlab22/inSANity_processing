@@ -1,4 +1,5 @@
-import java.util.TreeMap; //<>// //<>//
+import java.util.TreeMap; //<>// //<>// //<>//
+import java.util.*;
 
 class NotesUsableItem extends DetailsItensScreen implements IAction {
 
@@ -6,15 +7,19 @@ class NotesUsableItem extends DetailsItensScreen implements IAction {
   float y = 108 * heightRatio;
 
   Ani[] anim = new Ani[0];
-  Ani[] animPage = new Ani[0];
+  Ani[] animPageFade = new Ani[0];
+  Ani[] animPageFlip = new Ani[0];
 
-  Map<Integer, UISprite> pages;
+  NavigableMap<Integer, UISprite> pages;
+  Iterator<Map.Entry<Integer, UISprite>> pageEntries;
 
   int currentPageIndex;
   UISprite currentPage;
+  UISprite lastPage;
 
   ImageButton rightArrow;
   ImageButton leftArrow;
+  ImageButton closeButton;
 
   int rightArrowX;
   int rightArrowY;
@@ -22,9 +27,13 @@ class NotesUsableItem extends DetailsItensScreen implements IAction {
   int leftArrowX;
   int leftArrowY;
 
+  int closeButtonX;
+  int closeButtonY;
+
   boolean isDisabling = false;
 
-  final float FADE_DURATION = 2;
+  final float FADE_DURATION = 0.25;
+  final float PAGE_FLIP_DURATION = 0.25;
 
   NotesUsableItem() {
     allowSceneMousePressed = false;
@@ -39,8 +48,12 @@ class NotesUsableItem extends DetailsItensScreen implements IAction {
     leftArrowX = round(-21 * widthRatio);
     leftArrowY = round(474 * heightRatio);
 
+    closeButtonX = round(627 * widthRatio);
+    closeButtonY = round(0 * heightRatio);
+
     rightArrow = new ImageButton( "Notes nav arrow right.png", rightArrowX, rightArrowY, "Notes nav arrow right outline.png" );
     leftArrow = new ImageButton( "Notes nav arrow left.png", leftArrowX, leftArrowY, "Notes nav arrow left outline.png" );
+    closeButton = new ImageButton( "Close Button.png", closeButtonX, closeButtonY, "Close Button overlay.png" );
   }
 
   void addPage(Object obj) {
@@ -61,6 +74,8 @@ class NotesUsableItem extends DetailsItensScreen implements IAction {
         sprite.alpha = 0;
 
         pages.put(index, sprite);
+        pageEntries = pages.entrySet().iterator();
+
         currentPage = sprite;
 
         for (Map.Entry<Integer, UISprite> entry : pages.entrySet()) {
@@ -75,6 +90,12 @@ class NotesUsableItem extends DetailsItensScreen implements IAction {
   void display(float delta) {
     super.display(delta);
 
+    if (lastPage != null) {
+      lastPage.x = round(x);
+      lastPage.y = round(y);
+      lastPage.display(delta);
+    }
+
     currentPage.x = round(x);
     currentPage.y = round(y);
     currentPage.display(delta);
@@ -84,17 +105,63 @@ class NotesUsableItem extends DetailsItensScreen implements IAction {
 
     leftArrow.x = round(x + leftArrowX);
     leftArrow.y = round(y + leftArrowY);
-    
+
+    closeButton.x = round(x + closeButtonX);
+    closeButton.y = round(y + closeButtonY);
+
     rightArrow.display();
     leftArrow.display();
+    closeButton.display();
   }
 
   void step(float delta) {
     display(delta);
+
+    for (Map.Entry<Integer, UISprite> entry : pages.entrySet()) {
+      println(entry.getKey(), entry.getValue().alpha, entry.getValue().enabled);
+    }
+
+    if (keyPressed && key == 'c') {
+      setEnabled(false);
+    }
   }
-  
+
   void handleMousePressed() { 
     super.handleMousePressed();
+
+    if (rightArrow.isPointInside(mouseX, mouseY)) {
+      Map.Entry<Integer, UISprite> nextPage = pages.higherEntry(currentPageIndex);
+      if (nextPage != null) {
+
+        currentPageIndex = nextPage.getKey();
+        println(currentPageIndex);
+
+        lastPage = currentPage;
+        UITweenSprite.tweenSprite(lastPage, "alpha:0", PAGE_FLIP_DURATION, 0, Ani.CUBIC_IN, this, "onEnd:foo");
+
+        currentPage = nextPage.getValue();
+        currentPage.enabled = true;
+        UITweenSprite.tweenSprite(currentPage, "alpha:255", PAGE_FLIP_DURATION, 0, this, "onEnd:foo");
+      }
+    } else if (leftArrow.isPointInside(mouseX, mouseY)) {
+      Map.Entry<Integer, UISprite> prevPage = pages.lowerEntry(currentPageIndex);
+      if (prevPage != null) {
+
+        currentPageIndex = prevPage.getKey();
+        println(currentPageIndex);
+
+        lastPage = currentPage;
+
+        UITweenSprite.tweenSprite(lastPage, "alpha:0", PAGE_FLIP_DURATION, 0, Ani.CUBIC_IN, this, "onEnd:foo");
+
+        currentPage = prevPage.getValue();
+        currentPage.enabled = true;
+        UITweenSprite.tweenSprite(currentPage, "alpha:255", PAGE_FLIP_DURATION, 0, this, "onEnd:foo");
+      }
+      println("leftArrow clicked");
+    } else if (closeButton.isPointInside(mouseX, mouseY)) {
+      setEnabled(false);
+    }
   }
 
   void setEnabled(boolean val) {
@@ -113,9 +180,9 @@ class NotesUsableItem extends DetailsItensScreen implements IAction {
 
       //Fade in Current Page
       int lastPageAlpha = page.alpha;
-      endFadeAnim(animPage);
+      endFadeAnim(animPageFade);
       page.alpha = lastPageAlpha;
-      animPage = Ani.to(page, FADE_DURATION, 0, "alpha:255", Ani.CUBIC_OUT);
+      animPageFade = Ani.to(page, FADE_DURATION, 0, "alpha:255", Ani.CUBIC_OUT);
       page.enabled = true;
 
       isDisabling = false;
@@ -128,9 +195,9 @@ class NotesUsableItem extends DetailsItensScreen implements IAction {
 
       //Fade Out Current Page
       int lastPageAlpha = page.alpha;
-      endFadeAnim(animPage);
+      endFadeAnim(animPageFade);
       page.alpha = lastPageAlpha;
-      animPage = Ani.to(page, FADE_DURATION, 0, "alpha:0", Ani.CUBIC_OUT, this, "onEnd:disable");
+      animPageFade = Ani.to(page, FADE_DURATION, 0, "alpha:0", Ani.CUBIC_OUT, this, "onEnd:disable");
 
       isDisabling = true;
     }
@@ -146,7 +213,7 @@ class NotesUsableItem extends DetailsItensScreen implements IAction {
     pages.get(currentPageIndex).enabled = false;
   }
 
-  private void foo() {
+  public void foo() {
   }
 
   void execute(Object obj) {
@@ -171,6 +238,10 @@ class NotesUsableItem extends DetailsItensScreen implements IAction {
   }
 }
 
+// ==========================================================================================================================================================
+// ==========================================================================================================================================================
+// ==========================================================================================================================================================
+
 abstract class DetailsItensScreen extends UsableItem {
   color bgColor = color(1);
   int alpha = 0;
@@ -185,6 +256,10 @@ abstract class DetailsItensScreen extends UsableItem {
   }
 }
 
+// ==========================================================================================================================================================
+// ==========================================================================================================================================================
+// ==========================================================================================================================================================
+
 abstract class UsableItem {
   String name;
   boolean enabled = false;
@@ -192,5 +267,6 @@ abstract class UsableItem {
 
   abstract void setEnabled(boolean val);
   abstract void step(float delta);
-  void handleMousePressed() { }
+  void handleMousePressed() {
+  }
 }

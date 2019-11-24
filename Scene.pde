@@ -5,6 +5,8 @@ abstract class SceneWithTransition extends Scene //<>// //<>//
 
   SceneWithTransition( String backgroundFilename ) {
     super(backgroundFilename);
+    
+    //background = loadImage( filename );
 
     enterTransition = new SceneTransition();
     leaveTransition = new SceneTransition();

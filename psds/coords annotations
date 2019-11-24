@@ -6,6 +6,8 @@ front door -front door 659 196
 
 front door wall light 1308 189
 
+groud hallway - garage door 1343 169 w 344 911
+
 living room - collider fireplace 93 405
 
 living room fireplace - diary overlay 620 976 w 303 104
@@ -33,3 +35,11 @@ notes pos 642 108 w 660 972
 notes nav arrow right pos 639 474 w 37 34
 
 notes nav arrow left pos -21 474 w 37 34
+
+notes close button 627 0 w 34 32
+
+garage - shelf collider 31 326 w 394 442
+
+garage shelf - flashlight - 717 388 w 154 152
+
+garage shelf - batteries - 831 783 w 154 152

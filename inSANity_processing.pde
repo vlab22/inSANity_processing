@@ -26,7 +26,8 @@ StateHandler stateHandler = new StateHandler( "inSANity Game" );
 State FRONTHOUSE_SCENE; 
 State FRONTDOOR_SCENE;
 State GROUND_HALLWAY_SCENE; 
-State FOREST_SCENE; 
+State GARAGE_SCENE; 
+State GARAGESHELF_SCENE;
 State LIVINGROOM_SCENE;
 State LIVINGROOM_CHIMNEY_SCENE;
 State HALLWAY2_ATTIC_SCENE;
@@ -57,14 +58,17 @@ void setup() {
   FRONTHOUSE_SCENE = new  FrontHouseScene();
   FRONTDOOR_SCENE = new   FrontDoorScene();
   GROUND_HALLWAY_SCENE = new  GroundHallwayScene();
+  GARAGE_SCENE = new GarageScene();
+  GARAGESHELF_SCENE = new GarageShelfScene();
   LIVINGROOM_SCENE = new LivingRoomScene();
   LIVINGROOM_CHIMNEY_SCENE = new LivingRoomFireplaceScene();
   HALLWAY2_ATTIC_SCENE = new Hallway2AtticScene();
   SAM_BEDROOM_SCENE = new SamBedRoomScene();
+  
   TEST_SCENE = new TestScene();
 
-  //stateHandler.changeStateTo( FRONTHOUSE_SCENE );
-  stateHandler.changeStateTo( LIVINGROOM_SCENE );
+  stateHandler.changeStateTo( FRONTHOUSE_SCENE );
+  //stateHandler.changeStateTo( GARAGE_SCENE );
 
   invPanel = new InventoryPanel();
   invManager = new InventoryManager(invPanel);

@@ -1,9 +1,9 @@
-import de.looksgood.ani.*;
+import de.looksgood.ani.*; //<>//
 
-class UITweenShape { //<>// //<>//
+class UITweenShape { //<>//
 
   ArrayList<Integer> shapesToRemove;
- 
+
   public UITweenShape() {
     shapesToRemove = new ArrayList<Integer>();
   }
@@ -84,4 +84,19 @@ class UITweenShape { //<>// //<>//
   //  t--;
   //  return -change/2 * (t*(t-2) - 1) + from;
   //}
+}
+
+static class UITweenSprite {
+
+  static HashMap<Integer, Ani[]> animsMap = new HashMap<Integer, Ani[]>();
+
+  static void tweenSprite(UISprite sprite, String propertyList, float duration, float delay, Object callbackObject, String callback) {
+    Ani[] ani = Ani.to(sprite, duration, delay, propertyList, Ani.CUBIC_OUT, callbackObject, callback);
+    animsMap.put(sprite.hashCode(), ani);
+  }
+
+  static void tweenSprite(UISprite sprite, String propertyList, float duration, float delay, de.looksgood.ani.easing.Easing easing, Object callbackObject, String callback) {
+    Ani[] ani = Ani.to(sprite, duration, delay, propertyList, easing, callbackObject, callback);
+    animsMap.put(sprite.hashCode(), ani);
+  }
 }

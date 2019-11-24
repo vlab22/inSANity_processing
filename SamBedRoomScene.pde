@@ -24,25 +24,25 @@ class SamBedRoomScene extends SceneWithTransition implements IWaiter {
   void enterState(State oldState) {
     super.enterState(oldState);
 
-    isFlashLightOn = playerHasFlashLight == true && playerHasBatteries == true;
+    //isFlashLightOn = playerHasFlashLight == true && playerHasBatteries == true;
 
-    if (playerHasFlashLight == false) {
-      placeText.show();
-    } else if (playerHasFlashLight == true && playerHasBatteries == false) {
-      placeText.textBox.setText("I have a flashlight but where are the batteries?\r\nMaybe in the garage too.");
-      placeText.show();
-    } else if (playerHasFlashLight == false && playerHasBatteries == true) {
-      placeText.textBox.setText("I have some batteries but where is the flashlight?\r\nMaybe in the garage too.");
-      placeText.show();
-    } else if (isFlashLightOn) {
-      placeText.textBox.setText("Now I can see...");
-      placeText.show();
-      placeText.hideDuration = 3;
-      waiter.waitForSeconds(2, this, 0, null);
-    }
+    //if (playerHasFlashLight == false) {
+    //  placeText.show();
+    //} else if (playerHasFlashLight == true && playerHasBatteries == false) {
+    //  placeText.textBox.setText("I have a flashlight but where are the batteries?\r\nMaybe in the garage too.");
+    //  placeText.show();
+    //} else if (playerHasFlashLight == false && playerHasBatteries == true) {
+    //  placeText.textBox.setText("I have some batteries but where is the flashlight?\r\nMaybe in the garage too.");
+    //  placeText.show();
+    //} else if (isFlashLightOn) {
+    //  placeText.textBox.setText("Now I can see...");
+    //  placeText.show();
+    //  placeText.hideDuration = 3;
+    //  waiter.waitForSeconds(2, this, 0, null);
+    //}
 
-    playerHasFlashLight = true;
-    playerHasBatteries = true;
+    //playerHasFlashLight = true;
+    //playerHasBatteries = true;
   }
 
   public void doStepWhileInState(float delta)
@@ -54,24 +54,24 @@ class SamBedRoomScene extends SceneWithTransition implements IWaiter {
 
     float blackAlpha = 0.975 * 255; //to set alpha of image and filler rects
 
-    if (isFlashLightOn) {
-      pushStyle();
-      tint(1, blackAlpha);
-      imageMode(CENTER);
-      image(flashLightImage, mouseX, mouseY);
-      popStyle();
+    //if (isFlashLightOn) {
+    //  pushStyle();
+    //  tint(1, blackAlpha);
+    //  imageMode(CENTER);
+    //  image(flashLightImage, mouseX, mouseY);
+    //  popStyle();
 
-      //Fill screen with 4 rectangles sorrounding the flashlight image
-      fill(1, 1, 1, blackAlpha);
-      rectMode(CORNER);
-      rect(0, 0, width, mouseY - flashLightImage.height * 0.5);
-      rect(0, mouseY + flashLightImage.height * 0.5, width, height - mouseY + flashLightImage.height * 0.5);
-      rect(0, mouseY - flashLightImage.height * 0.5, mouseX - flashLightImage.width * 0.5, flashLightImage.height);
-      rect(mouseX + flashLightImage.width * 0.5, mouseY - flashLightImage.height * 0.5, width - mouseX + flashLightImage.width * 0.5, flashLightImage.height);
-    } else {
-      fill(1, 1, 1, blackAlpha);
-      rect(0, 0, width, height);
-    }
+    //  //Fill screen with 4 rectangles sorrounding the flashlight image
+    //  fill(1, 1, 1, blackAlpha);
+    //  rectMode(CORNER);
+    //  rect(0, 0, width, mouseY - flashLightImage.height * 0.5);
+    //  rect(0, mouseY + flashLightImage.height * 0.5, width, height - mouseY + flashLightImage.height * 0.5);
+    //  rect(0, mouseY - flashLightImage.height * 0.5, mouseX - flashLightImage.width * 0.5, flashLightImage.height);
+    //  rect(mouseX + flashLightImage.width * 0.5, mouseY - flashLightImage.height * 0.5, width - mouseX + flashLightImage.width * 0.5, flashLightImage.height);
+    //} else {
+    //  fill(1, 1, 1, blackAlpha);
+    //  rect(0, 0, width, height);
+    //}
 
     mirrorPlaceButton.display();
     paintPlaceButton.display();

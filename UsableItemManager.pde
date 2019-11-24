@@ -54,7 +54,8 @@ class UsableItemManager {
       UsableItem usable = (UsableItem)item.getValue();
 
       if (usable.enabled) {
-
+        usable.handleMousePressed();
       }
     }
   }
+}

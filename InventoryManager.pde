@@ -21,11 +21,11 @@ class InventoryManager implements IWaiter {
 
     allowMultiples.put("notes_item", true);
     allowMultiples.put("flashlight_item", false);
-    allowMultiples.put("battery_item", false);
+    allowMultiples.put("batteries_item", false);
 
     itemsDisplayNames.put("notes_item", "Old Notes");
     itemsDisplayNames.put("flashlight_item", "Flash/Black Light");
-    itemsDisplayNames.put("battery_item", "Batteries");
+    itemsDisplayNames.put("batteries_item", "Batteries");
 
     inventoryPanel = pInventoryPanel;
 
@@ -54,8 +54,8 @@ class InventoryManager implements IWaiter {
           }
         }
       }
-    } 
-
+    }
+    
     if (freeSlot == -1) {
       for (int i = 0; i < items.length; i++) {
         if (items[i] == null) {
@@ -135,6 +135,10 @@ class InventoryManager implements IWaiter {
   }
 }
 
+// ==========================================================================================================================================================
+// ==========================================================================================================================================================
+// ==========================================================================================================================================================
+
 class InventoryPanel {
 
   int x;
@@ -180,6 +184,7 @@ class InventoryPanel {
       if (panelItems[i] == null)
         continue;
 
+      pushMatrix();
       InventoryPanelItem panelItem = panelItems[i];
       UISprite sprite = panelItem.sprite;
 
@@ -188,6 +193,7 @@ class InventoryPanel {
 
       translate(posX, posY);
       panelItem.display(delta, x + posX, y + posY);
+      popMatrix();
     }
 
     popMatrix();
@@ -238,6 +244,10 @@ class InventoryPanel {
   }
 }
 
+// ==========================================================================================================================================================
+// ==========================================================================================================================================================
+// ==========================================================================================================================================================
+
 class InventoryItem {
   String name;
   String displayName;
@@ -247,6 +257,10 @@ class InventoryItem {
 
   ArrayList<Object> objs = new ArrayList<Object>();
 }
+
+// ==========================================================================================================================================================
+// ==========================================================================================================================================================
+// ==========================================================================================================================================================
 
 class InventoryPanelItem {
   InventoryItem item;
@@ -311,6 +325,10 @@ class InventoryPanelItem {
     //println("update outline", outlineSprite.alpha, frameCount);
   }
 }
+
+// ==========================================================================================================================================================
+// ==========================================================================================================================================================
+// ==========================================================================================================================================================
 
 class Bounds {
   float x;
