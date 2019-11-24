@@ -48,4 +48,13 @@ class UsableItemManager {
       stateHandler.currentState.allowMousePressed = !disableSceneMousePressed;
     }
   }
-}
+
+  void handleMousePressed() { 
+    for (Map.Entry item : usablesMap.entrySet()) {
+      UsableItem usable = (UsableItem)item.getValue();
+
+      if (usable.enabled) {
+
+      }
+    }
+  }

@@ -1,19 +1,30 @@
-import java.util.TreeMap;
+import java.util.TreeMap; //<>// //<>//
 
-class NotesUsableItem extends DetailsItensScreen implements IAction { //<>//
+class NotesUsableItem extends DetailsItensScreen implements IAction {
 
   float x = 642 * widthRatio;
   float y = 108 * heightRatio;
 
   Ani[] anim = new Ani[0];
+  Ani[] animPage = new Ani[0];
 
   Map<Integer, UISprite> pages;
 
-  int currentPage;
+  int currentPageIndex;
+  UISprite currentPage;
+
+  ImageButton rightArrow;
+  ImageButton leftArrow;
+
+  int rightArrowX;
+  int rightArrowY;
+
+  int leftArrowX;
+  int leftArrowY;
 
   boolean isDisabling = false;
 
-  final float FADE_DURATION = 0.25;
+  final float FADE_DURATION = 2;
 
   NotesUsableItem() {
     allowSceneMousePressed = false;
@@ -21,6 +32,15 @@ class NotesUsableItem extends DetailsItensScreen implements IAction { //<>//
     alpha = 0;
 
     pages = new TreeMap<Integer, UISprite>();
+
+    rightArrowX = round(639 * widthRatio);
+    rightArrowY = round(474 * heightRatio);
+
+    leftArrowX = round(-21 * widthRatio);
+    leftArrowY = round(474 * heightRatio);
+
+    rightArrow = new ImageButton( "Notes nav arrow right.png", rightArrowX, rightArrowY, "Notes nav arrow right outline.png" );
+    leftArrow = new ImageButton( "Notes nav arrow left.png", leftArrowX, leftArrowY, "Notes nav arrow left outline.png" );
   }
 
   void addPage(Object obj) {
@@ -31,60 +51,99 @@ class NotesUsableItem extends DetailsItensScreen implements IAction { //<>//
 
     switch(type) {
     case "page":
-      UISprite sprite = new UISprite(0, 0, str + ".png");
-      sprite.enabled = false;
-      currentPage = index;
-      pages.put(index, sprite);
+      currentPageIndex = index;
 
-      for (Map.Entry<Integer, UISprite> entry : pages.entrySet()) {
-        println("pages:", entry.getKey());
+      if (pages.containsKey(index)) {
+        currentPage = pages.get(index);
+      } else {
+        UISprite sprite = new UISprite(0, 0, str + ".png");
+        sprite.enabled = false;
+        sprite.alpha = 0;
+
+        pages.put(index, sprite);
+        currentPage = sprite;
+
+        for (Map.Entry<Integer, UISprite> entry : pages.entrySet()) {
+          println("pages:", entry.getKey());
+        }
       }
-
       break;
     default:
     }
-    
-    pages.get(currentPage).enabled = true;
   }
 
   void display(float delta) {
     super.display(delta);
 
-    //for (Map.Entry<Integer, UISprite> entry : pages.entrySet()) {
-     ((UISprite)pages.get(currentPage)).display(delta); //<>//
-    //}
+    currentPage.x = round(x);
+    currentPage.y = round(y);
+    currentPage.display(delta);
+
+    rightArrow.x = round(x + rightArrowX);
+    rightArrow.y = round(y + rightArrowY);
+
+    leftArrow.x = round(x + leftArrowX);
+    leftArrow.y = round(y + leftArrowY);
+    
+    rightArrow.display();
+    leftArrow.display();
   }
 
   void step(float delta) {
     display(delta);
-
-    //println("alpha", alpha, "enabled", enabled, anim.length, frameCount);
-    //println("ani size:", Ani.size(), "overwrite:", Ani.getOverwriteMode());
+  }
+  
+  void handleMousePressed() { 
+    super.handleMousePressed();
   }
 
   void setEnabled(boolean val) {
 
     println("val", val, "isDisabling", isDisabling);
 
+    UISprite page = currentPage;
+
     if (val == true || (val == false && isDisabling == true)) {
+      //Fade In BG
       int lastAlpha = alpha;
-      endFadeAnim();
+      endFadeAnim(anim);
       alpha = lastAlpha;
       anim = Ani.to(this, FADE_DURATION, 0, "alpha:200", Ani.CUBIC_OUT);
       enabled = true;
+
+      //Fade in Current Page
+      int lastPageAlpha = page.alpha;
+      endFadeAnim(animPage);
+      page.alpha = lastPageAlpha;
+      animPage = Ani.to(page, FADE_DURATION, 0, "alpha:255", Ani.CUBIC_OUT);
+      page.enabled = true;
+
       isDisabling = false;
     } else {
+      //Fade Out BG
       int lastAlpha = alpha;
-      endFadeAnim();
+      endFadeAnim(anim);
       alpha = lastAlpha;
+      anim = Ani.to(this, FADE_DURATION, 0, "alpha:0", Ani.CUBIC_OUT);
+
+      //Fade Out Current Page
+      int lastPageAlpha = page.alpha;
+      endFadeAnim(animPage);
+      page.alpha = lastPageAlpha;
+      animPage = Ani.to(page, FADE_DURATION, 0, "alpha:0", Ani.CUBIC_OUT, this, "onEnd:disable");
+
       isDisabling = true;
-      anim = Ani.to(this, FADE_DURATION, 0, "alpha:0", Ani.CUBIC_OUT, this, "onEnd:disable");
     }
   }
 
   private void disable() {
     enabled = false;
+    pages.get(currentPageIndex).enabled = false;
     isDisabling = false;
+  }
+
+  private void disablePage() {
+    pages.get(currentPageIndex).enabled = false;
   }
 
   private void foo() {
@@ -103,10 +162,11 @@ class NotesUsableItem extends DetailsItensScreen implements IAction { //<>//
     return false;
   }
 
-  private void endFadeAnim() {
-    for (int i = 0; i < anim.length; i++) {
-      //anim[i].setCallback("onEnd:foo");
-      anim[i].end();
+  private void endFadeAnim(Ani[] ani) {
+    for (int i = 0; i < ani.length; i++) {
+      ani[i].setCallbackObject(this);
+      ani[i].setCallback("onEnd:foo");
+      ani[i].end();
     }
   }
 }
@@ -132,4 +192,5 @@ abstract class UsableItem {
 
   abstract void setEnabled(boolean val);
   abstract void step(float delta);
+  void handleMousePressed() { }
 }

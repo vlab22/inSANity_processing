@@ -112,6 +112,7 @@ void keyTyped() {
 
 void mousePressed() { 
   invPanel.handleMousePressed();
+  usableItemManager.handleMousePressed();
   stateHandler.handleMousePressed();
 }
 void mouseClicked() { 

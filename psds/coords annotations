@@ -29,3 +29,7 @@ inventory item position gap 2, 26
 inventory item size 154 152
 
 notes pos 642 108 w 660 972
+
+notes nav arrow right pos 639 474 w 37 34
+
+notes nav arrow left pos -21 474 w 37 34

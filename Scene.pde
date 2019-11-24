@@ -26,6 +26,7 @@ abstract class SceneWithTransition extends Scene //<>// //<>//
   void TransitionDisplay(float delta) {
 
     usableItemManager.step(delta);
+    
     invPanel.display(delta);
 
     if (sceneLeaveTransition.enabled == true) {

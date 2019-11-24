@@ -51,7 +51,7 @@ class LivingRoomFireplaceScene extends SceneWithTransition {
     }
     if ( diaryInScene == true && diaryButton.isPointInside( mouseX, mouseY ) ) {
       diaryInScene = false;
-      invManager.PickUpItem("notes_item", new Object[] { "notes_item page 1", "notes_item page 2" }, diarySprite);
+      invManager.PickUpItem("notes_item", new Object[] { "notes_item page 2", "notes_item page 1" }, diarySprite);
     }
   }
 
