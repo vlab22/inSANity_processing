@@ -27,3 +27,5 @@ inventory open collider pos 0 899 w 613 179
 inventory item position gap 2, 26
 
 inventory item size 154 152
+
+notes pos 642 108 w 660 972

@@ -1,4 +1,4 @@
-import de.looksgood.ani.*; //<>// //<>//
+import de.looksgood.ani.*; //<>// //<>// //<>//
 
 class ImageButton {
   int x;

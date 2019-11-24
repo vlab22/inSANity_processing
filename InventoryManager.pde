@@ -1,4 +1,6 @@
-class InventoryManager implements IWaiter {  //<>//
+import java.util.Arrays; //<>// //<>//
+
+class InventoryManager implements IWaiter { 
 
   final int MAX_QUANTITY = 4; 
 
@@ -34,7 +36,7 @@ class InventoryManager implements IWaiter {  //<>//
     movingAnims = new ArrayList<Ani[]>();
   }
 
-  void PickUpItem(String itemName, UISprite sprite) {
+  void PickUpItem(String itemName, Object[] objs, UISprite sprite) {
 
     boolean allow = allowMultiples.get(itemName);
     int freeSlot = -1;
@@ -45,7 +47,9 @@ class InventoryManager implements IWaiter {  //<>//
         if (items[i] != null) {
           if (items[i].name == itemName) {
             freeSlot = i;
-            items[i].quantity += 1;
+            items[i].quantity += objs.length;
+            items[i].slot = freeSlot;
+            items[i].objs.addAll(Arrays.asList(objs));
             item = items[i];
           }
         }
@@ -66,8 +70,9 @@ class InventoryManager implements IWaiter {  //<>//
       item.name = itemName;
       item.displayName = itemsDisplayNames.get(itemName);
       item.multi = allow;
-      item.quantity = 1;
+      item.quantity += (objs.length == 0) ? 1 : objs.length;
       item.slot = freeSlot;
+      item.objs.addAll(Arrays.asList(objs));
     }
 
     if (freeSlot > -1) {
@@ -75,9 +80,14 @@ class InventoryManager implements IWaiter {  //<>//
 
       movingSprites.add(sprite);
 
+      boolean lastOpened = inventoryPanel.opened;
+      if (inventoryPanel.opened == false) {
+        inventoryPanel.openPanel();
+      }
+
       float toX = inventoryPanel.x + freeSlot * 155 * widthRatio + 155 * widthRatio * 0.5;
       float toY = inventoryPanel.y + 179 * heightRatio * 0.5 - sprite.h * 0.5;
-      Ani[] ani = Ani.to(sprite, PICKUP_MOVING_DURATION, 0, "x:" + toX + ", y:" + toY + ", alpha:0", Ani.QUAD_OUT, this, "onEnd:moveSpriteEnd");
+      Ani[] ani = Ani.to(sprite, PICKUP_MOVING_DURATION, lastOpened ? 0 : inventoryPanel.OPEN_CLOSE_ANIM_DURATION, "x:" + toX + ", y:" + toY + ", alpha:0", Ani.QUAD_OUT, this, "onEnd:moveSpriteEnd");
       movingAnims.add(ani);
 
       waiter.waitForSeconds(PICKUP_MOVING_DURATION, this, 0, item);
@@ -191,11 +201,9 @@ class InventoryPanel {
   void handleMousePressed() {
     if (isPointInsideEnableButton(mouseX, mouseY)) {
       if (opened == false) {
-        opened = true;
-        Ani.to(this, OPEN_CLOSE_ANIM_DURATION, 0, "y", openY, Ani.CUBIC_OUT);
+        openPanel();
       } else {
-        opened = false;
-        Ani.to(this, OPEN_CLOSE_ANIM_DURATION, 0, "y", closeY, Ani.CUBIC_OUT);
+        closepanel();
       }
     }
 
@@ -206,13 +214,23 @@ class InventoryPanel {
       InventoryPanelItem panelItem = panelItems[i];
       if (panelItem.bounds.isPointInside(mouseX, mouseY)) {
         println("invitem", panelItem.item.name, "clicked");
-        
+
         //Create/Enable Inv Item
-        usableItemManager.enableUsableItem(panelItem.item.name);
-        
+        usableItemManager.enableUsableItem(panelItem.item.name, panelItem.item.objs);
+
         break;
       }
     }
+  }
+
+  void openPanel() {
+    opened = true;
+    Ani.to(this, OPEN_CLOSE_ANIM_DURATION, 0, "y", openY, Ani.CUBIC_OUT);
+  }
+
+  void closepanel() {
+    opened = false;
+    Ani.to(this, OPEN_CLOSE_ANIM_DURATION, 0, "y", closeY, Ani.CUBIC_OUT);
   }
 
   boolean isPointInsideEnableButton( int px, int py ) {
@@ -226,6 +244,8 @@ class InventoryItem {
   boolean multi;
   int quantity;
   int slot;
+
+  ArrayList<Object> objs = new ArrayList<Object>();
 }
 
 class InventoryPanelItem {
@@ -280,11 +300,11 @@ class InventoryPanelItem {
     }
 
     //Debug Bounds
-    popMatrix();
-    fill(1, 1, 1, 30);
-    noStroke();
-    rect(bounds.x, bounds.y, bounds.w, bounds.h);
-    pushMatrix();
+    //popMatrix();
+    //fill(1, 1, 1, 30);
+    //noStroke();
+    //rect(bounds.x, bounds.y, bounds.w, bounds.h);
+    //pushMatrix();
   }
 
   void onUp() {
