@@ -4,4 +4,5 @@ interface IAnim {
 }
 interface IHasHiddenLayer {
   PImage getHiddenImage();
+  HiddenCollider[] getHiddenColliders();
 }

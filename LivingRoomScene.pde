@@ -1,4 +1,4 @@
-class LivingRoomFireplaceScene extends SceneWithTransition { //<>//
+class LivingRoomFireplaceScene extends SceneWithTransition { //<>// //<>// //<>//
 
   ImageButton backButton = new ImageButton( "arrowDown.png", round(908 * widthRatio), round(997 * heightRatio), "arrowDown outline.png" );
   ImageButton diaryButton = new ImageButton( null, round(620 * widthRatio), round(976 * heightRatio), "Living_room_Chimney_Photo diary overlay.png" );
@@ -62,7 +62,7 @@ class LivingRoomFireplaceScene extends SceneWithTransition { //<>//
   }
 }
 
-class LivingRoomScene extends SceneWithTransition { //<>// //<>// //<>//
+class LivingRoomScene extends SceneWithTransition implements IHasHiddenLayer { //<>//
 
   ImageButton backButton = new ImageButton( "arrowDown.png", round(908 * widthRatio), round(997 * heightRatio), "arrowDown outline.png" );
   ImageButton fireplaceButton = new ImageButton( null, round(93 * widthRatio), round(405 * heightRatio), "Living_room fireplace outline.png");
@@ -75,6 +75,8 @@ class LivingRoomScene extends SceneWithTransition { //<>// //<>// //<>//
 
   State nextState;
 
+  PImage hiddenImage;
+
   LivingRoomScene() {
     super("Living_room concept-Recovered-Recovered.png");
 
@@ -83,6 +85,9 @@ class LivingRoomScene extends SceneWithTransition { //<>// //<>// //<>//
     footStepsSoundClip = new SoundClip("footstep01 0.800 seconds.wav");
 
     firePlaceText = new TextBoxWithFader("That pictures over the Fireplace...");
+
+    hiddenImage = loadImage("Living_room hidden.png");
+    hiddenImage.resize(round(hiddenImage.width * widthRatio), round(hiddenImage.height * heightRatio));
   }
 
   void enterState(State oldState) {
@@ -118,5 +123,13 @@ class LivingRoomScene extends SceneWithTransition { //<>// //<>// //<>//
     footStepsSoundClip.play();
 
     firePlaceText.hide();
+  }
+
+  PImage getHiddenImage() {
+    return hiddenImage;
+  }
+
+  HiddenCollider[] getHiddenColliders() {
+    return new HiddenCollider[0];
   }
 }

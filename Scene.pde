@@ -57,6 +57,7 @@ abstract class Scene extends State //<>// //<>//
 
   void enterState( State oldState )
   {
+    super.enterState(oldState);
     if ( background == null ) {
       background = loadImage( filename );
     }

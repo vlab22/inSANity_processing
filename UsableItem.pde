@@ -142,6 +142,8 @@ class NotesUsableItem extends DetailsItensScreen implements IAction {
         currentPage = nextPage.getValue();
         currentPage.enabled = true;
         UITweenSprite.tweenSprite(currentPage, "alpha:255", PAGE_FLIP_DURATION, 0, this, "onEnd:foo");
+        
+        soundManager.PAGE_FLIP[0].play();
       }
     } else if (leftArrow.isPointInside(mouseX, mouseY)) {
       Map.Entry<Integer, UISprite> prevPage = pages.lowerEntry(currentPageIndex);
@@ -157,6 +159,8 @@ class NotesUsableItem extends DetailsItensScreen implements IAction {
         currentPage = prevPage.getValue();
         currentPage.enabled = true;
         UITweenSprite.tweenSprite(currentPage, "alpha:255", PAGE_FLIP_DURATION, 0, this, "onEnd:foo");
+        
+        soundManager.PAGE_FLIP[1].play();
       }
       println("leftArrow clicked");
     } else if (closeButton.isPointInside(mouseX, mouseY)) {
@@ -201,6 +205,8 @@ class NotesUsableItem extends DetailsItensScreen implements IAction {
 
       isDisabling = true;
     }
+    
+    soundManager.PICKUP_PAGE[(val == true) ? 1 : 0].play();
   }
 
   private void disable() {

@@ -62,3 +62,17 @@ abstract class UIShape {
   void endDisplay() {
   }
 }
+
+class Rect {
+  float x;
+  float y;
+  float w;
+  float h;
+ 
+  Rect(float pX, float pY, float pW, float pH) {
+    x = pX * widthRatio;
+    y = pY * heightRatio;
+    w = pW * widthRatio;
+    h = pH * heightRatio;
+  }
+}

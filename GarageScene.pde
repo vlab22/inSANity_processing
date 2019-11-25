@@ -77,9 +77,14 @@ class GarageShelfScene extends SceneWithTransition implements IWaiter, IHasHidde
 
   PImage hiddenImage;
 
+  HiddenCollider[] hiddenColliders = new HiddenCollider[] {
+    new HiddenCollider("kill", 103, 286, 398, 89)
+  };
+
   GarageShelfScene() {
     super("Garage_shelf.png");
     hiddenImage = loadImage("Garage_shelf hidden.png");
+    hiddenImage.resize(round(hiddenImage.width * widthRatio), round(hiddenImage.height * heightRatio));
 
     footStepsSoundClip = new SoundClip("footstep01 0.800 seconds.wav");
   }
@@ -112,7 +117,7 @@ class GarageShelfScene extends SceneWithTransition implements IWaiter, IHasHidde
 
   void handleMousePressed() {
     if ( backButton.isPointInside( mouseX, mouseY ) ) {
-      changeState(GROUND_HALLWAY_SCENE);
+      changeState(GARAGE_SCENE);
     }
     if ( flashLightInScene == true && flashLightPlaceButton.isPointInside( mouseX, mouseY ) ) {
       flashLightInScene = false;
@@ -140,5 +145,9 @@ class GarageShelfScene extends SceneWithTransition implements IWaiter, IHasHidde
 
   PImage getHiddenImage() {
     return hiddenImage;
+  }
+
+  HiddenCollider[] getHiddenColliders() {
+    return hiddenColliders;
   }
 }

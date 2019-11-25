@@ -35,6 +35,20 @@ class State
   }
 
   public void enterState( State oldState ) {
+    if (invManager != null && invManager.findItemByName("flashlight_batteries_item") != null) {
+
+      FlashLightUsableItem flash = (FlashLightUsableItem)usableItemManager.usablesMap.get("flashlight_batteries_item");
+
+      if (this instanceof IHasHiddenLayer) {
+        IHasHiddenLayer ihl = ((IHasHiddenLayer)this);
+        PImage hiddenImage = ihl.getHiddenImage();
+        flash.hiddenImage = hiddenImage;
+        flash.hiddenColliders = ihl.getHiddenColliders();
+      } else {
+        flash.hiddenImage = null;
+        flash.hiddenColliders = new HiddenCollider[0];
+      }
+    }
   }    
   public void doStepWhileInState(float delta) {
   } 
@@ -246,7 +260,7 @@ class StateHandler
           currentState.leaveState( nextState );
         }
       } else {
-        nextState.enterState( currentState );
+        nextState.enterState(currentState);
         currentState = nextState;
         nextState = null;
       }
@@ -254,7 +268,7 @@ class StateHandler
   }
 
   void leaveStateAfterTransition() {
-    nextState.enterState( currentState );
+    nextState.enterState(currentState);
     currentState = nextState;
     nextState = null;
 
@@ -265,6 +279,8 @@ class StateHandler
 
     currentState.leaveTransition.isPlaying = false;
     currentState.leaveTransition.enabled = false;
+
+    println((currentState != null) ? currentState.name : "null", nextState != null ? nextState.name : "null");
   }
 
   void enterStateAfterTransition() {

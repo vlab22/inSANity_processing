@@ -8,12 +8,26 @@ class SoundManager {
   final SoundClip PICK_UP_ITEM_02 = new SoundClip("pickuo item 02.mp3");
   final SoundClip FLASHLIGHT_ON = new SoundClip("flashlight on.wav");
   final SoundClip FLASHLIGHT_OFF = new SoundClip("flashlight off.wav");
+  final SoundClip[] PICKUP_PAGE = new SoundClip[] { 
+    new SoundClip("pickup page 01.wav"), 
+    new SoundClip("pickup page 02.wav")
+  };
+  final SoundClip[] PAGE_FLIP = new SoundClip[] { 
+    new SoundClip("page flip 01.wav"), 
+    new SoundClip("page flip 02.wav")
+  };
+  
+  final SoundClip LIMBO_SOUND = new SoundClip("Lets Play Limbo (Blind) - Part 4 - Medium Speed Chase.wav");
 
   final SoundClip[] sounds = new SoundClip[] {
     INSERT_BATTERIES_SOUND, 
     PICK_UP_ITEM_01, 
     PICK_UP_ITEM_02, 
-    FLASHLIGHT_ON
+    FLASHLIGHT_ON, 
+    PICKUP_PAGE[0], 
+    PICKUP_PAGE[1], 
+    PAGE_FLIP[0],
+    PAGE_FLIP[1]
   };
 
   SoundManager() {
@@ -33,6 +47,8 @@ class SoundManager {
   void playPickUpItem(String itemName) {
     switch (itemName) {
     case "notes_item":
+      int rand = int(random(0, PICKUP_PAGE.length));
+      PICKUP_PAGE[rand].play();
       break;
     case "batteries_item":
       PICK_UP_ITEM_01.play();
@@ -47,6 +63,7 @@ class SoundManager {
   void playItemClicked(String itemName) {
     switch (itemName) {
     case "notes_item":
+      PICKUP_PAGE[1].play();
       break;
     case "flashlight_batteries_item_on":
       FLASHLIGHT_ON.play();

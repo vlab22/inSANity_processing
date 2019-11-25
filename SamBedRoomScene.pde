@@ -1,16 +1,19 @@
 class SamBedRoomScene extends SceneWithTransition implements IWaiter {
 
   ImageButton backButton = new ImageButton( "arrowDown.png", round(825 * widthRatio), round(997 * heightRatio), "arrowDown outline.png" );
-
   ImageButton mirrorPlaceButton = new ImageButton( null, round(853 * widthRatio), round(410 * heightRatio), "Sam_bedroom mirror overlay.png");
-
   ImageButton paintPlaceButton = new ImageButton( null, round(537 * widthRatio), round(311 * heightRatio), "Sam_bedroom paint overlay.png");
-  
+  ImageButton underbedPlaceButton = new ImageButton( null, round(19 * widthRatio), round(662 * heightRatio), "Sam_bedroom under bed overlay.png");
+
   SoundClip footStepsSoundClip;
+
+  UISprite underBedNote = new UISprite(round(108 * widthRatio), round(766 * heightRatio), "Sam_bedroom under bed note sprite.png");
 
   TextBoxWithFader placeText = new TextBoxWithFader("It's too dark, I remember to have a flashlight\r\nin the garage", false);
 
   boolean isFlashLightOn;
+
+  boolean noteInScene = true;
 
   PImage flashLightImage;
 
@@ -19,6 +22,8 @@ class SamBedRoomScene extends SceneWithTransition implements IWaiter {
     footStepsSoundClip = new SoundClip("footstep01 0.800 seconds.wav");
 
     flashLightImage = loadImage("Flashlight light alpha.png");
+    
+    underBedNote.enabled = false;
   }
 
   void enterState(State oldState) {
@@ -76,9 +81,14 @@ class SamBedRoomScene extends SceneWithTransition implements IWaiter {
     mirrorPlaceButton.display();
     paintPlaceButton.display();
 
+    if (noteInScene == true) {
+      underbedPlaceButton.display();
+    }
+   
     backButton.display();
-
     placeText.display();
+    
+    underBedNote.display(delta);
 
     super.TransitionDisplay(delta);
   }
@@ -86,6 +96,12 @@ class SamBedRoomScene extends SceneWithTransition implements IWaiter {
   void handleMousePressed() {
     if ( backButton.isPointInside( mouseX, mouseY ) ) {
       changeState( HALLWAY2_ATTIC_SCENE );
+    }
+
+    if (noteInScene == true && underbedPlaceButton.isPointInside( mouseX, mouseY ) ) {
+      noteInScene = false;
+      underBedNote.enabled = true;
+      invManager.PickUpItem("notes_item", new Object[] { "notes_item page 4" }, underBedNote);
     }
   }
 

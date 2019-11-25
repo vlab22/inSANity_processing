@@ -2,7 +2,7 @@ class GroundHallwayScene extends SceneWithTransition
 {
   ImageButton toOutofHouseButton = new ImageButton( "arrowDown.png", round(908 * widthRatio), round(997 * heightRatio), "arrowDown outline.png" );
   ImageButton toUpstairsButton = new ImageButton( "arrowUp.png", round(908 * widthRatio), round(340 * heightRatio), "arrowUp outline.png" );
-  ImageButton toLivingRoomButton = new ImageButton( "arrowLeft.png", round(450 * widthRatio), round(950 * heightRatio), "arrowLeft outline.png" );
+  ImageButton toLivingRoomButton = new ImageButton( "arrowLeft.png", round(531 * widthRatio), round(774 * heightRatio), "arrowLeft outline.png" );
 
   ImageButton garageDoorPlaceButton = new ImageButton( null, round(1343 * widthRatio), round(169 * heightRatio), "Ground_Hallway garage door overlay.png");
 

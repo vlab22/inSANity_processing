@@ -1,8 +1,8 @@
 import java.util.Arrays; //<>// //<>// //<>// //<>//
 
 enum ItemCategory {
-  TOOL,
-  NOTE,
+  TOOL, 
+    NOTE,
 }
 
 class InventoryManager implements IWaiter { 
@@ -11,7 +11,7 @@ class InventoryManager implements IWaiter {
 
   final float PICKUP_MOVING_DURATION = 0.2;
 
-  HashMap<String, Integer> inventoryItems;
+  HashMap<String, InventoryItem> itemsMap;
   ArrayList<InventoryItem> items;
 
   final HashMap<String, ItemCategory> itemsCategories = new HashMap<String, ItemCategory>();
@@ -34,7 +34,7 @@ class InventoryManager implements IWaiter {
     itemsDisplayNames.put("flashlight_item", "Flash/Black Light");
     itemsDisplayNames.put("flashlight_batteries_item", "Flash/Black Light");
     itemsDisplayNames.put("batteries_item", "Batteries");
-    
+
     itemsCategories.put("notes_item", ItemCategory.NOTE);
     itemsCategories.put("flashlight_item", ItemCategory.TOOL);
     itemsCategories.put("flashlight_batteries_item", ItemCategory.TOOL);
@@ -42,7 +42,7 @@ class InventoryManager implements IWaiter {
 
     inventoryPanel = pInventoryPanel;
 
-    inventoryItems = new HashMap<String, Integer>();
+    itemsMap = new HashMap<String, InventoryItem>();
     items = new ArrayList<InventoryItem>(MAX_QUANTITY);
 
     movingSprites = new ArrayList<UISprite>();
@@ -51,7 +51,7 @@ class InventoryManager implements IWaiter {
 
   void PickUpItem(String itemName, Object[] objs, UISprite sprite) {
 
-    boolean allow = allowMultiples.get(itemName);
+    boolean allow = allowMultiples.get(itemName); //<>//
     int freeSlot = -1;
     InventoryItem item = null;
 
@@ -73,7 +73,7 @@ class InventoryManager implements IWaiter {
       freeSlot = (items.size() < MAX_QUANTITY) ? items.size() : -1;
     }
 
-    if (item == null) {
+    if (item == null && freeSlot > -1) {
       item = new InventoryItem();
       item.name = itemName;
       item.displayName = itemsDisplayNames.get(itemName);
@@ -82,10 +82,12 @@ class InventoryManager implements IWaiter {
       item.slot = freeSlot;
       item.category = itemsCategories.get(itemName);
       item.objs.addAll(Arrays.asList(objs));
+
+      itemsMap.put(item.name, item);
+      items.add(freeSlot, item);
     }
 
     if (freeSlot > -1) {
-      items.add(freeSlot, item);
 
       movingSprites.add(sprite);
 
@@ -98,7 +100,7 @@ class InventoryManager implements IWaiter {
       float toY = inventoryPanel.y + 179 * heightRatio * 0.5 - sprite.h * 0.5;
       Ani[] ani = Ani.to(sprite, PICKUP_MOVING_DURATION, lastOpened ? 0 : inventoryPanel.OPEN_CLOSE_ANIM_DURATION, "x:" + toX + ", y:" + toY + ", alpha:0", Ani.QUAD_OUT, this, "onEnd:moveSpriteEnd");
       movingAnims.add(ani);
-      
+
       //Play pickup sound
       soundManager.playPickUpItem(item.name);
 
@@ -155,10 +157,14 @@ class InventoryManager implements IWaiter {
         inventoryPanel.panelItems[item1.slot] = null;
         inventoryPanel.panelItems[item2.slot] = null;
 
-        items.remove(item1);
-        items.remove(item2);
-        
         items.add(item.slot, item);
+
+        items.set(item1.slot, null);
+        items.set(item2.slot, null);
+
+        itemsMap.remove(item1.name);
+        itemsMap.remove(item2.name);
+        itemsMap.put(item.name, item);
 
         inventoryPanel.addItem(item, item.slot);
       }
@@ -209,12 +215,7 @@ class InventoryManager implements IWaiter {
   }
 
   public InventoryItem findItemByName(String itemName) {
-    for (int i = 0; i < items.size(); i++) {
-      if (itemName == items.get(i).name) {
-        return items.get(i);
-      }
-    }
-    return null;
+    return itemsMap.getOrDefault(itemName, null);
   }
 }
 

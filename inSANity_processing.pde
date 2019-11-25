@@ -43,9 +43,9 @@ float heightRatio = 1;
 
 void setup() {
 
-  fullScreen(P2D);
+  //fullScreen(P2D);
   //size( 1920, 1280, P2D );
-  //size( 1280, 720, P2D );
+  size( 1280, 720, P2D );
   noStroke();
 
   widthRatio = width / 1920.0;
@@ -73,7 +73,7 @@ void setup() {
   TEST_SCENE = new TestScene();
 
   //stateHandler.changeStateTo( FRONTHOUSE_SCENE );
-  stateHandler.changeStateTo( GARAGE_SHELF_SCENE );
+  stateHandler.changeStateTo( HALLWAY2_ATTIC_SCENE );
 
   invPanel = new InventoryPanel();
   invManager = new InventoryManager(invPanel);
@@ -99,6 +99,11 @@ void draw() {
   //for (int i = 0; i < soundManager.sounds.length; i++) {
   //  println(i, soundManager.sounds[i].player.isPlaying());
   //}
+  
+  fill(255, 255, 0);
+  textAlign(LEFT);
+  textSize(16);
+  text("Fps: " + frameRate, 35, 35);
 }
 
 
