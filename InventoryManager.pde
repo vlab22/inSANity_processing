@@ -1,4 +1,9 @@
-import java.util.Arrays; //<>// //<>//
+import java.util.Arrays; //<>// //<>// //<>// //<>//
+
+enum ItemCategory {
+  TOOL,
+  NOTE,
+}
 
 class InventoryManager implements IWaiter { 
 
@@ -7,8 +12,9 @@ class InventoryManager implements IWaiter {
   final float PICKUP_MOVING_DURATION = 0.2;
 
   HashMap<String, Integer> inventoryItems;
-  InventoryItem[] items;
+  ArrayList<InventoryItem> items;
 
+  final HashMap<String, ItemCategory> itemsCategories = new HashMap<String, ItemCategory>();
   final HashMap<String, Boolean> allowMultiples = new HashMap<String, Boolean>();
   final HashMap<String, String> itemsDisplayNames = new HashMap<String, String>();
 
@@ -21,16 +27,23 @@ class InventoryManager implements IWaiter {
 
     allowMultiples.put("notes_item", true);
     allowMultiples.put("flashlight_item", false);
+    allowMultiples.put("flashlight_batteries_item", false);
     allowMultiples.put("batteries_item", false);
 
     itemsDisplayNames.put("notes_item", "Old Notes");
     itemsDisplayNames.put("flashlight_item", "Flash/Black Light");
+    itemsDisplayNames.put("flashlight_batteries_item", "Flash/Black Light");
     itemsDisplayNames.put("batteries_item", "Batteries");
+    
+    itemsCategories.put("notes_item", ItemCategory.NOTE);
+    itemsCategories.put("flashlight_item", ItemCategory.TOOL);
+    itemsCategories.put("flashlight_batteries_item", ItemCategory.TOOL);
+    itemsCategories.put("batteries_item", ItemCategory.TOOL);
 
     inventoryPanel = pInventoryPanel;
 
     inventoryItems = new HashMap<String, Integer>();
-    items = new InventoryItem[MAX_QUANTITY];
+    items = new ArrayList<InventoryItem>(MAX_QUANTITY);
 
     movingSprites = new ArrayList<UISprite>();
     movingAnims = new ArrayList<Ani[]>();
@@ -43,26 +56,21 @@ class InventoryManager implements IWaiter {
     InventoryItem item = null;
 
     if (allow) {
-      for (int i = 0; i < items.length; i++) {
-        if (items[i] != null) {
-          if (items[i].name == itemName) {
+      for (int i = 0; i < items.size(); i++) {
+        if (items.get(i) != null) {
+          if (items.get(i).name == itemName) {
+            item = items.get(i);
             freeSlot = i;
-            items[i].quantity += objs.length;
-            items[i].slot = freeSlot;
-            items[i].objs.addAll(Arrays.asList(objs));
-            item = items[i];
+            item.quantity += objs.length;
+            item.slot = freeSlot;
+            item.objs.addAll(Arrays.asList(objs));
           }
         }
       }
     }
-    
+
     if (freeSlot == -1) {
-      for (int i = 0; i < items.length; i++) {
-        if (items[i] == null) {
-          freeSlot = i;
-          break;
-        }
-      }
+      freeSlot = (items.size() < MAX_QUANTITY) ? items.size() : -1;
     }
 
     if (item == null) {
@@ -72,11 +80,12 @@ class InventoryManager implements IWaiter {
       item.multi = allow;
       item.quantity += (objs.length == 0) ? 1 : objs.length;
       item.slot = freeSlot;
+      item.category = itemsCategories.get(itemName);
       item.objs.addAll(Arrays.asList(objs));
     }
 
     if (freeSlot > -1) {
-      items[freeSlot] = item;
+      items.add(freeSlot, item);
 
       movingSprites.add(sprite);
 
@@ -89,15 +98,72 @@ class InventoryManager implements IWaiter {
       float toY = inventoryPanel.y + 179 * heightRatio * 0.5 - sprite.h * 0.5;
       Ani[] ani = Ani.to(sprite, PICKUP_MOVING_DURATION, lastOpened ? 0 : inventoryPanel.OPEN_CLOSE_ANIM_DURATION, "x:" + toX + ", y:" + toY + ", alpha:0", Ani.QUAD_OUT, this, "onEnd:moveSpriteEnd");
       movingAnims.add(ani);
+      
+      //Play pickup sound
+      soundManager.playPickUpItem(item.name);
 
       waiter.waitForSeconds(PICKUP_MOVING_DURATION, this, 0, item);
     }
+  }
+
+  void joinItems(String item1name, String item2name) {
+    //Get Slot of item1
+    InventoryItem item1 = findItemByName(item1name);
+    InventoryItem item2 = findItemByName(item2name);
+
+    //Anim item1 to item2
+    InventoryPanelItem panelItem1 = inventoryPanel.panelItems[item1.slot];
+    InventoryPanelItem panelItem2 = inventoryPanel.panelItems[item2.slot];
+    UISprite item1Sprite = panelItem1.sprite;
+
+    float toPosX = 2 * widthRatio + (item2.slot - item1.slot) * item1Sprite.w;
+
+    println(toPosX, item2.slot);
+
+    panelItem1.collisionEnabled = false;
+    panelItem2.collisionEnabled = false;
+
+    Ani.to(item1Sprite, 0.8, 0, "x:" + toPosX + ", alpha:0", Ani.QUAD_OUT);
+
+    waiter.waitForSeconds(1, this, 1, new InventoryItem[]{item1, item2});
   }
 
   void execute(int executeId, Object obj) {
     if (executeId == 0) {
       InventoryItem item = (InventoryItem)obj;
       inventoryPanel.addItem(item, item.slot);
+    } else if (executeId == 1) {
+      //Join items
+
+      InventoryItem item1 = ((InventoryItem[])obj)[0];
+      InventoryItem item2 = ((InventoryItem[])obj)[1];
+
+      //Battery with flashlight
+      if (item1.name == "batteries_item" && item2.name == "flashlight_item") {
+        String itemName = "flashlight_batteries_item";
+
+        InventoryItem item = new InventoryItem();
+        item.name = itemName;
+        item.displayName = itemsDisplayNames.get(itemName);
+        item.multi = false;
+        item.quantity = 1;
+        item.slot = item2.slot;
+        item.category = itemsCategories.get(itemName);
+        item.onOffState = true;
+        item.objs.addAll(Arrays.asList(new String[]{"flashlight_batteries_item item 0"}));
+
+        inventoryPanel.panelItems[item1.slot] = null;
+        inventoryPanel.panelItems[item2.slot] = null;
+
+        items.remove(item1);
+        items.remove(item2);
+        
+        items.add(item.slot, item);
+
+        inventoryPanel.addItem(item, item.slot);
+      }
+
+      println(item1.name, item2.name);
     }
   }
 
@@ -132,6 +198,23 @@ class InventoryManager implements IWaiter {
       movingAnims.clear();
       movingSprites.clear();
     }
+  }
+
+  public void tryInstallBatteries() {
+    if (findItemByName("flashlight_item") != null) {
+      //Has flashlight in inventory
+      joinItems("batteries_item", "flashlight_item");
+      soundManager.INSERT_BATTERIES_SOUND.play();
+    }
+  }
+
+  public InventoryItem findItemByName(String itemName) {
+    for (int i = 0; i < items.size(); i++) {
+      if (itemName == items.get(i).name) {
+        return items.get(i);
+      }
+    }
+    return null;
   }
 }
 
@@ -200,7 +283,12 @@ class InventoryPanel {
   }
 
   void addItem(InventoryItem item, int slot) {
-    InventoryPanelItem panelItem = new InventoryPanelItem(item, itemQuantityFont, TEXT_QUANTITY_FONT_SIZE);
+    InventoryPanelItem panelItem;
+    if (item.onOffState) {
+      panelItem = new InventoryPanelItemWithOnOffState(item, itemQuantityFont, TEXT_QUANTITY_FONT_SIZE);
+    } else {
+      panelItem = new InventoryPanelItem(item, itemQuantityFont, TEXT_QUANTITY_FONT_SIZE);
+    }
     panelItems[slot] = panelItem;
   }
 
@@ -218,12 +306,17 @@ class InventoryPanel {
         continue;
 
       InventoryPanelItem panelItem = panelItems[i];
-      if (panelItem.bounds.isPointInside(mouseX, mouseY)) {
-        println("invitem", panelItem.item.name, "clicked");
+      if (panelItem.collisionEnabled && panelItem.bounds.isPointInside(mouseX, mouseY)) {
 
         //Create/Enable Inv Item
         usableItemManager.enableUsableItem(panelItem.item.name, panelItem.item.objs);
 
+        if (panelItem instanceof InventoryPanelItemWithOnOffState) {
+          InventoryPanelItemWithOnOffState panelItemOnOff = (InventoryPanelItemWithOnOffState)panelItem;
+          panelItemOnOff.on = !panelItemOnOff.on;
+        }
+
+        println("invitem", panelItem.item.name, "clicked");
         break;
       }
     }
@@ -254,6 +347,9 @@ class InventoryItem {
   boolean multi;
   int quantity;
   int slot;
+  ItemCategory category;
+
+  boolean onOffState = false;
 
   ArrayList<Object> objs = new ArrayList<Object>();
 }
@@ -274,6 +370,8 @@ class InventoryPanelItem {
   PFont itemFont;
   int itemFontSize = 12;
 
+  boolean collisionEnabled = true;
+
   InventoryPanelItem(InventoryItem pItem, PFont pItemFont, int pItemFontSize) {
     item = pItem;
     sprite = new UISprite(0, 0, item.name + ".png");
@@ -287,7 +385,7 @@ class InventoryPanelItem {
   }
 
   void display(float delta, float panelX, float panelY) {
-    bounds.updateBounds(panelX, panelY);
+    bounds.updateBounds(sprite.x + panelX, sprite.y + panelY);
 
     outlineSprite.display(delta);
     sprite.display(delta);
@@ -301,7 +399,7 @@ class InventoryPanelItem {
       text(item.quantity, sprite.w - textSize - 4 * widthRatio, sprite.h - (itemFontSize + 4) * heightRatio);
     }
 
-    if (bounds.isPointInside(mouseX, mouseY)) {
+    if (collisionEnabled && bounds.isPointInside(mouseX, mouseY)) {
       if (outlineSprite.alpha <= 0 && (anim == null || anim.isPlaying() == false)) {
         if (anim != null) anim.end();
         anim = Ani.to(outlineSprite, 0.4, 0, "alpha", 255, Ani.CUBIC_OUT, this, "onUpdate:onUp");
@@ -323,6 +421,51 @@ class InventoryPanelItem {
 
   void onUp() {
     //println("update outline", outlineSprite.alpha, frameCount);
+  }
+}
+
+class InventoryPanelItemWithOnOffState extends InventoryPanelItem {
+
+  UISprite onSprite;
+  boolean on = false;
+
+  InventoryPanelItemWithOnOffState(InventoryItem pItem, PFont pItemFont, int pItemFontSize) {
+    super(pItem, pItemFont, pItemFontSize);
+
+    onSprite = new UISprite(0, 0, item.name + " on.png");
+  }
+
+  void display(float delta, float panelX, float panelY) {
+    bounds.updateBounds(sprite.x + panelX, sprite.y + panelY);
+
+    outlineSprite.display(delta);
+
+    if (on) {
+      onSprite.display(delta);
+    } else {
+      sprite.display(delta);
+    }
+
+    if (item.multi) {
+      fill(255);
+      textFont(itemFont, itemFontSize * heightRatio);
+      textAlign(LEFT, CENTER);
+      float textSize = textWidth(str(item.quantity));
+
+      text(item.quantity, sprite.w - textSize - 4 * widthRatio, sprite.h - (itemFontSize + 4) * heightRatio);
+    }
+
+    if (collisionEnabled && bounds.isPointInside(mouseX, mouseY)) {
+      if (outlineSprite.alpha <= 0 && (anim == null || anim.isPlaying() == false)) {
+        if (anim != null) anim.end();
+        anim = Ani.to(outlineSprite, 0.4, 0, "alpha", 255, Ani.CUBIC_OUT, this, "onUpdate:onUp");
+        anim.start();
+      }
+    } else if (outlineSprite.alpha > 0 && (anim != null && anim.getEnd() == 255)) {
+      anim.end();
+      anim = Ani.to(outlineSprite, 0.4, 0, "alpha", 0, Ani.CUBIC_OUT, this, "onUpdate:onUp");
+      anim.start();
+    }
   }
 }
 

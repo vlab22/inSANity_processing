@@ -79,7 +79,7 @@ class NotesUsableItem extends DetailsItensScreen implements IAction {
         currentPage = sprite;
 
         for (Map.Entry<Integer, UISprite> entry : pages.entrySet()) {
-          println("pages:", entry.getKey());
+          //println("pages:", entry.getKey());
         }
       }
       break;
@@ -95,7 +95,7 @@ class NotesUsableItem extends DetailsItensScreen implements IAction {
       lastPage.y = round(y);
       lastPage.display(delta);
     }
-
+    
     currentPage.x = round(x);
     currentPage.y = round(y);
     currentPage.display(delta);
@@ -118,7 +118,7 @@ class NotesUsableItem extends DetailsItensScreen implements IAction {
     display(delta);
 
     for (Map.Entry<Integer, UISprite> entry : pages.entrySet()) {
-      println(entry.getKey(), entry.getValue().alpha, entry.getValue().enabled);
+      //println(entry.getKey(), entry.getValue().alpha, entry.getValue().enabled);
     }
 
     if (keyPressed && key == 'c') {

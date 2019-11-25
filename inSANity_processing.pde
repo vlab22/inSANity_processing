@@ -20,6 +20,9 @@ InventoryManager invManager;
 //Usable Items
 UsableItemManager usableItemManager;
 
+//SoundManager
+SoundManager soundManager;
+
 // ============ STATE HANDLER AND STATES ============
 StateHandler stateHandler = new StateHandler( "inSANity Game" );
 
@@ -27,7 +30,7 @@ State FRONTHOUSE_SCENE;
 State FRONTDOOR_SCENE;
 State GROUND_HALLWAY_SCENE; 
 State GARAGE_SCENE; 
-State GARAGESHELF_SCENE;
+State GARAGE_SHELF_SCENE;
 State LIVINGROOM_SCENE;
 State LIVINGROOM_CHIMNEY_SCENE;
 State HALLWAY2_ATTIC_SCENE;
@@ -40,9 +43,9 @@ float heightRatio = 1;
 
 void setup() {
 
-  //fullScreen(P2D);
+  fullScreen(P2D);
   //size( 1920, 1280, P2D );
-  size( 1280, 720, P2D );
+  //size( 1280, 720, P2D );
   noStroke();
 
   widthRatio = width / 1920.0;
@@ -52,6 +55,8 @@ void setup() {
 
   waiter = new Waiter();
 
+  soundManager = new SoundManager();
+
   playerHasFlashLight = false;
   playerHasBatteries = false;
 
@@ -59,20 +64,20 @@ void setup() {
   FRONTDOOR_SCENE = new   FrontDoorScene();
   GROUND_HALLWAY_SCENE = new  GroundHallwayScene();
   GARAGE_SCENE = new GarageScene();
-  GARAGESHELF_SCENE = new GarageShelfScene();
+  GARAGE_SHELF_SCENE = new GarageShelfScene();
   LIVINGROOM_SCENE = new LivingRoomScene();
   LIVINGROOM_CHIMNEY_SCENE = new LivingRoomFireplaceScene();
   HALLWAY2_ATTIC_SCENE = new Hallway2AtticScene();
   SAM_BEDROOM_SCENE = new SamBedRoomScene();
-  
+
   TEST_SCENE = new TestScene();
 
-  stateHandler.changeStateTo( FRONTHOUSE_SCENE );
-  //stateHandler.changeStateTo( GARAGE_SCENE );
+  //stateHandler.changeStateTo( FRONTHOUSE_SCENE );
+  stateHandler.changeStateTo( GARAGE_SHELF_SCENE );
 
   invPanel = new InventoryPanel();
   invManager = new InventoryManager(invPanel);
-  
+
   usableItemManager = new UsableItemManager();
 }
 
@@ -89,6 +94,11 @@ void draw() {
   waiter.step(delta);
 
   surface.setTitle(mouseX + ", " + mouseY);
+
+  //println("-------------");
+  //for (int i = 0; i < soundManager.sounds.length; i++) {
+  //  println(i, soundManager.sounds[i].player.isPlaying());
+  //}
 }
 
 

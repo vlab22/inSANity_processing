@@ -36,7 +36,7 @@ class GarageScene extends SceneWithTransition implements IWaiter {
       changeState(GROUND_HALLWAY_SCENE);
     }
     if ( shelfPlaceButton.isPointInside( mouseX, mouseY ) ) {
-      changeState(GARAGESHELF_SCENE);
+      changeState(GARAGE_SHELF_SCENE);
     }
   }
 
@@ -59,7 +59,7 @@ class GarageScene extends SceneWithTransition implements IWaiter {
 // ==========================================================================================================================================================
 // ==========================================================================================================================================================
 
-class GarageShelfScene extends SceneWithTransition implements IWaiter {
+class GarageShelfScene extends SceneWithTransition implements IWaiter, IHasHiddenLayer {
 
   ImageButton backButton = new ImageButton( "arrowDown.png", round(825 * widthRatio), round(997 * heightRatio), "arrowDown outline.png" );
   ImageButton flashLightPlaceButton = new ImageButton( null, round(717 * widthRatio), round(388 * heightRatio), "flashlight_item outline.png");
@@ -75,8 +75,12 @@ class GarageShelfScene extends SceneWithTransition implements IWaiter {
   boolean flashLightInScene = true;
   boolean batteriesInScene = true;
 
+  PImage hiddenImage;
+
   GarageShelfScene() {
     super("Garage_shelf.png");
+    hiddenImage = loadImage("Garage_shelf hidden.png");
+
     footStepsSoundClip = new SoundClip("footstep01 0.800 seconds.wav");
   }
 
@@ -132,5 +136,9 @@ class GarageShelfScene extends SceneWithTransition implements IWaiter {
     if (executeId == 0) {
       placeText.hide();
     }
+  }
+
+  PImage getHiddenImage() {
+    return hiddenImage;
   }
 }

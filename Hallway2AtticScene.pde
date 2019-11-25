@@ -6,12 +6,12 @@ class Hallway2AtticScene extends SceneWithTransition {
 
 
   SoundClip footStepsSoundClip;
-  SoundClip doorOpenSoundClip;
+  SoundClip frontDoorOpenSoundClip;
 
   Hallway2AtticScene() {
     super("Hallway_2_Room Attic.png");
     footStepsSoundClip = new SoundClip("footstep01 0.800 seconds.wav");
-    doorOpenSoundClip = new SoundClip("53280__the-bizniss__front-door-open.wav");
+    frontDoorOpenSoundClip = new SoundClip("53280__the-bizniss__front-door-open.wav");
   }
 
   public void doStepWhileInState(float delta)
@@ -32,7 +32,7 @@ class Hallway2AtticScene extends SceneWithTransition {
 
     if ( samDoorsButton.isPointInside( mouseX, mouseY ) ) {
       changeState( SAM_BEDROOM_SCENE );
-      doorOpenSoundClip.play();
+      frontDoorOpenSoundClip.play();
     }
   }
 
