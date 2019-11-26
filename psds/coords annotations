@@ -20,6 +20,10 @@ Sam Room - mirror collider - 853 410
 
 Sam Room - paint collider - 537 311
 
+Sam room - under bed - 19 662 w 246 140
+
+Sam room - under bed note sprite - 108 766 w 88 46
+
 inventory size pos 0 899 w 615 181
 
 inventory close collider pos 0 1055 w 613 179
@@ -35,6 +39,9 @@ notes pos 642 108 w 660 972
 notes nav arrow right pos 639 474 w 37 34
 
 notes nav arrow left pos -21 474 w 37 34
+
+notes page 2 - hidden word 0 - "I need" - 724 164 w 185 79
+notes page 2 - hidden word 1 - "to" - 865 329 w 99 71
 
 notes close button 627 0 w 34 32
 

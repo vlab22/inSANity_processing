@@ -65,9 +65,20 @@ class FlashLightUsableItem extends UsableItem { //<>// //<>//
 
       for (int i = 0; i < hiddenColliders.length; i++) {
         if (hiddenColliders[i].pointInCollider(xPos, yPos)) {
-          hiddenColliders[i].enabled = false;
-          soundManager.LIMBO_SOUND.play();
+
+          if (hiddenColliders[i].name == "kill") {
+            hiddenColliders[i].enabled = false;
+            soundManager.LIMBO_SOUND.play();
+          } else if (hiddenColliders[i].name.startsWith("page ")) {
+            hiddenColliders[i].enabled = false;
+            
+            UISprite hiidenWordSprite;
+          }
+
+          println("inside", hiddenColliders[i].name);
         }
+        fill(255, 255, 255, 40);
+        rect(hiddenColliders[i].rect.x, hiddenColliders[i].rect.y, hiddenColliders[i].rect.w, hiddenColliders[i].rect.h);
       }
     }
 
@@ -89,15 +100,20 @@ class FlashLightUsableItem extends UsableItem { //<>// //<>//
 
   void enable() {
 
-    if (stateHandler.currentState instanceof IHasHiddenLayer) {
-      IHasHiddenLayer ihl = (IHasHiddenLayer)stateHandler.currentState;
-      hiddenImage = ihl.getHiddenImage();
-      hiddenColliders = ihl.getHiddenColliders();
-      //createMaskArray();
-      //copyApplyMask();
+    //Find if note is opened
+    UsableItem usable = usableItemManager.usablesMap.getOrDefault("notes_item", null);
+    if (usable != null && usable.enabled) {
+      invManager.checkAndEnableHiddenImageForFlashLight((IHasHiddenLayer)usable);
+    } else
+      if (stateHandler.currentState instanceof IHasHiddenLayer) {
+        IHasHiddenLayer ihl = (IHasHiddenLayer)stateHandler.currentState;
+        hiddenImage = ihl.getHiddenImage();
+        hiddenColliders = ihl.getHiddenColliders();
+        //createMaskArray();
+        //copyApplyMask();
 
-      println(stateHandler.currentState.name, enabled);
-    }
+        println(stateHandler.currentState.name, enabled);
+      }
   }
 
   void disable() {
@@ -136,10 +152,16 @@ class HiddenCollider {
   String name;
   Rect rect;
   boolean enabled = true;
+  Object parent;
 
   HiddenCollider(String name, float x, float y, float w, float h) {
     this.name = name;
     this.rect = new Rect(x, y, w, h);
+  }
+
+  HiddenCollider(Object pParent, String name, float x, float y, float w, float h) {
+    this(name, x, y, w, h);
+    parent = pParent;
   }
 
   boolean pointInCollider(float xPos, float yPos) {

@@ -1,4 +1,4 @@
-import java.util.TreeMap; //<>// //<>// //<>//
+import java.util.TreeMap; //<>// //<>// //<>// //<>// //<>//
 import java.util.*;
 
 class NotesUsableItem extends DetailsItensScreen implements IAction, IHasHiddenLayer {
@@ -12,6 +12,9 @@ class NotesUsableItem extends DetailsItensScreen implements IAction, IHasHiddenL
 
   NavigableMap<Integer, UISprite> pages;
   Iterator<Map.Entry<Integer, UISprite>> pageEntries;
+
+  HashMap<Integer, ArrayList<UISprite>> hiddenWords = new HashMap<Integer, ArrayList<UISprite>>();
+  HashMap<Integer, HiddenCollider[]> hiddenWordsColliders = new HashMap<Integer, HiddenCollider[]>();
 
   int currentPageNumber;
   UISprite currentPage;
@@ -39,10 +42,6 @@ class NotesUsableItem extends DetailsItensScreen implements IAction, IHasHiddenL
 
   HashMap<Integer, PImage> hiddenImages = new HashMap<Integer, PImage>();
 
-  HiddenCollider[] hiddenColliders = new HiddenCollider[] {
-    new HiddenCollider("kill", 103, 286, 398, 89)
-  };
-
   NotesUsableItem() {
     allowSceneMousePressed = false;
     name = "notes_item";
@@ -62,6 +61,24 @@ class NotesUsableItem extends DetailsItensScreen implements IAction, IHasHiddenL
     rightArrow = new ImageButton( "Notes nav arrow right.png", rightArrowX, rightArrowY, "Notes nav arrow right outline.png" );
     leftArrow = new ImageButton( "Notes nav arrow left.png", leftArrowX, leftArrowY, "Notes nav arrow left outline.png" );
     closeButton = new ImageButton( "Close Button.png", closeButtonX, closeButtonY, "Close Button overlay.png" );
+
+    hiddenWords.put(2, new ArrayList<UISprite>() {
+      {
+        add(new UISprite(round(724 * widthRatio), round(164 * heightRatio), "notes_item page 2 - word 0 - hidden.png"));
+        add(new UISprite(round(865 * widthRatio), round(329 * heightRatio), "notes_item page 2 - word 1 - hidden.png"));
+      }
+    }
+    );
+
+    hiddenWordsColliders.put(1, new HiddenCollider[0]);
+
+    hiddenWordsColliders.put(2, new HiddenCollider[] {
+        new HiddenCollider(this, "page 2 0", 724, 164, 185, 79),
+        new HiddenCollider(this, "page 2 1", 865, 329, 99, 71),
+      }
+    );
+    
+    hiddenWordsColliders.put(4, new HiddenCollider[0]);
   }
 
   void addPage(Object obj) {
@@ -87,8 +104,9 @@ class NotesUsableItem extends DetailsItensScreen implements IAction, IHasHiddenL
         currentPage = sprite;
 
         //Add Hidden Image
-         UISprite hiddenSprite = new UISprite(0, 0, str + " hidden.png");
-         hiddenImages.put(index, hiddenSprite.image);
+        UISprite hiddenSprite = new UISprite(0, 0, str + " hidden.png");
+        hiddenSprite.image.resize(round(hiddenSprite.image.width * widthRatio), round(hiddenSprite.image.height * heightRatio));
+        hiddenImages.put(index, hiddenSprite.image);
 
         for (Map.Entry<Integer, UISprite> entry : pages.entrySet()) {
           //println("pages:", entry.getKey());
@@ -149,11 +167,14 @@ class NotesUsableItem extends DetailsItensScreen implements IAction, IHasHiddenL
         println("currentPageIndex:", currentPageNumber);
 
         lastPage = currentPage;
+
         UITweenSprite.tweenSprite(lastPage, "alpha:0", PAGE_FLIP_DURATION, 0, Ani.CUBIC_IN, this, "onEnd:foo");
 
         currentPage = nextPage.getValue();
         currentPage.enabled = true;
         UITweenSprite.tweenSprite(currentPage, "alpha:255", PAGE_FLIP_DURATION, 0, this, "onEnd:foo");
+
+        invManager.checkAndEnableHiddenImageForFlashLight(this);
 
         soundManager.PAGE_FLIP[0].play();
       }
@@ -171,6 +192,8 @@ class NotesUsableItem extends DetailsItensScreen implements IAction, IHasHiddenL
         currentPage = prevPage.getValue();
         currentPage.enabled = true;
         UITweenSprite.tweenSprite(currentPage, "alpha:255", PAGE_FLIP_DURATION, 0, this, "onEnd:foo");
+
+        invManager.checkAndEnableHiddenImageForFlashLight(this);
 
         soundManager.PAGE_FLIP[1].play();
       }
@@ -222,16 +245,18 @@ class NotesUsableItem extends DetailsItensScreen implements IAction, IHasHiddenL
     closeButtonColliderEnabled = val;
 
     soundManager.PICKUP_PAGE[(val == true) ? 1 : 0].play();
-    
-    //if (val == true) {
-    //  invManager.checkAndEnableHiddenImageForFlashLight();
-    //}
+
+    if (val == true) {
+      invManager.checkAndEnableHiddenImageForFlashLight(this);
+    }
   }
 
   private void disable() {
     enabled = false;
     pages.get(currentPageNumber).enabled = false;
     isDisabling = false;
+
+    invManager.checkAndEnableHiddenImageForFlashLight(stateHandler.currentState);
   }
 
   private void disablePage() {
@@ -267,7 +292,7 @@ class NotesUsableItem extends DetailsItensScreen implements IAction, IHasHiddenL
   }
 
   HiddenCollider[] getHiddenColliders() {
-    return hiddenColliders;
+    return hiddenWordsColliders.get(currentPageNumber);
   }
 }
 

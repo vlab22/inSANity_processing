@@ -220,14 +220,14 @@ class InventoryManager implements IWaiter {
     return itemsMap.getOrDefault(itemName, null);
   }
 
-  void checkAndEnableHiddenImageForFlashLight(State state) {
+  void checkAndEnableHiddenImageForFlashLight(Object obj) {
     try {
       if (findItemByName("flashlight_batteries_item") != null) {
 
         FlashLightUsableItem flash = (FlashLightUsableItem)usableItemManager.usablesMap.get("flashlight_batteries_item");
 
-        if (state instanceof IHasHiddenLayer) {
-          IHasHiddenLayer ihl = ((IHasHiddenLayer)state);
+        if (obj instanceof IHasHiddenLayer) {
+          IHasHiddenLayer ihl = ((IHasHiddenLayer)obj);
           PImage hiddenImage = ihl.getHiddenImage();
           flash.hiddenImage = hiddenImage;
           flash.hiddenColliders = ihl.getHiddenColliders();
