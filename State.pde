@@ -35,20 +35,7 @@ class State
   }
 
   public void enterState( State oldState ) {
-    if (invManager != null && invManager.findItemByName("flashlight_batteries_item") != null) {
-
-      FlashLightUsableItem flash = (FlashLightUsableItem)usableItemManager.usablesMap.get("flashlight_batteries_item");
-
-      if (this instanceof IHasHiddenLayer) {
-        IHasHiddenLayer ihl = ((IHasHiddenLayer)this);
-        PImage hiddenImage = ihl.getHiddenImage();
-        flash.hiddenImage = hiddenImage;
-        flash.hiddenColliders = ihl.getHiddenColliders();
-      } else {
-        flash.hiddenImage = null;
-        flash.hiddenColliders = new HiddenCollider[0];
-      }
-    }
+    invManager.checkAndEnableHiddenImageForFlashLight(this);
   }    
   public void doStepWhileInState(float delta) {
   } 

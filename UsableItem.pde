@@ -1,7 +1,7 @@
 import java.util.TreeMap; //<>// //<>// //<>//
 import java.util.*;
 
-class NotesUsableItem extends DetailsItensScreen implements IAction {
+class NotesUsableItem extends DetailsItensScreen implements IAction, IHasHiddenLayer {
 
   float x = 642 * widthRatio;
   float y = 108 * heightRatio;
@@ -13,7 +13,7 @@ class NotesUsableItem extends DetailsItensScreen implements IAction {
   NavigableMap<Integer, UISprite> pages;
   Iterator<Map.Entry<Integer, UISprite>> pageEntries;
 
-  int currentPageIndex;
+  int currentPageNumber;
   UISprite currentPage;
   UISprite lastPage;
 
@@ -30,10 +30,18 @@ class NotesUsableItem extends DetailsItensScreen implements IAction {
   int closeButtonX;
   int closeButtonY;
 
+  boolean closeButtonColliderEnabled = true;
+
   boolean isDisabling = false;
 
   final float FADE_DURATION = 0.25;
   final float PAGE_FLIP_DURATION = 0.25;
+
+  HashMap<Integer, PImage> hiddenImages = new HashMap<Integer, PImage>();
+
+  HiddenCollider[] hiddenColliders = new HiddenCollider[] {
+    new HiddenCollider("kill", 103, 286, 398, 89)
+  };
 
   NotesUsableItem() {
     allowSceneMousePressed = false;
@@ -64,7 +72,7 @@ class NotesUsableItem extends DetailsItensScreen implements IAction {
 
     switch(type) {
     case "page":
-      currentPageIndex = index;
+      currentPageNumber = index;
 
       if (pages.containsKey(index)) {
         currentPage = pages.get(index);
@@ -77,6 +85,10 @@ class NotesUsableItem extends DetailsItensScreen implements IAction {
         pageEntries = pages.entrySet().iterator();
 
         currentPage = sprite;
+
+        //Add Hidden Image
+         UISprite hiddenSprite = new UISprite(0, 0, str + " hidden.png");
+         hiddenImages.put(index, hiddenSprite.image);
 
         for (Map.Entry<Integer, UISprite> entry : pages.entrySet()) {
           //println("pages:", entry.getKey());
@@ -95,7 +107,7 @@ class NotesUsableItem extends DetailsItensScreen implements IAction {
       lastPage.y = round(y);
       lastPage.display(delta);
     }
-    
+
     currentPage.x = round(x);
     currentPage.y = round(y);
     currentPage.display(delta);
@@ -130,11 +142,11 @@ class NotesUsableItem extends DetailsItensScreen implements IAction {
     super.handleMousePressed();
 
     if (rightArrow.isPointInside(mouseX, mouseY)) {
-      Map.Entry<Integer, UISprite> nextPage = pages.higherEntry(currentPageIndex);
+      Map.Entry<Integer, UISprite> nextPage = pages.higherEntry(currentPageNumber);
       if (nextPage != null) {
 
-        currentPageIndex = nextPage.getKey();
-        println(currentPageIndex);
+        currentPageNumber = nextPage.getKey();
+        println("currentPageIndex:", currentPageNumber);
 
         lastPage = currentPage;
         UITweenSprite.tweenSprite(lastPage, "alpha:0", PAGE_FLIP_DURATION, 0, Ani.CUBIC_IN, this, "onEnd:foo");
@@ -142,15 +154,15 @@ class NotesUsableItem extends DetailsItensScreen implements IAction {
         currentPage = nextPage.getValue();
         currentPage.enabled = true;
         UITweenSprite.tweenSprite(currentPage, "alpha:255", PAGE_FLIP_DURATION, 0, this, "onEnd:foo");
-        
+
         soundManager.PAGE_FLIP[0].play();
       }
     } else if (leftArrow.isPointInside(mouseX, mouseY)) {
-      Map.Entry<Integer, UISprite> prevPage = pages.lowerEntry(currentPageIndex);
+      Map.Entry<Integer, UISprite> prevPage = pages.lowerEntry(currentPageNumber);
       if (prevPage != null) {
 
-        currentPageIndex = prevPage.getKey();
-        println(currentPageIndex);
+        currentPageNumber = prevPage.getKey();
+        println("currentPageIndex:", currentPageNumber);
 
         lastPage = currentPage;
 
@@ -159,11 +171,12 @@ class NotesUsableItem extends DetailsItensScreen implements IAction {
         currentPage = prevPage.getValue();
         currentPage.enabled = true;
         UITweenSprite.tweenSprite(currentPage, "alpha:255", PAGE_FLIP_DURATION, 0, this, "onEnd:foo");
-        
+
         soundManager.PAGE_FLIP[1].play();
       }
       println("leftArrow clicked");
-    } else if (closeButton.isPointInside(mouseX, mouseY)) {
+    } else if (closeButtonColliderEnabled == true && closeButton.isPointInside(mouseX, mouseY)) {
+      closeButtonColliderEnabled = false;
       setEnabled(false);
     }
   }
@@ -205,18 +218,24 @@ class NotesUsableItem extends DetailsItensScreen implements IAction {
 
       isDisabling = true;
     }
-    
+
+    closeButtonColliderEnabled = val;
+
     soundManager.PICKUP_PAGE[(val == true) ? 1 : 0].play();
+    
+    //if (val == true) {
+    //  invManager.checkAndEnableHiddenImageForFlashLight();
+    //}
   }
 
   private void disable() {
     enabled = false;
-    pages.get(currentPageIndex).enabled = false;
+    pages.get(currentPageNumber).enabled = false;
     isDisabling = false;
   }
 
   private void disablePage() {
-    pages.get(currentPageIndex).enabled = false;
+    pages.get(currentPageNumber).enabled = false;
   }
 
   public void foo() {
@@ -241,6 +260,14 @@ class NotesUsableItem extends DetailsItensScreen implements IAction {
       ani[i].setCallback("onEnd:foo");
       ani[i].end();
     }
+  }
+
+  PImage getHiddenImage() {
+    return hiddenImages.getOrDefault(currentPageNumber, null);
+  }
+
+  HiddenCollider[] getHiddenColliders() {
+    return hiddenColliders;
   }
 }
 

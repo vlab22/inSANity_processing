@@ -72,13 +72,13 @@ void setup() {
 
   TEST_SCENE = new TestScene();
 
-  //stateHandler.changeStateTo( FRONTHOUSE_SCENE );
-  stateHandler.changeStateTo( HALLWAY2_ATTIC_SCENE );
-
   invPanel = new InventoryPanel();
   invManager = new InventoryManager(invPanel);
 
   usableItemManager = new UsableItemManager();
+
+  //stateHandler.changeStateTo( FRONTHOUSE_SCENE );
+  stateHandler.changeStateTo( GROUND_HALLWAY_SCENE );
 }
 
 
@@ -99,7 +99,7 @@ void draw() {
   //for (int i = 0; i < soundManager.sounds.length; i++) {
   //  println(i, soundManager.sounds[i].player.isPlaying());
   //}
-  
+
   fill(255, 255, 0);
   textAlign(LEFT);
   textSize(16);

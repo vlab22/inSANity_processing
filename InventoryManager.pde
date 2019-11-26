@@ -1,4 +1,4 @@
-import java.util.Arrays; //<>// //<>// //<>// //<>//
+import java.util.Arrays; //<>// //<>// //<>// //<>// //<>//
 
 enum ItemCategory {
   TOOL, 
@@ -51,7 +51,7 @@ class InventoryManager implements IWaiter {
 
   void PickUpItem(String itemName, Object[] objs, UISprite sprite) {
 
-    boolean allow = allowMultiples.get(itemName); //<>//
+    boolean allow = allowMultiples.get(itemName);
     int freeSlot = -1;
     InventoryItem item = null;
 
@@ -167,6 +167,8 @@ class InventoryManager implements IWaiter {
         itemsMap.put(item.name, item);
 
         inventoryPanel.addItem(item, item.slot);
+
+        usableItemManager.createItem(item.name, item.objs);
       }
 
       println(item1.name, item2.name);
@@ -216,6 +218,29 @@ class InventoryManager implements IWaiter {
 
   public InventoryItem findItemByName(String itemName) {
     return itemsMap.getOrDefault(itemName, null);
+  }
+
+  void checkAndEnableHiddenImageForFlashLight(State state) {
+    try {
+      if (findItemByName("flashlight_batteries_item") != null) {
+
+        FlashLightUsableItem flash = (FlashLightUsableItem)usableItemManager.usablesMap.get("flashlight_batteries_item");
+
+        if (state instanceof IHasHiddenLayer) {
+          IHasHiddenLayer ihl = ((IHasHiddenLayer)state);
+          PImage hiddenImage = ihl.getHiddenImage();
+          flash.hiddenImage = hiddenImage;
+          flash.hiddenColliders = ihl.getHiddenColliders();
+        } else {
+          flash.hiddenImage = null;
+          flash.hiddenColliders = new HiddenCollider[0];
+        }
+      }
+    }
+    catch (Exception e) {
+      println("exception at checkAndEnableHiddenImageForFlashLight");
+      e.printStackTrace();
+    }
   }
 }
 
