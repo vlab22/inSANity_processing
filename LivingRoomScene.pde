@@ -1,4 +1,4 @@
-class LivingRoomFireplaceScene extends SceneWithTransition { //<>// //<>// //<>//
+class LivingRoomFireplaceScene extends SceneWithTransition { //<>// //<>// //<>// //<>//
 
   ImageButton backButton = new ImageButton( "arrowDown.png", round(908 * widthRatio), round(997 * heightRatio), "arrowDown outline.png" );
   ImageButton diaryButton = new ImageButton( null, round(620 * widthRatio), round(976 * heightRatio), "Living_room_Chimney_Photo diary overlay.png" );
@@ -51,7 +51,12 @@ class LivingRoomFireplaceScene extends SceneWithTransition { //<>// //<>// //<>/
     }
     if ( diaryInScene == true && diaryButton.isPointInside( mouseX, mouseY ) ) {
       diaryInScene = false;
-      invManager.PickUpItem("notes_item", new Object[] { "notes_item page 2", "notes_item page 1" }, diarySprite);
+      invManager.PickUpItem("notes_item", new Object[] { 
+        "notes_item page 4",
+        "notes_item page 3",
+        "notes_item page 2",
+        "notes_item page 1" 
+        }, diarySprite);
     }
   }
 
@@ -62,7 +67,7 @@ class LivingRoomFireplaceScene extends SceneWithTransition { //<>// //<>// //<>/
   }
 }
 
-class LivingRoomScene extends SceneWithTransition implements IHasHiddenLayer { //<>//
+class LivingRoomScene extends SceneWithTransition implements IHasHiddenLayer {
 
   ImageButton backButton = new ImageButton( "arrowDown.png", round(908 * widthRatio), round(997 * heightRatio), "arrowDown outline.png" );
   ImageButton fireplaceButton = new ImageButton( null, round(93 * widthRatio), round(405 * heightRatio), "Living_room fireplace outline.png");
@@ -78,7 +83,7 @@ class LivingRoomScene extends SceneWithTransition implements IHasHiddenLayer { /
   PImage hiddenImage;
 
   LivingRoomScene() {
-    super("Living_room concept-Recovered-Recovered.png");
+    super("Living_room.png");
 
     background = loadImage( filename );
 

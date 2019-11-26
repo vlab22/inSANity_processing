@@ -101,7 +101,7 @@ class SamBedRoomScene extends SceneWithTransition implements IWaiter {
     if (noteInScene == true && underbedPlaceButton.isPointInside( mouseX, mouseY ) ) {
       noteInScene = false;
       underBedNote.enabled = true;
-      invManager.PickUpItem("notes_item", new Object[] { "notes_item page 4" }, underBedNote);
+      invManager.PickUpItem("notes_item", new Object[] { "notes_item page 5" }, underBedNote);
     }
   }
 

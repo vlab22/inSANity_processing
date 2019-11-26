@@ -41,6 +41,8 @@ State TEST_SCENE;
 float widthRatio = 1;
 float heightRatio = 1;
 
+boolean resetedByPlayer = false;
+
 void setup() {
 
   //fullScreen(P2D);
@@ -77,12 +79,20 @@ void setup() {
 
   usableItemManager = new UsableItemManager();
 
-  //stateHandler.changeStateTo( FRONTHOUSE_SCENE );
-  stateHandler.changeStateTo( GROUND_HALLWAY_SCENE );
-  
-  invManager.PickUpItem("notes_item", new Object[] { "notes_item page 2", "notes_item page 1" }, null);
-  invManager.PickUpItem("flashlight_item", new Object[] { "flashlight_item item 0" }, null);
-  invManager.PickUpItem("batteries_item", new Object[] { "batteries_item item 0" }, null);
+  if (resetedByPlayer)
+    stateHandler.changeStateTo( FRONTHOUSE_SCENE );
+  else
+    stateHandler.changeStateTo( GROUND_HALLWAY_SCENE );
+
+  if (resetedByPlayer == false) {
+    invManager.PickUpItem("notes_item", new Object[] {         
+      "notes_item page 4", 
+      "notes_item page 3", 
+      "notes_item page 2", 
+      "notes_item page 1"  }, null);
+    invManager.PickUpItem("flashlight_item", new Object[] { "flashlight_item item 0" }, null);
+    invManager.PickUpItem("batteries_item", new Object[] { "batteries_item item 0" }, null);
+  }
 }
 
 
@@ -125,6 +135,11 @@ void keyReleased() {
   stateHandler.handleKeyReleased();
 
   if (key == 'r') {
+    //Hard reset
+    frameCount = -1;
+    resetedByPlayer = true;
+  }
+  if (key == 't') {
     frameCount = -1;
   }
 }

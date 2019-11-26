@@ -213,7 +213,7 @@ class InventoryManager implements IWaiter {
     if (findItemByName("flashlight_item") != null) {
       //Has flashlight in inventory
       joinItems("batteries_item", "flashlight_item");
-      soundManager.INSERT_BATTERIES_SOUND.play();
+      soundManager.INSERT_BATTERIES_SOUND.play(); //<>//
     }
   }
 
@@ -222,26 +222,26 @@ class InventoryManager implements IWaiter {
   }
 
   void checkAndEnableHiddenImageForFlashLight(Object obj) {
-    try {
-      if (findItemByName("flashlight_batteries_item") != null) {
+    //try {
+    if (findItemByName("flashlight_batteries_item") != null) {
 
-        FlashLightUsableItem flash = (FlashLightUsableItem)usableItemManager.usablesMap.get("flashlight_batteries_item");
+      FlashLightUsableItem flash = (FlashLightUsableItem)usableItemManager.usablesMap.get("flashlight_batteries_item");
 
-        if (obj instanceof IHasHiddenLayer) {
-          IHasHiddenLayer ihl = ((IHasHiddenLayer)obj);
-          PImage hiddenImage = ihl.getHiddenImage();
-          flash.hiddenImage = hiddenImage;
-          flash.hiddenColliders = ihl.getHiddenColliders();
-        } else {
-          flash.hiddenImage = null;
-          flash.hiddenColliders = new HiddenCollider[0];
-        }
+      if (obj instanceof IHasHiddenLayer) {
+        IHasHiddenLayer ihl = ((IHasHiddenLayer)obj);
+        PImage hiddenImage = ihl.getHiddenImage();
+        flash.hiddenImage = hiddenImage;
+        flash.hiddenColliders = ihl.getHiddenColliders();
+      } else {
+        flash.hiddenImage = null;
+        flash.hiddenColliders = new HiddenCollider[0];
       }
     }
-    catch (Exception e) {
-      println("exception at checkAndEnableHiddenImageForFlashLight");
-      e.printStackTrace();
-    }
+    //}
+    //catch (Exception e) {
+    //  println("exception at checkAndEnableHiddenImageForFlashLight");
+    //  e.printStackTrace();
+    //}
   }
 }
 
@@ -327,6 +327,8 @@ class InventoryPanel {
         closepanel();
       }
     }
+
+    //Handle inventory item clicked ================================ 
 
     for (int i = 0; i < panelItems.length; i++) {
       if (panelItems[i] == null)
@@ -440,9 +442,9 @@ class InventoryPanelItem {
 
     //Debug Bounds
     //popMatrix();
-    //fill(1, 1, 1, 30);
-    //noStroke();
-    //rect(bounds.x, bounds.y, bounds.w, bounds.h);
+    fill(1, 1, 1, 100);
+    noStroke();
+    rect(bounds.x, bounds.y, bounds.w, bounds.h);
     //pushMatrix();
   }
 
@@ -493,6 +495,13 @@ class InventoryPanelItemWithOnOffState extends InventoryPanelItem {
       anim = Ani.to(outlineSprite, 0.4, 0, "alpha", 0, Ani.CUBIC_OUT, this, "onUpdate:onUp");
       anim.start();
     }
+
+    //Debug Bounds
+    //popMatrix();
+    fill(1, 1, 1, 100);
+    noStroke();
+    rect(bounds.x, bounds.y, bounds.w, bounds.h);
+    //pushMatrix();
   }
 }
 

@@ -21,7 +21,7 @@ class UsableItemManager {
 
   //Instanciate the object of the item
   void createItem(String itemName, ArrayList<Object> codeObjs) {
-    UsableItem usable = null;
+    UsableItem usable = null; //<>//
 
     switch (itemName) {
     case "notes_item":
@@ -34,13 +34,17 @@ class UsableItemManager {
       notes.setEnabled(!notes.enabled);
       usable = notes;
 
+      break;
+
     case "batteries_item":
       invManager.tryInstallBatteries();
+
       break;
 
     case "flashlight_batteries_item":
       FlashLightUsableItem flash = new FlashLightUsableItem();
       usable = flash;
+      
       break;
 
     default:

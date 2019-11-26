@@ -63,19 +63,42 @@ class NotesUsableItem extends DetailsItensScreen implements IAction, IHasHiddenL
     closeButton = new ImageButton( "Close Button.png", closeButtonX, closeButtonY, "Close Button overlay.png" );
 
     //Creates hidden words sprites
-    hiddenWords.put(1, new ArrayList<UISprite>());
-
-    hiddenWords.put(2, new ArrayList<UISprite>() {
+    hiddenWords.put(1, new ArrayList<UISprite>() {
       {
-        add(new UISprite(724, 164, "notes_item page 2 - word 0 - hidden.png"));
-        add(new UISprite(865, 329, "notes_item page 2 - word 1 - hidden.png"));
-        add(new UISprite(724, 164, "notes_item page 2 - word 2 - hidden.png"));
-        add(new UISprite(865, 329, "notes_item page 2 - word 3 - hidden.png"));
+        add(new UISprite(679, 299, "notes_item page 1 - word 0 - hidden.png")); //I need
+        add(new UISprite(936, 347, "notes_item page 1 - word 1 - hidden.png")); //to
+        add(new UISprite(1084, 442, "notes_item page 1 - word 2 - hidden.png")); //feel
+        add(new UISprite(757, 587, "notes_item page 1 - word 3 - hidden.png")); //safe
       }
     }
     );
-
-    hiddenWords.put(4, new ArrayList<UISprite>());
+    hiddenWords.put(2, new ArrayList<UISprite>() {
+      {
+        add(new UISprite(669, 290, "notes_item page 2 - word 0 - hidden.png")); //I
+        add(new UISprite(1116, 348, "notes_item page 2 - word 1 - hidden.png")); //want
+        add(new UISprite(996, 495, "notes_item page 2 - word 2 - hidden.png")); //you
+        add(new UISprite(1134, 484, "notes_item page 2 - word 3 - hidden.png")); //gone
+      }
+    }
+    );
+    hiddenWords.put(3, new ArrayList<UISprite>() {
+      {
+        add(new UISprite(710, 455, "notes_item page 3 - word 0 - hidden.png")); //Stop
+        add(new UISprite(714, 516, "notes_item page 3 - word 1 - hidden.png")); //beating
+        add(new UISprite(839, 519, "notes_item page 3 - word 2 - hidden.png")); //me
+      }
+    }
+    );
+    hiddenWords.put(4, new ArrayList<UISprite>() {
+      {
+        add(new UISprite(750, 286, "notes_item page 4 - word 0 - hidden.png")); //is
+        add(new UISprite(855, 409, "notes_item page 4 - word 1 - hidden.png")); //violence
+        add(new UISprite(785, 463, "notes_item page 4 - word 2 - hidden.png")); //the
+        add(new UISprite(909, 520, "notes_item page 4 - word 3 - hidden.png")); //answer
+      }
+    }
+    );
+    hiddenWords.put(5, new ArrayList<UISprite>());
 
     //Disable hidden sprites
     for (Map.Entry<Integer, ArrayList<UISprite>> entry : hiddenWords.entrySet()) {
@@ -84,16 +107,34 @@ class NotesUsableItem extends DetailsItensScreen implements IAction, IHasHiddenL
 
 
     //Create hiddenCollider of words
-    hiddenWordsColliders.put(1, new HiddenCollider[0]);
-
-    hiddenWordsColliders.put(2, new HiddenCollider[] {
-      new HiddenCollider(this, "page 2 0", 657, 40, 320, 320), 
-      new HiddenCollider(this, "page 2 1", 755, 198, 320, 320), 
-      new HiddenCollider(this, "page 2 2", 1013, 395, 320, 320), 
-      new HiddenCollider(this, "page 2 3", 589, 706, 320, 320), 
+    hiddenWordsColliders.put(1, new HiddenCollider[] {
+      new HiddenCollider(this, "page 1 0", 681, 242, 200, 200), 
+      new HiddenCollider(this, "page 1 1", 890, 291, 200, 200), 
+      new HiddenCollider(this, "page 1 2", 1038, 379, 200, 200), 
+      new HiddenCollider(this, "page 1 3", 727, 534, 200, 200), 
       });
 
-    hiddenWordsColliders.put(4, new HiddenCollider[0]);
+    hiddenWordsColliders.put(2, new HiddenCollider[] {
+      new HiddenCollider(this, "page 2 0", 616, 239, 200, 200), //I
+      new HiddenCollider(this, "page 2 1", 1071, 278, 200, 200), //want
+      new HiddenCollider(this, "page 2 2", 941, 429, 200, 200), //you 
+      new HiddenCollider(this, "page 2 3", 1081, 423, 200, 200), //gone
+      });
+
+    hiddenWordsColliders.put(3, new HiddenCollider[] {
+      new HiddenCollider(this, "page 3 0", 658, 399, 200, 200), //Stop
+      new HiddenCollider(this, "page 3 1", 665, 445, 200, 200), //beating
+      new HiddenCollider(this, "page 3 2", 766, 446, 200, 200), //me 
+      });
+    hiddenWordsColliders.put(4, new HiddenCollider[]{
+      new HiddenCollider(this, "page 4 0", 685, 212, 200, 200), //is
+      new HiddenCollider(this, "page 4 1", 826, 340, 200, 200), //violence
+      new HiddenCollider(this, "page 4 2", 719, 387, 200, 200), //the
+      new HiddenCollider(this, "page 4 3", 880, 466, 200, 200), //answer
+      });
+    hiddenWordsColliders.put(5, new HiddenCollider[]{
+      new HiddenCollider(this, "page 5 0", 717, 253, 487, 685), //kill kill kill
+      });
   }
 
   void addPage(Object obj) {
@@ -148,7 +189,6 @@ class NotesUsableItem extends DetailsItensScreen implements IAction, IHasHiddenL
     //Draw current hidden words if enabled
     for (UISprite sprite : hiddenWords.get(currentPageNumber)) {
       sprite.display(delta);
-      println("word sprite alpha:", sprite.alpha);
     }
 
     rightArrow.x = round(x + rightArrowX);
