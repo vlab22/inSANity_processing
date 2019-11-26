@@ -67,10 +67,10 @@ class NotesUsableItem extends DetailsItensScreen implements IAction, IHasHiddenL
 
     hiddenWords.put(2, new ArrayList<UISprite>() {
       {
-        add(new UISprite(round(724 * widthRatio), round(164 * heightRatio), "notes_item page 2 - word 0 - hidden.png"));
-        add(new UISprite(round(865 * widthRatio), round(329 * heightRatio), "notes_item page 2 - word 1 - hidden.png"));
-        add(new UISprite(round(724 * widthRatio), round(164 * heightRatio), "notes_item page 2 - word 2 - hidden.png"));
-        add(new UISprite(round(865 * widthRatio), round(329 * heightRatio), "notes_item page 2 - word 3 - hidden.png"));
+        add(new UISprite(724, 164, "notes_item page 2 - word 0 - hidden.png"));
+        add(new UISprite(865, 329, "notes_item page 2 - word 1 - hidden.png"));
+        add(new UISprite(724, 164, "notes_item page 2 - word 2 - hidden.png"));
+        add(new UISprite(865, 329, "notes_item page 2 - word 3 - hidden.png"));
       }
     }
     );

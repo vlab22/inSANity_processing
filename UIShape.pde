@@ -5,7 +5,7 @@ class UISprite extends UIShape {
   boolean enabled = true;
 
   UISprite (int pX, int pY, String imageFileName) {
-    super(pX, pY);
+    super(round(pX * widthRatio), round(pY * heightRatio));
     image = loadImage(imageFileName);
 
     if (image != null) {

@@ -65,8 +65,8 @@ class GarageShelfScene extends SceneWithTransition implements IWaiter, IHasHidde
   ImageButton flashLightPlaceButton = new ImageButton( null, round(717 * widthRatio), round(388 * heightRatio), "flashlight_item outline.png");
   ImageButton batteriesPlaceButton = new ImageButton( null, round(831 * widthRatio), round(783 * heightRatio), "batteries_item outline.png");
 
-  UISprite flashLigthSprite = new UISprite(round(717 * widthRatio), round(388 * heightRatio), "flashlight_item.png");
-  UISprite batteriesSprite = new UISprite(round(831 * widthRatio), round(783 * heightRatio), "batteries_item.png");
+  UISprite flashLigthSprite = new UISprite(717, 388, "flashlight_item.png");
+  UISprite batteriesSprite = new UISprite(831, 783, "batteries_item.png");
 
   SoundClip footStepsSoundClip;
 

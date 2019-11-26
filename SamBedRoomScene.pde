@@ -7,7 +7,7 @@ class SamBedRoomScene extends SceneWithTransition implements IWaiter {
 
   SoundClip footStepsSoundClip;
 
-  UISprite underBedNote = new UISprite(round(108 * widthRatio), round(766 * heightRatio), "Sam_bedroom under bed note sprite.png");
+  UISprite underBedNote = new UISprite(108, 766, "Sam_bedroom under bed note sprite.png");
 
   TextBoxWithFader placeText = new TextBoxWithFader("It's too dark, I remember to have a flashlight\r\nin the garage", false);
 
