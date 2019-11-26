@@ -40,8 +40,10 @@ notes nav arrow right pos 639 474 w 37 34
 
 notes nav arrow left pos -21 474 w 37 34
 
-notes page 2 - hidden word 0 - "I need" - 724 164 w 185 79
-notes page 2 - hidden word 1 - "to" - 865 329 w 99 71
+notes page 2 - hidden word 0 - "I need" - 724 164 w 185 79 - collider 657, 40, 320, 320
+notes page 2 - hidden word 1 - "to" - 865 329 w 99 71 - collider 755, 198, 320, 320
+notes page 2 - hidden word 2 - "feel" - 1107, 501, 114, 95 - collider 1013, 395, 320, 320
+notes page 2 - hidden word 2 - "safe" - 691, 831, 110, 87 - collider 589, 706, 320, 320
 
 notes close button 627 0 w 34 32
 

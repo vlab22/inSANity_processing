@@ -69,15 +69,20 @@ class FlashLightUsableItem extends UsableItem { //<>// //<>//
           if (hiddenColliders[i].name == "kill") {
             hiddenColliders[i].enabled = false;
             soundManager.LIMBO_SOUND.play();
-          } else if (hiddenColliders[i].name.startsWith("page ")) {
+          } else if (hiddenColliders[i].parent instanceof NotesUsableItem) {
             hiddenColliders[i].enabled = false;
-            
-            UISprite hiidenWordSprite;
+
+            int wordPage = Integer.parseInt(hiddenColliders[i].name.split(" ")[1]); //the page is the second value in string, example "page 2 0"
+            int wordIndex = Integer.parseInt(hiddenColliders[i].name.split(" ")[2]); //the index is the third value in string, example "page 2 0"
+            NotesUsableItem notes = (NotesUsableItem)hiddenColliders[i].parent;
+            UISprite hiddenWordSprite = notes.getHiddenWordSprite(wordIndex);
+            hiddenWordSprite.enabled = true; //<>//
           }
 
           println("inside", hiddenColliders[i].name);
         }
-        fill(255, 255, 255, 40);
+        
+        fill(255, 255, 255, 10);
         rect(hiddenColliders[i].rect.x, hiddenColliders[i].rect.y, hiddenColliders[i].rect.w, hiddenColliders[i].rect.h);
       }
     }

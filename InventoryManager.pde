@@ -89,17 +89,18 @@ class InventoryManager implements IWaiter {
 
     if (freeSlot > -1) {
 
-      movingSprites.add(sprite);
-
       boolean lastOpened = inventoryPanel.opened;
       if (inventoryPanel.opened == false) {
         inventoryPanel.openPanel();
       }
 
-      float toX = inventoryPanel.x + freeSlot * 155 * widthRatio + 155 * widthRatio * 0.5;
-      float toY = inventoryPanel.y + 179 * heightRatio * 0.5 - sprite.h * 0.5;
-      Ani[] ani = Ani.to(sprite, PICKUP_MOVING_DURATION, lastOpened ? 0 : inventoryPanel.OPEN_CLOSE_ANIM_DURATION, "x:" + toX + ", y:" + toY + ", alpha:0", Ani.QUAD_OUT, this, "onEnd:moveSpriteEnd");
-      movingAnims.add(ani);
+      if (sprite != null) {
+        movingSprites.add(sprite);
+        float toX = inventoryPanel.x + freeSlot * 155 * widthRatio + 155 * widthRatio * 0.5;
+        float toY = inventoryPanel.y + 179 * heightRatio * 0.5 - sprite.h * 0.5;
+        Ani[] ani = Ani.to(sprite, PICKUP_MOVING_DURATION, lastOpened ? 0 : inventoryPanel.OPEN_CLOSE_ANIM_DURATION, "x:" + toX + ", y:" + toY + ", alpha:0", Ani.QUAD_OUT, this, "onEnd:moveSpriteEnd");
+        movingAnims.add(ani);
+      }
 
       //Play pickup sound
       soundManager.playPickUpItem(item.name);

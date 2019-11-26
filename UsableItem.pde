@@ -62,22 +62,37 @@ class NotesUsableItem extends DetailsItensScreen implements IAction, IHasHiddenL
     leftArrow = new ImageButton( "Notes nav arrow left.png", leftArrowX, leftArrowY, "Notes nav arrow left outline.png" );
     closeButton = new ImageButton( "Close Button.png", closeButtonX, closeButtonY, "Close Button overlay.png" );
 
+    //Creates hidden words sprites
+    hiddenWords.put(1, new ArrayList<UISprite>());
+
     hiddenWords.put(2, new ArrayList<UISprite>() {
       {
         add(new UISprite(round(724 * widthRatio), round(164 * heightRatio), "notes_item page 2 - word 0 - hidden.png"));
         add(new UISprite(round(865 * widthRatio), round(329 * heightRatio), "notes_item page 2 - word 1 - hidden.png"));
+        add(new UISprite(round(724 * widthRatio), round(164 * heightRatio), "notes_item page 2 - word 2 - hidden.png"));
+        add(new UISprite(round(865 * widthRatio), round(329 * heightRatio), "notes_item page 2 - word 3 - hidden.png"));
       }
     }
     );
 
+    hiddenWords.put(4, new ArrayList<UISprite>());
+
+    //Disable hidden sprites
+    for (Map.Entry<Integer, ArrayList<UISprite>> entry : hiddenWords.entrySet()) {
+      setEnabledPageHiddenWordsSprites(entry.getKey(), false);
+    }
+
+
+    //Create hiddenCollider of words
     hiddenWordsColliders.put(1, new HiddenCollider[0]);
 
     hiddenWordsColliders.put(2, new HiddenCollider[] {
-        new HiddenCollider(this, "page 2 0", 724, 164, 185, 79),
-        new HiddenCollider(this, "page 2 1", 865, 329, 99, 71),
-      }
-    );
-    
+      new HiddenCollider(this, "page 2 0", 657, 40, 320, 320), 
+      new HiddenCollider(this, "page 2 1", 755, 198, 320, 320), 
+      new HiddenCollider(this, "page 2 2", 1013, 395, 320, 320), 
+      new HiddenCollider(this, "page 2 3", 589, 706, 320, 320), 
+      });
+
     hiddenWordsColliders.put(4, new HiddenCollider[0]);
   }
 
@@ -129,6 +144,12 @@ class NotesUsableItem extends DetailsItensScreen implements IAction, IHasHiddenL
     currentPage.x = round(x);
     currentPage.y = round(y);
     currentPage.display(delta);
+
+    //Draw current hidden words if enabled
+    for (UISprite sprite : hiddenWords.get(currentPageNumber)) {
+      sprite.display(delta);
+      println("word sprite alpha:", sprite.alpha);
+    }
 
     rightArrow.x = round(x + rightArrowX);
     rightArrow.y = round(y + rightArrowY);
@@ -284,6 +305,24 @@ class NotesUsableItem extends DetailsItensScreen implements IAction, IHasHiddenL
       ani[i].setCallbackObject(this);
       ani[i].setCallback("onEnd:foo");
       ani[i].end();
+    }
+  }
+
+  UISprite getHiddenWordSprite(int wordIndex) {
+    return hiddenWords.get(currentPageNumber).get(wordIndex);
+  }
+
+  void setEnabledCurrentPageHiddenWordsSprites(boolean val) {
+    ArrayList<UISprite> sprites = hiddenWords.get(currentPageNumber);
+    for (int i = 0; i < sprites.size(); i++) {
+      sprites.get(i).enabled = val;
+    }
+  }
+
+  void setEnabledPageHiddenWordsSprites(int pageNumber, boolean val) {
+    ArrayList<UISprite> sprites = hiddenWords.getOrDefault(pageNumber, new ArrayList<UISprite>()); //ugly hahaha, tired of "ifs"
+    for (int i = 0; i < sprites.size(); i++) {
+      sprites.get(i).enabled = val;
     }
   }
 

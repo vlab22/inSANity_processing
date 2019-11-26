@@ -79,6 +79,10 @@ void setup() {
 
   //stateHandler.changeStateTo( FRONTHOUSE_SCENE );
   stateHandler.changeStateTo( GROUND_HALLWAY_SCENE );
+  
+  invManager.PickUpItem("notes_item", new Object[] { "notes_item page 2", "notes_item page 1" }, null);
+  invManager.PickUpItem("flashlight_item", new Object[] { "flashlight_item item 0" }, null);
+  invManager.PickUpItem("batteries_item", new Object[] { "batteries_item item 0" }, null);
 }
 
 
