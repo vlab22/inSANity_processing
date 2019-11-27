@@ -8,6 +8,8 @@ class SoundManager {
   final SoundClip PICK_UP_ITEM_02 = new SoundClip("pickuo item 02.mp3");
   final SoundClip FLASHLIGHT_ON = new SoundClip("flashlight on.wav");
   final SoundClip FLASHLIGHT_OFF = new SoundClip("flashlight off.wav");
+  final SoundClip ATTIC_DOOR_FALL = new SoundClip("attic door open.wav");
+  final SoundClip FOOT_STEPS = new SoundClip("footstep01 0.800 seconds.wav");
   final SoundClip[] PICKUP_PAGE = new SoundClip[] { 
     new SoundClip("pickup page 01.wav"), 
     new SoundClip("pickup page 02.wav")

@@ -17,37 +17,19 @@ class SamBedRoomScene extends SceneWithTransition implements IWaiter {
 
   PImage flashLightImage;
 
+  boolean firstTimeInRoom = true;
+
   SamBedRoomScene() {
     super("Sam_bedroom.png");
     footStepsSoundClip = new SoundClip("footstep01 0.800 seconds.wav");
 
     flashLightImage = loadImage("Flashlight light alpha.png");
-    
+
     underBedNote.enabled = false;
   }
 
   void enterState(State oldState) {
     super.enterState(oldState);
-
-    //isFlashLightOn = playerHasFlashLight == true && playerHasBatteries == true;
-
-    //if (playerHasFlashLight == false) {
-    //  placeText.show();
-    //} else if (playerHasFlashLight == true && playerHasBatteries == false) {
-    //  placeText.textBox.setText("I have a flashlight but where are the batteries?\r\nMaybe in the garage too.");
-    //  placeText.show();
-    //} else if (playerHasFlashLight == false && playerHasBatteries == true) {
-    //  placeText.textBox.setText("I have some batteries but where is the flashlight?\r\nMaybe in the garage too.");
-    //  placeText.show();
-    //} else if (isFlashLightOn) {
-    //  placeText.textBox.setText("Now I can see...");
-    //  placeText.show();
-    //  placeText.hideDuration = 3;
-    //  waiter.waitForSeconds(2, this, 0, null);
-    //}
-
-    //playerHasFlashLight = true;
-    //playerHasBatteries = true;
   }
 
   public void doStepWhileInState(float delta)
@@ -57,37 +39,16 @@ class SamBedRoomScene extends SceneWithTransition implements IWaiter {
     rectMode(CORNER);
     noStroke();
 
-    float blackAlpha = 0.975 * 255; //to set alpha of image and filler rects
-
-    //if (isFlashLightOn) {
-    //  pushStyle();
-    //  tint(1, blackAlpha);
-    //  imageMode(CENTER);
-    //  image(flashLightImage, mouseX, mouseY);
-    //  popStyle();
-
-    //  //Fill screen with 4 rectangles sorrounding the flashlight image
-    //  fill(1, 1, 1, blackAlpha);
-    //  rectMode(CORNER);
-    //  rect(0, 0, width, mouseY - flashLightImage.height * 0.5);
-    //  rect(0, mouseY + flashLightImage.height * 0.5, width, height - mouseY + flashLightImage.height * 0.5);
-    //  rect(0, mouseY - flashLightImage.height * 0.5, mouseX - flashLightImage.width * 0.5, flashLightImage.height);
-    //  rect(mouseX + flashLightImage.width * 0.5, mouseY - flashLightImage.height * 0.5, width - mouseX + flashLightImage.width * 0.5, flashLightImage.height);
-    //} else {
-    //  fill(1, 1, 1, blackAlpha);
-    //  rect(0, 0, width, height);
-    //}
-
     mirrorPlaceButton.display();
     paintPlaceButton.display();
 
     if (noteInScene == true) {
       underbedPlaceButton.display();
     }
-   
+
     backButton.display();
     placeText.display();
-    
+
     underBedNote.display(delta);
 
     super.TransitionDisplay(delta);
@@ -95,13 +56,30 @@ class SamBedRoomScene extends SceneWithTransition implements IWaiter {
 
   void handleMousePressed() {
     if ( backButton.isPointInside( mouseX, mouseY ) ) {
-      changeState( HALLWAY2_ATTIC_SCENE );
+
+      if (firstTimeInRoom) {
+        this.allowMousePressed = false;
+        placeText.alpha = 0;
+        placeText.textBox.setText("Something happened in the Hallway");
+        placeText.show();
+
+        firstTimeInRoom = false;
+
+        soundManager.ATTIC_DOOR_FALL.play();
+
+        Hallway2AtticScene hall = ((Hallway2AtticScene)HALLWAY2_ATTIC_SCENE);
+        hall.atticStairsOpen = true;
+
+        waiter.waitForSeconds(3, this, 1, null);
+      } else {
+        changeState( HALLWAY2_ATTIC_SCENE );
+      }
     }
 
     if (noteInScene == true && underbedPlaceButton.isPointInside( mouseX, mouseY ) ) {
       noteInScene = false;
       underBedNote.enabled = true;
-      invManager.PickUpItem("notes_item", new Object[] { "notes_item page 5" }, underBedNote);
+      invManager.PickUpItem("notes_item", new Object[] { "notes_item page 3" }, underBedNote);
     }
   }
 
@@ -116,6 +94,9 @@ class SamBedRoomScene extends SceneWithTransition implements IWaiter {
   void execute(int executeId, Object obj) {
     if (executeId == 0) {
       placeText.hide();
+    } else if (executeId == 1) {
+      changeState( HALLWAY2_ATTIC_SCENE );
+      this.allowMousePressed = true;
     }
   }
 }

@@ -46,27 +46,28 @@ class ImageButton {
   }
 
   void display() {
-    if (onHoverButtonImage != null) {
-      if (alpha < 255 && isPointInside(mouseX, mouseY) && playDir != 1) {
-        to = 255;
-        anim.setBegin(alpha);
-        anim.setEnd(to);
-        playDir = 1;
-        anim.start();
-      } else if (alpha > 0 && isPointInside(mouseX, mouseY) == false && playDir != -1) {
-        to = 0;
-        anim.setBegin(alpha);
-        anim.setEnd(to);
-        playDir = -1;
-        anim.start();
+    if (allowMousePressed) {
+      if (onHoverButtonImage != null) {
+        if (alpha < 255 && isPointInside(mouseX, mouseY) && playDir != 1) {
+          to = 255;
+          anim.setBegin(alpha);
+          anim.setEnd(to);
+          playDir = 1;
+          anim.start();
+        } else if (alpha > 0 && isPointInside(mouseX, mouseY) == false && playDir != -1) {
+          to = 0;
+          anim.setBegin(alpha);
+          anim.setEnd(to);
+          playDir = -1;
+          anim.start();
+        }
+        pushStyle();
+        tint(overlayColor, alpha);
+        imageMode(CORNER);
+        image(onHoverButtonImage, x, y, onHoverButtonImage.width * widthRatio, onHoverButtonImage.height * heightRatio);
+        popStyle();
       }
-      pushStyle();
-      tint(overlayColor, alpha);
-      imageMode(CORNER);
-      image(onHoverButtonImage, x, y, onHoverButtonImage.width * widthRatio, onHoverButtonImage.height * heightRatio);
-      popStyle();
     }
-
     if (buttonImage != null)
       image( buttonImage, x, y, buttonImage.width * widthRatio, buttonImage.height * heightRatio);
   }

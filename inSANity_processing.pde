@@ -1,8 +1,5 @@
 // ============ VARIABLES ============ //<>// //<>// //<>//
 
-boolean playerHasFlashLight = false;
-boolean playerHasBatteries = false;
-
 //Fonts
 String MAIN_FONT_32 = "Gaiatype-32.vlw";
 String MAIN_FONT_12 = "Gaiatype-12.vlw";
@@ -35,13 +32,21 @@ State LIVINGROOM_SCENE;
 State LIVINGROOM_CHIMNEY_SCENE;
 State HALLWAY2_ATTIC_SCENE;
 State SAM_BEDROOM_SCENE;
+State ATTIC_SCENE;
+State CAR_INSIDE_SCENE;
+State END_CREDIT_SCENE;
 
 State TEST_SCENE;
+
+// =============== INPUT =============
+
+boolean allowMousePressed = true;
 
 float widthRatio = 1;
 float heightRatio = 1;
 
 boolean resetedByPlayer = false;
+
 
 void setup() {
 
@@ -53,14 +58,13 @@ void setup() {
   widthRatio = width / 1920.0;
   heightRatio = height / 1080.0;
 
+  allowMousePressed = true;
+
   Ani.init(this);
 
   waiter = new Waiter();
 
   soundManager = new SoundManager();
-
-  playerHasFlashLight = false;
-  playerHasBatteries = false;
 
   FRONTHOUSE_SCENE = new  FrontHouseScene();
   FRONTDOOR_SCENE = new   FrontDoorScene();
@@ -71,6 +75,9 @@ void setup() {
   LIVINGROOM_CHIMNEY_SCENE = new LivingRoomFireplaceScene();
   HALLWAY2_ATTIC_SCENE = new Hallway2AtticScene();
   SAM_BEDROOM_SCENE = new SamBedRoomScene();
+  ATTIC_SCENE = new AtticScene();
+  CAR_INSIDE_SCENE = new CarInsideScene();
+  END_CREDIT_SCENE = new EndCreditScene();
 
   TEST_SCENE = new TestScene();
 
@@ -82,7 +89,7 @@ void setup() {
   if (resetedByPlayer)
     stateHandler.changeStateTo( FRONTHOUSE_SCENE );
   else
-    stateHandler.changeStateTo( GROUND_HALLWAY_SCENE );
+    stateHandler.changeStateTo( HALLWAY2_ATTIC_SCENE );
 
   if (resetedByPlayer == false) {
     invManager.PickUpItem("notes_item", new Object[] {         
@@ -92,6 +99,8 @@ void setup() {
       "notes_item page 1"  }, null);
     invManager.PickUpItem("flashlight_item", new Object[] { "flashlight_item item 0" }, null);
     invManager.PickUpItem("batteries_item", new Object[] { "batteries_item item 0" }, null);
+
+    ((Hallway2AtticScene)HALLWAY2_ATTIC_SCENE).atticStairsOpen = true;
   }
 }
 
@@ -142,6 +151,27 @@ void keyReleased() {
   if (key == 't') {
     frameCount = -1;
   }
+  if (key == 'd') {
+    println("======================");
+    println("======================");
+    println("Usables");
+    for (Map.Entry<String, UsableItem> entry : usableItemManager.usablesMap.entrySet()) {
+      println(entry.getKey(), entry.getValue().name);
+    }
+
+    println("======================");
+    println("Inv Items itemsMap");
+    for (Map.Entry<String, InventoryItem> entry : invManager.itemsMap.entrySet()) {
+      println(entry.getKey(), entry.getValue().name);
+    }
+
+    println("======================");
+    println("Inv Items items");
+    for (int i = 0; i < invManager.items.size(); i++) {
+      InventoryItem item = invManager.items.get(i);
+      println(( item != null ? item.name : null));
+    }
+  }
 }
 
 void keyTyped() { 
@@ -149,9 +179,11 @@ void keyTyped() {
 }
 
 void mousePressed() { 
-  invPanel.handleMousePressed();
-  usableItemManager.handleMousePressed();
-  stateHandler.handleMousePressed();
+  if (allowMousePressed == true) {
+    invPanel.handleMousePressed();
+    usableItemManager.handleMousePressed();
+    stateHandler.handleMousePressed();
+  }
 }
 void mouseClicked() { 
   stateHandler.handleMouseClicked();

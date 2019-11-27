@@ -42,6 +42,12 @@ class NotesUsableItem extends DetailsItensScreen implements IAction, IHasHiddenL
 
   HashMap<Integer, PImage> hiddenImages = new HashMap<Integer, PImage>();
 
+  int hiddenWordsFound = 0;
+
+  final int MAX_WORDS_FOUND_TO_END = 15;
+  
+  boolean itemSoundEnabled = true; //in the game ends, disable sound
+
   NotesUsableItem() {
     allowSceneMousePressed = false;
     name = "notes_item";
@@ -305,7 +311,8 @@ class NotesUsableItem extends DetailsItensScreen implements IAction, IHasHiddenL
 
     closeButtonColliderEnabled = val;
 
-    soundManager.PICKUP_PAGE[(val == true) ? 1 : 0].play();
+    if (itemSoundEnabled == true)
+      soundManager.PICKUP_PAGE[(val == true) ? 1 : 0].play();
 
     if (val == true) {
       invManager.checkAndEnableHiddenImageForFlashLight(this);

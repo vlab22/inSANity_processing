@@ -1,4 +1,4 @@
-class FlashLightUsableItem extends UsableItem { //<>// //<>// //<>//
+class FlashLightUsableItem extends UsableItem implements IWaiter { //<>// //<>// //<>//
 
   PImage blackLightImage;
   PImage hiddenImage;
@@ -16,13 +16,18 @@ class FlashLightUsableItem extends UsableItem { //<>// //<>// //<>//
   PGraphics pg; 
   int[] maskArray;
 
+  TextBoxWithFader placeText = new TextBoxWithFader();
+
   FlashLightUsableItem() {
     super();
     blackLightImage = loadImage("BlackLight.png");
-    mask = loadImage("BlackLight mask.png");
+    blackLightImage.resize(round(blackLightImage.width * widthRatio), round(blackLightImage.height * heightRatio));
 
-    maskW = round(mask.width * widthRatio);
-    maskH = round(mask.height * heightRatio);
+    mask = loadImage("BlackLight mask.png");
+    mask.resize(round(mask.width * widthRatio), round(mask.height * heightRatio));
+
+    maskW = mask.width;
+    maskH = mask.height;
 
     masked = new PImage(maskW, maskH);
 
@@ -31,6 +36,8 @@ class FlashLightUsableItem extends UsableItem { //<>// //<>// //<>//
     maskArray = new int[maskW * maskH];
 
     createMaskArray();
+
+    placeText.enabled = false;
   }
 
   void display() {
@@ -55,7 +62,9 @@ class FlashLightUsableItem extends UsableItem { //<>// //<>// //<>//
       image(masked, xPos, yPos);
     }
 
-    image(blackLightImage, mouseX, mouseY, blackLightImage.width * widthRatio, blackLightImage.height * heightRatio);
+    image(blackLightImage, mouseX, mouseY);
+
+    placeText.display();
   }
 
   void step(float delta) {
@@ -66,23 +75,46 @@ class FlashLightUsableItem extends UsableItem { //<>// //<>// //<>//
       for (int i = 0; i < hiddenColliders.length; i++) {
         if (hiddenColliders[i].pointInCollider(xPos, yPos)) {
 
-          if (hiddenColliders[i].name == "kill") {
-            hiddenColliders[i].enabled = false;
-            soundManager.LIMBO_SOUND.play();
-          } else if (hiddenColliders[i].parent instanceof NotesUsableItem) {
+          if (hiddenColliders[i].parent instanceof NotesUsableItem) {
             hiddenColliders[i].enabled = false;
 
             int wordPage = Integer.parseInt(hiddenColliders[i].name.split(" ")[1]); //the page is the second value in string, example "page 2 0"
             int wordIndex = Integer.parseInt(hiddenColliders[i].name.split(" ")[2]); //the index is the third value in string, example "page 2 0"
 
+            NotesUsableItem notes = (NotesUsableItem)hiddenColliders[i].parent;
+
             if (wordPage == 5) {
-              //Final Page
+              //Final Page Goes To EndScene
+
               soundManager.LIMBO_SOUND.play();
-              
+              allowMousePressed = false;
+
+              waiter.waitForSeconds(5, this, 3, notes);
             } else {
-              NotesUsableItem notes = (NotesUsableItem)hiddenColliders[i].parent;
               UISprite hiddenWordSprite = notes.getHiddenWordSprite(wordIndex);
               hiddenWordSprite.enabled = true;
+
+              notes.hiddenWordsFound++;
+
+              println("hiddenWordsFound", notes.hiddenWordsFound);
+
+              if (notes.hiddenWordsFound >= notes.MAX_WORDS_FOUND_TO_END) {
+
+                //Unlock CAR
+                GarageScene garage = (GarageScene)GARAGE_SCENE;
+                garage.carPlaceEnabled = true;
+
+                placeText.setDuration(3);
+                placeText.textBox.setText("I want to leave this house right now!\r\nI can't handle it anymore!");
+                placeText.enabled = true;
+                placeText.show();
+
+                allowMousePressed = false; //lock player input mouse while playing messages
+
+                waiter.waitForSeconds(3, this, 0, notes);
+
+                println("Car collider enabled");
+              }
             }
           }
 
@@ -95,6 +127,48 @@ class FlashLightUsableItem extends UsableItem { //<>// //<>// //<>//
     }
 
     display();
+  }
+
+  void execute(int executeId, Object obj) {
+
+
+    //Run to garage messages
+    if (executeId == 0) {
+
+      placeText.hide();
+      waiter.waitForSeconds(0.5, this, 1, obj); //wait text fadeout
+    } else if (executeId == 1) {
+
+      if (stateHandler.currentState.name != "GarageScene") {
+        placeText.textBox.setText("I need to reach the garage right now!.");
+        placeText.show();
+
+        waiter.waitForSeconds(3, this, 2, obj); //wait text fadeout
+      } else {
+        placeText.disableAfterHide = true;
+        placeText.hide();
+        NotesUsableItem notes = (NotesUsableItem)obj;
+        allowMousePressed = true;
+      }
+    } else if (executeId == 2) {
+      placeText.disableAfterHide = true;
+      placeText.hide();
+      NotesUsableItem notes = (NotesUsableItem)obj;
+      allowMousePressed = true;
+    }
+
+    //END Game Sequence
+    else if (executeId == 3) {
+      NotesUsableItem notes = (NotesUsableItem)obj;
+      notes.itemSoundEnabled = false; //not play annoying sound when close
+      notes.setEnabled(false);
+
+      waiter.waitForSeconds(2, this, 4, notes);
+    } else if (executeId == 4) {
+      SceneWithTransition scene = (SceneWithTransition)stateHandler.currentState;
+      invPanel.closepanel();
+      scene.changeState(END_CREDIT_SCENE);
+    }
   }
 
   void setEnabled(boolean val) {
@@ -139,7 +213,7 @@ class FlashLightUsableItem extends UsableItem { //<>// //<>// //<>//
     pg.imageMode(CORNER);
     //pg.ellipse(-maskW * 2, -maskH * 2, maskW, maskH);
     //pg.ellipse(0, 0, maskW, maskH);
-    pg.image(mask, 0, 0, mask.width * widthRatio, mask.height * heightRatio);
+    pg.image(mask, 0, 0);
 
     pg.loadPixels();
     for (int x = 0; x < maskW; x++)

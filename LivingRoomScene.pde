@@ -52,9 +52,7 @@ class LivingRoomFireplaceScene extends SceneWithTransition { //<>// //<>// //<>/
     if ( diaryInScene == true && diaryButton.isPointInside( mouseX, mouseY ) ) {
       diaryInScene = false;
       invManager.PickUpItem("notes_item", new Object[] { 
-        "notes_item page 4",
-        "notes_item page 3",
-        "notes_item page 2",
+        "notes_item page 2", 
         "notes_item page 1" 
         }, diarySprite);
     }
@@ -67,14 +65,14 @@ class LivingRoomFireplaceScene extends SceneWithTransition { //<>// //<>// //<>/
   }
 }
 
-class LivingRoomScene extends SceneWithTransition implements IHasHiddenLayer {
+class LivingRoomScene extends SceneWithTransition implements IWaiter, IHasHiddenLayer {
 
   ImageButton backButton = new ImageButton( "arrowDown.png", round(908 * widthRatio), round(997 * heightRatio), "arrowDown outline.png" );
   ImageButton fireplaceButton = new ImageButton( null, round(93 * widthRatio), round(405 * heightRatio), "Living_room fireplace outline.png");
 
   boolean firePlaceTextEnabled = true;
 
-  TextBoxWithFader firePlaceText;
+  TextBoxWithFader placeText;
 
   SoundClip footStepsSoundClip;
 
@@ -89,7 +87,8 @@ class LivingRoomScene extends SceneWithTransition implements IHasHiddenLayer {
 
     footStepsSoundClip = new SoundClip("footstep01 0.800 seconds.wav");
 
-    firePlaceText = new TextBoxWithFader("That pictures over the Fireplace...");
+    placeText = new TextBoxWithFader("My old diary is over there as my mom said.");
+    placeText.alpha = 0;
 
     hiddenImage = loadImage("Living_room hidden.png");
     hiddenImage.resize(round(hiddenImage.width * widthRatio), round(hiddenImage.height * heightRatio));
@@ -97,7 +96,11 @@ class LivingRoomScene extends SceneWithTransition implements IHasHiddenLayer {
 
   void enterState(State oldState) {
     super.enterState(oldState);
-    firePlaceText.show();
+
+    if (!invManager.hasItem("notes_item")) {
+      placeText.show();
+      waiter.waitForSeconds(3.5, this, 0, null);
+    }
   }
 
   public void doStepWhileInState(float delta)
@@ -107,7 +110,7 @@ class LivingRoomScene extends SceneWithTransition implements IHasHiddenLayer {
     backButton.display();
     fireplaceButton.display();
 
-    firePlaceText.display();
+    placeText.display();
 
     super.TransitionDisplay(delta);
   }
@@ -122,12 +125,18 @@ class LivingRoomScene extends SceneWithTransition implements IHasHiddenLayer {
     }
   }
 
+  void execute(int executeId, Object obj) {
+    if (executeId == 0) {
+      placeText.hide(); 
+    }
+  }
+
   void changeState(State state) {
     stateHandler.changeStateTo( state );
     nextState = state;
     footStepsSoundClip.play();
 
-    firePlaceText.hide();
+    placeText.hide();
   }
 
   PImage getHiddenImage() {

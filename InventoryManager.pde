@@ -1,4 +1,4 @@
-import java.util.Arrays; //<>// //<>// //<>// //<>// //<>//
+import java.util.Arrays; //<>// //<>// //<>// //<>// //<>// //<>//
 
 enum ItemCategory {
   TOOL, 
@@ -16,6 +16,7 @@ class InventoryManager implements IWaiter {
 
   final HashMap<String, ItemCategory> itemsCategories = new HashMap<String, ItemCategory>();
   final HashMap<String, Boolean> allowMultiples = new HashMap<String, Boolean>();
+  final HashMap<String, Boolean> isUsableMap = new HashMap<String, Boolean>();
   final HashMap<String, String> itemsDisplayNames = new HashMap<String, String>();
 
   ArrayList<UISprite> movingSprites;
@@ -29,6 +30,11 @@ class InventoryManager implements IWaiter {
     allowMultiples.put("flashlight_item", false);
     allowMultiples.put("flashlight_batteries_item", false);
     allowMultiples.put("batteries_item", false);
+
+    isUsableMap.put("notes_item", true);
+    isUsableMap.put("flashlight_item", false);
+    isUsableMap.put("flashlight_batteries_item", true);
+    isUsableMap.put("batteries_item", false);
 
     itemsDisplayNames.put("notes_item", "Old Notes");
     itemsDisplayNames.put("flashlight_item", "Flash/Black Light");
@@ -135,6 +141,10 @@ class InventoryManager implements IWaiter {
     if (executeId == 0) {
       InventoryItem item = (InventoryItem)obj;
       inventoryPanel.addItem(item, item.slot);
+
+      if (isUsableMap.getOrDefault(item.name, false) == true) {
+        usableItemManager.createItem(item.name, false, item.objs);
+      }
     } else if (executeId == 1) {
       //Join items
 
@@ -169,7 +179,7 @@ class InventoryManager implements IWaiter {
 
         inventoryPanel.addItem(item, item.slot);
 
-        usableItemManager.createItem(item.name, item.objs);
+        usableItemManager.createItem(item.name, false, item.objs);
       }
 
       println(item1.name, item2.name);
@@ -213,7 +223,7 @@ class InventoryManager implements IWaiter {
     if (findItemByName("flashlight_item") != null) {
       //Has flashlight in inventory
       joinItems("batteries_item", "flashlight_item");
-      soundManager.INSERT_BATTERIES_SOUND.play(); //<>//
+      soundManager.INSERT_BATTERIES_SOUND.play();
     }
   }
 
@@ -242,6 +252,10 @@ class InventoryManager implements IWaiter {
     //  println("exception at checkAndEnableHiddenImageForFlashLight");
     //  e.printStackTrace();
     //}
+  }
+
+  boolean hasItem(String itemName) {
+    return itemsMap.containsKey(itemName);
   }
 }
 
@@ -428,18 +442,19 @@ class InventoryPanelItem {
       text(item.quantity, sprite.w - textSize - 4 * widthRatio, sprite.h - (itemFontSize + 4) * heightRatio);
     }
 
-    if (collisionEnabled && bounds.isPointInside(mouseX, mouseY)) {
-      if (outlineSprite.alpha <= 0 && (anim == null || anim.isPlaying() == false)) {
-        if (anim != null) anim.end();
-        anim = Ani.to(outlineSprite, 0.4, 0, "alpha", 255, Ani.CUBIC_OUT, this, "onUpdate:onUp");
+    if (allowMousePressed == true) {
+      if (collisionEnabled && bounds.isPointInside(mouseX, mouseY)) {
+        if (outlineSprite.alpha <= 0 && (anim == null || anim.isPlaying() == false)) {
+          if (anim != null) anim.end();
+          anim = Ani.to(outlineSprite, 0.4, 0, "alpha", 255, Ani.CUBIC_OUT, this, "onUpdate:onUp");
+          anim.start();
+        }
+      } else if (outlineSprite.alpha > 0 && (anim != null && anim.getEnd() == 255)) {
+        anim.end();
+        anim = Ani.to(outlineSprite, 0.4, 0, "alpha", 0, Ani.CUBIC_OUT, this, "onUpdate:onUp");
         anim.start();
       }
-    } else if (outlineSprite.alpha > 0 && (anim != null && anim.getEnd() == 255)) {
-      anim.end();
-      anim = Ani.to(outlineSprite, 0.4, 0, "alpha", 0, Ani.CUBIC_OUT, this, "onUpdate:onUp");
-      anim.start();
     }
-
     //Debug Bounds
     //popMatrix();
     fill(1, 1, 1, 100);

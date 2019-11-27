@@ -15,13 +15,13 @@ class UsableItemManager {
       }
       usable.setEnabled(!usable.enabled);
     } else {
-      createItem(itemName, codeObjs);
+      createItem(itemName, true, codeObjs);
     }
   }
 
   //Instanciate the object of the item
-  void createItem(String itemName, ArrayList<Object> codeObjs) {
-    UsableItem usable = null; //<>//
+  void createItem(String itemName, boolean activate, ArrayList<Object> codeObjs) {
+    UsableItem usable = null;
 
     switch (itemName) {
     case "notes_item":
@@ -31,7 +31,9 @@ class UsableItemManager {
         notes.addPage(codeObjs.get(i));
       }
 
-      notes.setEnabled(!notes.enabled);
+      if (activate)
+        notes.setEnabled(!notes.enabled);
+        
       usable = notes;
 
       break;
@@ -44,7 +46,7 @@ class UsableItemManager {
     case "flashlight_batteries_item":
       FlashLightUsableItem flash = new FlashLightUsableItem();
       usable = flash;
-      
+
       break;
 
     default:
