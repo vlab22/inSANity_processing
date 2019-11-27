@@ -16,8 +16,6 @@ class FlashLightUsableItem extends UsableItem implements IWaiter { //<>// //<>//
   PGraphics pg; 
   int[] maskArray;
 
-  TextBoxWithFader placeText = new TextBoxWithFader();
-
   FlashLightUsableItem() {
     super();
     blackLightImage = loadImage("BlackLight.png");
@@ -36,26 +34,12 @@ class FlashLightUsableItem extends UsableItem implements IWaiter { //<>// //<>//
     maskArray = new int[maskW * maskH];
 
     createMaskArray();
-
-    placeText.enabled = false;
   }
 
   void display() {
     imageMode(CENTER);
 
     if (hiddenImage != null) {
-      //if (!(mouseX < maskW/2 || mouseX > width - maskW/2))
-      //{
-      //  xPos = mouseX;
-      //  doCopy = true;
-      //}
-      //if (!(mouseY < maskH/2 || mouseY > height - maskH/2))
-      //{
-      //  yPos = mouseY;
-      //  doCopy = true;
-      //}
-      //if (doCopy) copyApplyMask();
-      //doCopy = false;
 
       copyApplyMask();
 
@@ -63,8 +47,6 @@ class FlashLightUsableItem extends UsableItem implements IWaiter { //<>// //<>//
     }
 
     image(blackLightImage, mouseX, mouseY);
-
-    placeText.display();
   }
 
   void step(float delta) {
@@ -72,50 +54,21 @@ class FlashLightUsableItem extends UsableItem implements IWaiter { //<>// //<>//
       xPos = mouseX;
       yPos = mouseY;
 
+      //Checks if the mouse hits the hiddencollider of hidden messages
+      //TODO: Move the gameplay rules to other class
+      //Each hiddenCollider, after hit, is disable and a COUNTER (notes.hiddenWordsFound) is incremented
+      //If reachs 15, unlocks the CAR_SCENE (actually unlocks the button that navigate to CAR_SCENE)
+
+      //If hit a hiddenCollider in wordPage 5 (the final page, only avaiable inside the car) so triggers the Final
+      //Before some actions allowMousePressed is set to false to lock all mousePressed input
+
       for (int i = 0; i < hiddenColliders.length; i++) {
+
         if (hiddenColliders[i].pointInCollider(xPos, yPos)) {
 
+          hiddenColliders[i].parent.hiddenColliderHit(hiddenColliders[i]);
+
           if (hiddenColliders[i].parent instanceof NotesUsableItem) {
-            hiddenColliders[i].enabled = false;
-
-            int wordPage = Integer.parseInt(hiddenColliders[i].name.split(" ")[1]); //the page is the second value in string, example "page 2 0"
-            int wordIndex = Integer.parseInt(hiddenColliders[i].name.split(" ")[2]); //the index is the third value in string, example "page 2 0"
-
-            NotesUsableItem notes = (NotesUsableItem)hiddenColliders[i].parent;
-
-            if (wordPage == 5) {
-              //Final Page Goes To EndScene
-
-              soundManager.LIMBO_SOUND.play();
-              allowMousePressed = false;
-
-              waiter.waitForSeconds(5, this, 3, notes);
-            } else {
-              UISprite hiddenWordSprite = notes.getHiddenWordSprite(wordIndex);
-              hiddenWordSprite.enabled = true;
-
-              notes.hiddenWordsFound++;
-
-              println("hiddenWordsFound", notes.hiddenWordsFound);
-
-              if (notes.hiddenWordsFound >= notes.MAX_WORDS_FOUND_TO_END) {
-
-                //Unlock CAR
-                GarageScene garage = (GarageScene)GARAGE_SCENE;
-                garage.carPlaceEnabled = true;
-
-                placeText.setDuration(3);
-                placeText.textBox.setText("I want to leave this house right now!\r\nI can't handle it anymore!");
-                placeText.enabled = true;
-                placeText.show();
-
-                allowMousePressed = false; //lock player input mouse while playing messages
-
-                waiter.waitForSeconds(3, this, 0, notes);
-
-                println("Car collider enabled");
-              }
-            }
           }
 
           println("inside", hiddenColliders[i].name);
@@ -127,48 +80,6 @@ class FlashLightUsableItem extends UsableItem implements IWaiter { //<>// //<>//
     }
 
     display();
-  }
-
-  void execute(int executeId, Object obj) {
-
-
-    //Run to garage messages
-    if (executeId == 0) {
-
-      placeText.hide();
-      waiter.waitForSeconds(0.5, this, 1, obj); //wait text fadeout
-    } else if (executeId == 1) {
-
-      if (stateHandler.currentState.name != "GarageScene") {
-        placeText.textBox.setText("I need to reach the garage right now!.");
-        placeText.show();
-
-        waiter.waitForSeconds(3, this, 2, obj); //wait text fadeout
-      } else {
-        placeText.disableAfterHide = true;
-        placeText.hide();
-        NotesUsableItem notes = (NotesUsableItem)obj;
-        allowMousePressed = true;
-      }
-    } else if (executeId == 2) {
-      placeText.disableAfterHide = true;
-      placeText.hide();
-      NotesUsableItem notes = (NotesUsableItem)obj;
-      allowMousePressed = true;
-    }
-
-    //END Game Sequence
-    else if (executeId == 3) {
-      NotesUsableItem notes = (NotesUsableItem)obj;
-      notes.itemSoundEnabled = false; //not play annoying sound when close
-      notes.setEnabled(false);
-
-      waiter.waitForSeconds(2, this, 4, notes);
-    } else if (executeId == 4) {
-      SceneWithTransition scene = (SceneWithTransition)stateHandler.currentState;
-      invPanel.closepanel();
-      scene.changeState(END_CREDIT_SCENE);
-    }
   }
 
   void setEnabled(boolean val) {
@@ -232,20 +143,23 @@ class FlashLightUsableItem extends UsableItem implements IWaiter { //<>// //<>//
     masked = hiddenImage.get(xPos - maskW/2, yPos - maskH/2, maskW, maskH);
     masked.mask(maskArray);
   }
+
+  void execute(int executeId, Object obj) {
+  }
 }
 
 class HiddenCollider {
   String name;
   Rect rect;
   boolean enabled = true;
-  Object parent;
+  IHasHiddenLayer parent;
 
   HiddenCollider(String name, float x, float y, float w, float h) {
     this.name = name;
     this.rect = new Rect(x, y, w, h);
   }
 
-  HiddenCollider(Object pParent, String name, float x, float y, float w, float h) {
+  HiddenCollider(IHasHiddenLayer pParent, String name, float x, float y, float w, float h) {
     this(name, x, y, w, h);
     parent = pParent;
   }

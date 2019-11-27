@@ -1,7 +1,7 @@
 import java.util.TreeMap; //<>// //<>// //<>// //<>// //<>//
 import java.util.*;
 
-class NotesUsableItem extends DetailsItensScreen implements IAction, IHasHiddenLayer {
+class NotesUsableItem extends DetailsItensScreen implements IHasHiddenLayer, IWaiter {
 
   float x = 642 * widthRatio;
   float y = 108 * heightRatio;
@@ -45,8 +45,10 @@ class NotesUsableItem extends DetailsItensScreen implements IAction, IHasHiddenL
   int hiddenWordsFound = 0;
 
   final int MAX_WORDS_FOUND_TO_END = 15;
-  
+
   boolean itemSoundEnabled = true; //in the game ends, disable sound
+
+  TextBoxWithFader placeText = new TextBoxWithFader();
 
   NotesUsableItem() {
     allowSceneMousePressed = false;
@@ -206,6 +208,8 @@ class NotesUsableItem extends DetailsItensScreen implements IAction, IHasHiddenL
     closeButton.x = round(x + closeButtonX);
     closeButton.y = round(y + closeButtonY);
 
+    placeText.display();
+
     rightArrow.display();
     leftArrow.display();
     closeButton.display();
@@ -334,9 +338,6 @@ class NotesUsableItem extends DetailsItensScreen implements IAction, IHasHiddenL
   public void foo() {
   }
 
-  void execute(Object obj) {
-  }
-
   private boolean isPlaying() {
     for (int i = 0; i < anim.length; i++) {
       if (anim[i].isPlaying() || anim[i].isDelaying()) {
@@ -379,6 +380,89 @@ class NotesUsableItem extends DetailsItensScreen implements IAction, IHasHiddenL
 
   HiddenCollider[] getHiddenColliders() {
     return hiddenWordsColliders.get(currentPageNumber);
+  }
+
+  void hiddenColliderHit(HiddenCollider hc) {
+    hc.enabled = false;
+
+    int wordPage = Integer.parseInt(hc.name.split(" ")[1]); //the page is the second value in string, example "page 2 0"
+    int wordIndex = Integer.parseInt(hc.name.split(" ")[2]); //the index is the third value in string, example "page 2 0"
+
+    if (wordPage == 5) {
+      //Final Page Goes To EndScene
+
+      soundManager.LIMBO_SOUND.play();
+      allowMousePressed = false;
+
+      waiter.waitForSeconds(5, this, 3, this);
+    } else {
+      UISprite hiddenWordSprite = this.getHiddenWordSprite(wordIndex);
+      hiddenWordSprite.enabled = true;
+
+      this.hiddenWordsFound++;
+
+      println("hiddenWordsFound", this.hiddenWordsFound);
+
+      if (this.hiddenWordsFound >= this.MAX_WORDS_FOUND_TO_END) {
+
+        //Unlock CAR
+        GarageScene garage = (GarageScene)GARAGE_SCENE;
+        garage.carPlaceEnabled = true;
+
+        placeText.setDuration(3);
+        placeText.textBox.setText("I want to leave this house right now!\r\nI can't handle it anymore!");
+        placeText.enabled = true;
+        placeText.show();
+
+        allowMousePressed = false; //lock player input mouse while playing messages
+
+        waiter.waitForSeconds(3, this, 0, this);
+
+        println("Car collider enabled");
+      }
+    }
+  }
+
+  void execute(int executeId, Object obj) {
+
+
+    //Run to garage messages
+    if (executeId == 0) {
+
+      placeText.hide();
+      waiter.waitForSeconds(0.5, this, 1, obj); //wait text fadeout
+    } else if (executeId == 1) {
+
+      if (stateHandler.currentState.name != "GarageScene") {
+        placeText.textBox.setText("I need to reach the garage right now!.");
+        placeText.show();
+
+        waiter.waitForSeconds(3, this, 2, obj); //wait text fadeout
+      } else {
+        placeText.disableAfterHide = true;
+        placeText.hide();
+        NotesUsableItem notes = (NotesUsableItem)obj;
+        allowMousePressed = true;
+      }
+    } else if (executeId == 2) {
+      placeText.disableAfterHide = true;
+      placeText.hide();
+      NotesUsableItem notes = (NotesUsableItem)obj;
+      allowMousePressed = true;
+    }
+
+    //END Game Sequence
+    else if (executeId == 3) {
+      NotesUsableItem notes = (NotesUsableItem)obj;
+      notes.itemSoundEnabled = false; //not play annoying sound when close
+      notes.setEnabled(false);
+
+      waiter.waitForSeconds(2, this, 4, notes);
+    } else if (executeId == 4) {
+      SceneWithTransition scene = (SceneWithTransition)stateHandler.currentState;
+      invPanel.closepanel();
+      scene.changeState(END_CREDIT_SCENE);
+    }
   }
 }
 

@@ -1,19 +1,44 @@
 import processing.sound.*;
 
-class FrontHouseScene extends SceneWithTransition
+class FrontHouseScene extends SceneWithTransition implements IWaiter
 {
   ImageButton houseFrontDoorButton = new ImageButton(null, round(967 * widthRatio), round(655 * heightRatio), "House_front door overlay.png");
   SoundClip footStepsSoundClip;
 
+  TextBoxWithFader placeText = new TextBoxWithFader();
+
   FrontHouseScene() {
     super( "House_front.png" );
+    
+    background = loadImage( filename );
+    
     footStepsSoundClip = new SoundClip("footstep01 0.800 seconds.wav");
+  }
+
+  void enterState( State oldState )
+  {
+    super.enterState(oldState);
+
+    placeText.textBox.setText("My childhood house. My mother left my diary on\r\nthe fireplace's table");
+    placeText.alpha = 0;
+    placeText.show();
+    
+    waiter.waitForSeconds(12, this, 0, null);
+    
+  }
+  
+  void execute(int executeId, Object obj) {
+    if (executeId == 0) {
+      placeText.hide();
+    }
   }
 
   public void doStepWhileInState(float delta)
   {
     super.doStepWhileInState(delta);
     houseFrontDoorButton.display();
+
+    placeText.display();
 
     super.TransitionDisplay(delta);
   }

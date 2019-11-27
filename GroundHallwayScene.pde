@@ -1,6 +1,6 @@
 class GroundHallwayScene extends SceneWithTransition
 {
-  ImageButton toOutofHouseButton = new ImageButton( "arrowDown.png", round(908 * widthRatio), round(997 * heightRatio), "arrowDown outline.png" );
+  //ImageButton toOutofHouseButton = new ImageButton( "arrowDown.png", round(908 * widthRatio), round(997 * heightRatio), "arrowDown outline.png" );
   ImageButton toUpstairsButton = new ImageButton( "arrowUp.png", round(908 * widthRatio), round(340 * heightRatio), "arrowUp outline.png" );
   ImageButton toLivingRoomButton = new ImageButton( "arrowLeft.png", round(531 * widthRatio), round(774 * heightRatio), "arrowLeft outline.png" );
 
@@ -21,7 +21,7 @@ class GroundHallwayScene extends SceneWithTransition
   {
     super.doStepWhileInState(delta);
 
-    toOutofHouseButton.display();
+    //toOutofHouseButton.display();
     toUpstairsButton.display();
     toLivingRoomButton.display();
 
@@ -37,9 +37,9 @@ class GroundHallwayScene extends SceneWithTransition
     if ( toUpstairsButton.isPointInside(mouseX, mouseY) ) {
       changeState(HALLWAY2_ATTIC_SCENE);
     }
-    if ( toOutofHouseButton.isPointInside( mouseX, mouseY ) ) {
-      changeState(FRONTDOOR_SCENE);
-    }
+    //if ( toOutofHouseButton.isPointInside( mouseX, mouseY ) ) {
+    //  changeState(FRONTDOOR_SCENE);
+    //}
     if ( garageDoorPlaceButton.isPointInside( mouseX, mouseY ) ) {
       changeState(GARAGE_SCENE);
       doorOpenSoundClip.play();

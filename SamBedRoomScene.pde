@@ -26,6 +26,8 @@ class SamBedRoomScene extends SceneWithTransition implements IWaiter {
     flashLightImage = loadImage("Flashlight light alpha.png");
 
     underBedNote.enabled = false;
+
+    placeText.enabled = false;
   }
 
   void enterState(State oldState) {
@@ -76,6 +78,10 @@ class SamBedRoomScene extends SceneWithTransition implements IWaiter {
       }
     }
 
+    if ( mirrorPlaceButton.isPointInside( mouseX, mouseY ) ) {
+      changeState(SAM_BEDROOM_MIRROR_SCENE);
+    }
+
     if (noteInScene == true && underbedPlaceButton.isPointInside( mouseX, mouseY ) ) {
       noteInScene = false;
       underBedNote.enabled = true;
@@ -98,5 +104,72 @@ class SamBedRoomScene extends SceneWithTransition implements IWaiter {
       changeState( HALLWAY2_ATTIC_SCENE );
       this.allowMousePressed = true;
     }
+  }
+}
+
+class SamBedRoomMirrorScene extends SceneWithTransition implements IHasHiddenLayer {
+  ImageButton backButton = new ImageButton( "arrowDown.png", round(825 * widthRatio), round(997 * heightRatio), "arrowDown outline.png" );
+
+  TextBoxWithFader placeText = new TextBoxWithFader("It's too dark, I remember to have a flashlight\r\nin the garage", false);
+
+  PImage hiddenImage;
+
+  HiddenCollider[] hiddenColliders = new HiddenCollider[] {
+    new HiddenCollider("foo", 103, 286, 398, 89)
+  };
+
+  SamBedRoomMirrorScene() {
+    super("Sam_bedroom_mirror.png");
+    hiddenImage = loadImage("Sam_bedroom_mirror hidden.png");
+    hiddenImage.resize(round(hiddenImage.width * widthRatio), round(hiddenImage.height * heightRatio));
+  }
+
+  void enterState(State oldState) {
+    super.enterState(oldState);
+  }
+
+  void checkMessages() {
+  }
+
+  public void doStepWhileInState(float delta)
+  {
+    super.doStepWhileInState(delta);
+
+    backButton.display();
+
+    placeText.display();
+
+    super.TransitionDisplay(delta);
+  }
+
+  void handleMousePressed() {
+    if ( backButton.isPointInside( mouseX, mouseY ) ) {
+      changeState(SAM_BEDROOM_SCENE);
+    }
+  }
+
+  void execute(int executeId, Object obj) {
+    if (executeId == 0) {
+      placeText.hide();
+    }
+  }
+
+  void changeState(State state) {
+    stateHandler.changeStateTo( state );
+    soundManager.FOOT_STEPS.play();
+
+    if (placeText.alpha > 0)
+      placeText.hide();
+  }
+
+  PImage getHiddenImage() {
+    return hiddenImage;
+  }
+
+  HiddenCollider[] getHiddenColliders() {
+    return hiddenColliders;
+  }
+
+  void hiddenColliderHit(HiddenCollider hc) {
   }
 }

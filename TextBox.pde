@@ -1,4 +1,4 @@
-class TextBoxWithFader {  //<>// //<>// //<>// //<>//
+class TextBoxWithFader {  //<>// //<>// //<>// //<>// //<>//
 
   private int alpha;
 
@@ -26,6 +26,8 @@ class TextBoxWithFader {  //<>// //<>// //<>// //<>//
     this.showDuration = 1;
     this.hideDuration = 0.5;
     this.delay = 0.2;
+    
+    this.enabled = false;
 
     anim = new Ani(this, 0.2, 0, "alpha", 255, Ani.QUAD_OUT, this, "onUpdate:update");
     anim.end();
@@ -67,6 +69,7 @@ class TextBoxWithFader {  //<>// //<>// //<>// //<>//
 
   void show() {
     println("textbox show", alpha, frameCount, "text:", textBox.text);
+    this.enabled = true;
     setFrom(alpha);
     setTo(255);
     setDuration(showDuration);

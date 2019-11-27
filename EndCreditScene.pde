@@ -33,8 +33,11 @@ class EndCreditScene extends SceneWithTransition implements IHasHiddenLayer
   PImage getHiddenImage() {
     return endCreditHiddenImage;
   }
-  
+
   HiddenCollider[] getHiddenColliders() {
     return new HiddenCollider[0];
+  }
+
+  void hiddenColliderHit(HiddenCollider hc) {
   }
 }

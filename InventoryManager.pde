@@ -1,4 +1,4 @@
-import java.util.Arrays; //<>// //<>// //<>// //<>// //<>// //<>//
+import java.util.Arrays; //<>// //<>// //<>// //<>// //<>// //<>// //<>//
 
 enum ItemCategory {
   TOOL, 
@@ -571,8 +571,4 @@ class Bounds {
   boolean isPointInside( int px, int py ) {
     return isPointInRectangle( px, py, x, y, w, h);
   }
-}
-
-interface IAction {
-  void execute(Object obj);
 }

@@ -1,4 +1,4 @@
-class LivingRoomFireplaceScene extends SceneWithTransition { //<>// //<>// //<>// //<>//
+class LivingRoomFireplaceScene extends SceneWithTransition { //<>// //<>// //<>// //<>// //<>//
 
   ImageButton backButton = new ImageButton( "arrowDown.png", round(908 * widthRatio), round(997 * heightRatio), "arrowDown outline.png" );
   ImageButton diaryButton = new ImageButton( null, round(620 * widthRatio), round(976 * heightRatio), "Living_room_Chimney_Photo diary overlay.png" );
@@ -117,6 +117,12 @@ class LivingRoomScene extends SceneWithTransition implements IWaiter, IHasHidden
 
   void handleMousePressed() {
     if ( backButton.isPointInside( mouseX, mouseY ) ) {
+
+      if (invManager.hasItem("notes_item")) {
+        NotesUsableItem notes = (NotesUsableItem)usableItemManager.usablesMap.get("notes_item");
+        InventoryItem item = invManager.findItemByName("notes_item");
+      }
+
       changeState( GROUND_HALLWAY_SCENE );
     }
 
@@ -127,7 +133,7 @@ class LivingRoomScene extends SceneWithTransition implements IWaiter, IHasHidden
 
   void execute(int executeId, Object obj) {
     if (executeId == 0) {
-      placeText.hide(); 
+      placeText.hide();
     }
   }
 
@@ -145,5 +151,8 @@ class LivingRoomScene extends SceneWithTransition implements IWaiter, IHasHidden
 
   HiddenCollider[] getHiddenColliders() {
     return new HiddenCollider[0];
+  }
+
+  void hiddenColliderHit(HiddenCollider hc) {
   }
 }

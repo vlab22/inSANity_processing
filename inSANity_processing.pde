@@ -1,4 +1,4 @@
-// ============ VARIABLES ============ //<>// //<>// //<>//
+// ============ VARIABLES ============ //<>// //<>// //<>// //<>// //<>//
 
 //Fonts
 String MAIN_FONT_32 = "Gaiatype-32.vlw";
@@ -7,7 +7,7 @@ String MAIN_FONT_12 = "Gaiatype-12.vlw";
 //Global Reference to PApplet to be used inside classes
 PApplet thisApplet = this; 
 
-//Waiter, class to wait for a amount of seconds
+//Waiter, class to wait for a amount of seconds and than run a method after it
 Waiter waiter;
 
 //Inventory
@@ -32,27 +32,33 @@ State LIVINGROOM_SCENE;
 State LIVINGROOM_CHIMNEY_SCENE;
 State HALLWAY2_ATTIC_SCENE;
 State SAM_BEDROOM_SCENE;
+State SAM_BEDROOM_MIRROR_SCENE;
 State ATTIC_SCENE;
 State CAR_INSIDE_SCENE;
 State END_CREDIT_SCENE;
 
+
 State TEST_SCENE;
 
-// =============== INPUT =============
+// =============== INPUTS =============
 
 boolean allowMousePressed = true;
+
+// ==========
 
 float widthRatio = 1;
 float heightRatio = 1;
 
-boolean resetedByPlayer = false;
+// ========== DEBUG ============
 
+boolean resetedByPlayer = false;
+boolean DEBUG = true;
 
 void setup() {
 
-  //fullScreen(P2D);
+  fullScreen(P2D);
   //size( 1920, 1280, P2D );
-  size( 1280, 720, P2D );
+  //size( 1280, 720, P2D );
   noStroke();
 
   widthRatio = width / 1920.0;
@@ -75,6 +81,7 @@ void setup() {
   LIVINGROOM_CHIMNEY_SCENE = new LivingRoomFireplaceScene();
   HALLWAY2_ATTIC_SCENE = new Hallway2AtticScene();
   SAM_BEDROOM_SCENE = new SamBedRoomScene();
+  SAM_BEDROOM_MIRROR_SCENE = new SamBedRoomMirrorScene();
   ATTIC_SCENE = new AtticScene();
   CAR_INSIDE_SCENE = new CarInsideScene();
   END_CREDIT_SCENE = new EndCreditScene();
@@ -86,12 +93,15 @@ void setup() {
 
   usableItemManager = new UsableItemManager();
 
-  if (resetedByPlayer)
+  if (resetedByPlayer || DEBUG == false) {
+    //The first Scene
     stateHandler.changeStateTo( FRONTHOUSE_SCENE );
-  else
+  } else {
+    //Scene to DEBUG
     stateHandler.changeStateTo( HALLWAY2_ATTIC_SCENE );
-
-  if (resetedByPlayer == false) {
+  }
+  if (resetedByPlayer == false && DEBUG == true) {
+    //DEBUG, God mode
     invManager.PickUpItem("notes_item", new Object[] {         
       "notes_item page 4", 
       "notes_item page 3", 
