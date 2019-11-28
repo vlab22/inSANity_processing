@@ -1,4 +1,4 @@
-class CarInsideScene extends SceneWithTransition { //<>// //<>// //<>// //<>//
+class CarInsideScene extends SceneWithTransition { //<>// //<>// //<>// //<>// //<>//
 
   ImageButton backButton = new ImageButton( "arrowDown.png", round(908 * widthRatio), round(997 * heightRatio), "arrowDown outline.png" );
   ImageButton diaryButton = new ImageButton( null, round(1267 * widthRatio), round(438 * heightRatio), "Car_Inside note overlay.png" );

@@ -1,8 +1,9 @@
-import java.util.Arrays; //<>// //<>// //<>// //<>// //<>// //<>// //<>//
+import java.util.Arrays; //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>//
 
 enum ItemCategory {
   TOOL, 
-    NOTE,
+    NOTE, 
+    KEY,
 }
 
 class InventoryManager implements IWaiter { 
@@ -30,21 +31,25 @@ class InventoryManager implements IWaiter {
     allowMultiples.put("flashlight_item", false);
     allowMultiples.put("flashlight_batteries_item", false);
     allowMultiples.put("batteries_item", false);
+    allowMultiples.put("garage_key_item", false);
 
     isUsableMap.put("notes_item", true);
     isUsableMap.put("flashlight_item", false);
     isUsableMap.put("flashlight_batteries_item", true);
     isUsableMap.put("batteries_item", false);
+    isUsableMap.put("garage_key_item", false);
 
     itemsDisplayNames.put("notes_item", "Old Notes");
     itemsDisplayNames.put("flashlight_item", "Flash/Black Light");
     itemsDisplayNames.put("flashlight_batteries_item", "Flash/Black Light");
     itemsDisplayNames.put("batteries_item", "Batteries");
+    itemsDisplayNames.put("garage_key_item", "Garage Key");
 
     itemsCategories.put("notes_item", ItemCategory.NOTE);
     itemsCategories.put("flashlight_item", ItemCategory.TOOL);
     itemsCategories.put("flashlight_batteries_item", ItemCategory.TOOL);
     itemsCategories.put("batteries_item", ItemCategory.TOOL);
+    itemsCategories.put("garage_key_item", ItemCategory.KEY);
 
     inventoryPanel = pInventoryPanel;
 

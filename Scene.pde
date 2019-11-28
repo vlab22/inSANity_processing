@@ -1,4 +1,4 @@
-abstract class SceneWithTransition extends Scene //<>// //<>// //<>//
+abstract class SceneWithTransition extends Scene //<>// //<>// //<>// //<>// //<>//
 {
   SceneTransition sceneEnterTransition;
   SceneTransition sceneLeaveTransition;
@@ -44,7 +44,7 @@ abstract class SceneWithTransition extends Scene //<>// //<>// //<>//
   }
 }
 
-abstract class Scene extends State //<>// //<>// //<>//
+abstract class Scene extends State //<>// //<>// //<>// //<>// //<>//
 {
   PImage background;
   String filename;

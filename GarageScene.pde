@@ -84,9 +84,9 @@ class GarageShelfScene extends SceneWithTransition implements IWaiter/*, IHasHid
 
   PImage hiddenImage;
 
-  HiddenCollider[] hiddenColliders = new HiddenCollider[] {
-    new HiddenCollider("kill", 103, 286, 398, 89)
-  };
+  //HiddenCollider[] hiddenColliders = new HiddenCollider[] {
+  //  new HiddenCollider(this, "kill", 103, 286, 398, 89)
+  //};
 
   GarageShelfScene() {
     super("Garage_shelf.png");

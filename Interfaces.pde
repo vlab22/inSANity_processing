@@ -1,5 +1,5 @@
 interface IAnim {
-  void onAnimShow();
+  void onAnimShow(Object obj);
   void onAnimEnd(Object obj);
 }
 interface IHasHiddenLayer {

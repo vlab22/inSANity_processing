@@ -13,8 +13,9 @@ class SamBedRoomScene extends SceneWithTransition implements IWaiter {
 
   boolean isFlashLightOn;
 
+  boolean allowUnderBed = false;  //Flag activated by mirror hiddencollider using the blacklight
   boolean noteInScene = true;
-
+  
   PImage flashLightImage;
 
   boolean firstTimeInRoom = true;
@@ -44,7 +45,7 @@ class SamBedRoomScene extends SceneWithTransition implements IWaiter {
     mirrorPlaceButton.display();
     paintPlaceButton.display();
 
-    if (noteInScene == true) {
+    if (allowUnderBed == true && noteInScene == true) {
       underbedPlaceButton.display();
     }
 
@@ -82,7 +83,7 @@ class SamBedRoomScene extends SceneWithTransition implements IWaiter {
       changeState(SAM_BEDROOM_MIRROR_SCENE);
     }
 
-    if (noteInScene == true && underbedPlaceButton.isPointInside( mouseX, mouseY ) ) {
+    if (allowUnderBed == true && noteInScene == true && underbedPlaceButton.isPointInside( mouseX, mouseY ) ) {
       noteInScene = false;
       underBedNote.enabled = true;
       invManager.PickUpItem("notes_item", new Object[] { "notes_item page 3" }, underBedNote);
@@ -115,7 +116,7 @@ class SamBedRoomMirrorScene extends SceneWithTransition implements IHasHiddenLay
   PImage hiddenImage;
 
   HiddenCollider[] hiddenColliders = new HiddenCollider[] {
-    new HiddenCollider("foo", 103, 286, 398, 89)
+    new HiddenCollider(this, "unlock sam under bed button", 810, 505, 191, 259)
   };
 
   SamBedRoomMirrorScene() {
@@ -171,5 +172,10 @@ class SamBedRoomMirrorScene extends SceneWithTransition implements IHasHiddenLay
   }
 
   void hiddenColliderHit(HiddenCollider hc) {
+    hc.enabled = false;  //allways disable the collider stop the collision detection
+    
+    //Enable the underBed overlay in SAM_B
+    SamBedRoomScene samBed = (SamBedRoomScene)SAM_BEDROOM_SCENE;
+    samBed.allowUnderBed = true;
   }
 }

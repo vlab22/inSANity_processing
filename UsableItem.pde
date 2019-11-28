@@ -1,4 +1,4 @@
-import java.util.TreeMap; //<>// //<>// //<>// //<>// //<>//
+import java.util.TreeMap; //<>// //<>// //<>// //<>// //<>// //<>// //<>//
 import java.util.*;
 
 class NotesUsableItem extends DetailsItensScreen implements IHasHiddenLayer, IWaiter {
@@ -409,7 +409,7 @@ class NotesUsableItem extends DetailsItensScreen implements IHasHiddenLayer, IWa
         GarageScene garage = (GarageScene)GARAGE_SCENE;
         garage.carPlaceEnabled = true;
 
-        placeText.setDuration(3);
+        placeText.setFadeInDuration(3);
         placeText.textBox.setText("I want to leave this house right now!\r\nI can't handle it anymore!");
         placeText.enabled = true;
         placeText.show();
@@ -433,8 +433,8 @@ class NotesUsableItem extends DetailsItensScreen implements IHasHiddenLayer, IWa
       waiter.waitForSeconds(0.5, this, 1, obj); //wait text fadeout
     } else if (executeId == 1) {
 
-      if (stateHandler.currentState.name != "GarageScene") {
-        placeText.textBox.setText("I need to reach the garage right now!.");
+      if (stateHandler.currentState.name.equals("GarageScene") == false) {
+        placeText.textBox.setText("I need to reach the garage right now!."); //<>// //<>// //<>//
         placeText.show();
 
         waiter.waitForSeconds(3, this, 2, obj); //wait text fadeout

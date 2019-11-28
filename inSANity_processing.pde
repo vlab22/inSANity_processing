@@ -1,4 +1,4 @@
-// ============ VARIABLES ============ //<>// //<>// //<>// //<>// //<>//
+// ============ VARIABLES ============ //<>// //<>// //<>// //<>// //<>// //<>// //<>//
 
 //Fonts
 String MAIN_FONT_32 = "Gaiatype-32.vlw";
@@ -37,7 +37,6 @@ State ATTIC_SCENE;
 State CAR_INSIDE_SCENE;
 State END_CREDIT_SCENE;
 
-
 State TEST_SCENE;
 
 // =============== INPUTS =============
@@ -56,9 +55,9 @@ boolean DEBUG = true;
 
 void setup() {
 
-  fullScreen(P2D);
+  //fullScreen(P2D);
   //size( 1920, 1280, P2D );
-  //size( 1280, 720, P2D );
+  size( 1280, 720, P2D );
   noStroke();
 
   widthRatio = width / 1920.0;

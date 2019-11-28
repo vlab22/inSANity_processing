@@ -6,15 +6,22 @@ class GroundHallwayScene extends SceneWithTransition
 
   ImageButton garageDoorPlaceButton = new ImageButton( null, round(1343 * widthRatio), round(169 * heightRatio), "Ground_Hallway garage door overlay.png");
 
+  TextBoxWithFader placeText = new TextBoxWithFader();
+
   SoundClip footStepsSoundClip;
   SoundClip doorOpenSoundClip;
 
   float angle = 0;
 
+  boolean garageDoorLocked = true;
+
   GroundHallwayScene() {
     super( "Ground_Hallway.png" );
     footStepsSoundClip = new SoundClip("footstep01 0.800 seconds.wav");
     doorOpenSoundClip = new SoundClip("53280__the-bizniss__front-door-open.wav");
+
+    placeText.enabled = false;
+    placeText.alpha = 0;
   }
 
   public void doStepWhileInState(float delta)
@@ -41,8 +48,17 @@ class GroundHallwayScene extends SceneWithTransition
     //  changeState(FRONTDOOR_SCENE);
     //}
     if ( garageDoorPlaceButton.isPointInside( mouseX, mouseY ) ) {
-      changeState(GARAGE_SCENE);
-      doorOpenSoundClip.play();
+
+      if (garageDoorLocked == true && invManager.hasItem("garage_key_item") == false) {
+        //Garage Locked and player doesn't have a key
+      } else if (garageDoorLocked == true && invManager.hasItem("garage_key_item") == true) {
+        //Player unlock the door
+        garageDoorLocked = true;
+      } else if (garageDoorLocked == false)
+      {
+        changeState(GARAGE_SCENE);
+        doorOpenSoundClip.play();
+      }
     }
   }
 

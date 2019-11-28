@@ -1,9 +1,67 @@
-class TextBoxWithFader {  //<>// //<>// //<>// //<>// //<>//
+class TextBoxManager implements IWaiter, IAnim { //<>//
+
+  HashSet<TextItem> textBoxesMap = new HashSet<TextItem>();
+  HashSet<TextBoxWithFader> itemsToHideRemove = new HashSet<TextBoxWithFader>();
+
+  final float DEFAULT_FADE_IN_DURATION = 0.2;
+  final float DEFAULT_FADE_OUT_DURATION = 0.2;
+
+  final float DEFAULT_DURATION = 3;
+
+
+  void step(float delta) {
+    for (TextItem textItem : textBoxesMap) {
+      TextBoxWithFader box = textItem.box;
+      box.display();
+      
+      if (textItem.timeCounter >= textItem.duration && !itemsToHideRemove.contains(textItem.box)) {
+        itemsToHideRemove.add(textItem.box);
+        box.hide();
+      }
+      
+      textItem.timeCounter += delta;
+    }
+  }
+
+  void showText(String text, float duration) {
+    TextBoxWithFader box = new TextBoxWithFader();
+    box.textBox.setText(text);
+    
+    TextItem textItem = new TextItem(box, duration);
+    
+    textBoxesMap.add(textItem);
+  }
+
+  void execute(int executeId, Object obj) {
+    if (executeId == 0) {
+    }
+  }
+
+  void onAnimShow(Object obj) {
+  }
+  void onAnimEnd(Object obj) {
+    
+  }
+
+  class TextItem {
+    TextBoxWithFader box;
+    float duration;
+    
+    float timeCounter = 0;
+    
+    TextItem(TextBoxWithFader pBox, float pDuration) {
+      box = pBox;
+      duration = pDuration;
+    }
+  }
+}
+
+class TextBoxWithFader {  //<>// //<>// //<>// //<>//
 
   private int alpha;
 
-  private float showDuration;
-  private float hideDuration;
+  private float fadeInDuration;
+  private float fadeOutDuration;
   private float delay;
 
   TextBox textBox;
@@ -23,19 +81,19 @@ class TextBoxWithFader {  //<>// //<>// //<>// //<>// //<>//
     textBox.borderColor = (textBox.borderColor & 0xffffff) | (alpha << 24);
     textBox.textColor = (textBox.textColor & 0xffffff) | (alpha << 24);
 
-    this.showDuration = 1;
-    this.hideDuration = 0.5;
+    this.fadeInDuration = 0.5;
+    this.fadeOutDuration = 0.5;
     this.delay = 0.2;
-    
+
     this.enabled = false;
 
-    anim = new Ani(this, 0.2, 0, "alpha", 255, Ani.QUAD_OUT, this, "onUpdate:update");
+    anim = new Ani(this, fadeInDuration, 0, "alpha", 255, Ani.QUAD_OUT, this, "onUpdate:update");
     anim.end();
   }
 
-  TextBoxWithFader(float duration, float delay) {
+  TextBoxWithFader(float pFadeInDuration, float delay) {
     this();
-    this.showDuration = duration;
+    this.fadeInDuration = pFadeInDuration;
     this.delay = delay;
   }
 
@@ -46,7 +104,7 @@ class TextBoxWithFader {  //<>// //<>// //<>// //<>// //<>//
 
   TextBoxWithFader(String text, float showDuration, float hideDuration, float delay) {
     this(text, showDuration, delay);
-    this.hideDuration = hideDuration;
+    this.fadeOutDuration = hideDuration;
   }
 
   TextBoxWithFader(String text, float showDuration, float hideDuration, float delay, boolean disableAfterHide) {
@@ -72,7 +130,7 @@ class TextBoxWithFader {  //<>// //<>// //<>// //<>// //<>//
     this.enabled = true;
     setFrom(alpha);
     setTo(255);
-    setDuration(showDuration);
+    setFadeInDuration(fadeInDuration);
     setDelay(delay);
     anim.setCallback("onEnd:onShow");
     anim.start();
@@ -84,7 +142,7 @@ class TextBoxWithFader {  //<>// //<>// //<>// //<>// //<>//
       anim.end();
       setFrom(alpha);
       setTo(0);
-      setDuration(hideDuration);
+      setFadeInDuration(fadeOutDuration);
       setDelay(0);
       anim.setCallback("onEnd:onHide");
       anim.start();
@@ -104,7 +162,7 @@ class TextBoxWithFader {  //<>// //<>// //<>// //<>// //<>//
 
   void onShow() {
     if (animHandler != null)
-      animHandler.onAnimShow();
+      animHandler.onAnimShow(this);
   }
 
   void onHide() {
@@ -113,7 +171,7 @@ class TextBoxWithFader {  //<>// //<>// //<>// //<>// //<>//
       this.enabled = false;
     }
     if (animHandler != null)
-      animHandler.onAnimEnd(animHandler);
+      animHandler.onAnimEnd(this);
   }
 
   void setFrom(int from) {
@@ -124,7 +182,7 @@ class TextBoxWithFader {  //<>// //<>// //<>// //<>// //<>//
     anim.setEnd(to);
   }
 
-  void setDuration(float duration) {
+  void setFadeInDuration(float duration) {
     anim.setDuration(duration);
   }
 

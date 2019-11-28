@@ -20,7 +20,7 @@ class AtticScene extends SceneWithTransition implements IHasHiddenLayer, IWaiter
   boolean noteInScene = true;
 
   HiddenCollider[] hiddenColliders = new HiddenCollider[] {
-    new HiddenCollider("foo", 103, 286, 398, 89)
+    new HiddenCollider(this, "foo", 103, 286, 398, 89)
   };
 
   AtticScene() {

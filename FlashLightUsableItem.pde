@@ -1,4 +1,4 @@
-class FlashLightUsableItem extends UsableItem implements IWaiter { //<>// //<>// //<>//
+class FlashLightUsableItem extends UsableItem implements IWaiter { //<>// //<>// //<>// //<>// //<>//
 
   PImage blackLightImage;
   PImage hiddenImage;
@@ -154,13 +154,9 @@ class HiddenCollider {
   boolean enabled = true;
   IHasHiddenLayer parent;
 
-  HiddenCollider(String name, float x, float y, float w, float h) {
+  HiddenCollider(IHasHiddenLayer pParent, String name, float x, float y, float w, float h) {
     this.name = name;
     this.rect = new Rect(x, y, w, h);
-  }
-
-  HiddenCollider(IHasHiddenLayer pParent, String name, float x, float y, float w, float h) {
-    this(name, x, y, w, h);
     parent = pParent;
   }
 
