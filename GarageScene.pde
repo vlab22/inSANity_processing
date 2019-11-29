@@ -4,6 +4,8 @@ class GarageScene extends SceneWithTransition implements IWaiter {
   ImageButton shelfPlaceButton = new ImageButton( null, round(31 * widthRatio), round(326 * heightRatio), "Garage shelf overlay.png");
   ImageButton carPlaceButton = new ImageButton( null, round(800 * widthRatio), round(395 * heightRatio), "Garage car overlay.png");
 
+  UISprite flashLightOnShelf = new UISprite(132, 476, "Garage flashlight on shelf.png");
+
   TextBoxWithFader placeText = new TextBoxWithFader("none", false);
 
   boolean carPlaceEnabled = false;
@@ -28,7 +30,11 @@ class GarageScene extends SceneWithTransition implements IWaiter {
     shelfPlaceButton.display();
     backButton.display();
 
-    if (carPlaceEnabled){
+    if (invManager.hasItem("flashlight_batteries_item") == false && invManager.hasItem("flashlight_item") == false) {
+      flashLightOnShelf.display(delta);
+    }
+
+    if (carPlaceEnabled) {
       carPlaceButton.display();
     }
 

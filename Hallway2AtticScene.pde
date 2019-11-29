@@ -2,14 +2,11 @@ class Hallway2AtticScene extends SceneWithTransition {
 
   ImageButton backButton = new ImageButton( "arrowDown.png", round(825 * widthRatio), round(997 * heightRatio), "arrowDown outline.png" );
   ImageButton samDoorsButton = new ImageButton( null, round(1132 * widthRatio), round(198 * heightRatio), "Hallway_2_Room Attic - Sam Door Overlay.png" );
-  ImageButton parentDoorsButton = new ImageButton( null, round(461 * widthRatio), round(264 * heightRatio), "Hallway_2_Room Attic - Parents Door Overlay.png" );
+  //ImageButton parentDoorsButton = new ImageButton( null, round(461 * widthRatio), round(264 * heightRatio), "Hallway_2_Room Attic - Parents Door Overlay.png" );
   ImageButton atticStairsButton = new ImageButton( "Hallway_2_Room Attic stairs.png", round(607 * widthRatio), round(0 * heightRatio), "Hallway_2_Room Attic stairs overlay.png" );
   ImageButton garageKeyPlaceButton = new ImageButton( null, round(921 * widthRatio), round(664 * heightRatio), "garage_key_laydown outline.png");
 
   UISprite garageKeySprite = new UISprite(921, 664, "garage_key_laydown.png");
-
-  SoundClip footStepsSoundClip;
-  SoundClip frontDoorOpenSoundClip;
 
   boolean atticStairsOpen = false;
 
@@ -17,8 +14,6 @@ class Hallway2AtticScene extends SceneWithTransition {
 
   Hallway2AtticScene() {
     super("Hallway_2_Room Attic.png");
-    footStepsSoundClip = new SoundClip("footstep01 0.800 seconds.wav");
-    frontDoorOpenSoundClip = new SoundClip("53280__the-bizniss__front-door-open.wav");
   }
 
   public void doStepWhileInState(float delta)
@@ -27,15 +22,16 @@ class Hallway2AtticScene extends SceneWithTransition {
 
     backButton.display();
     samDoorsButton.display();
-    parentDoorsButton.display();
+    //parentDoorsButton.display();
 
     if (atticStairsOpen == true && garageKeyPicked == false) {
       garageKeyPlaceButton.display();
       garageKeySprite.display(delta);
     }
 
-    if (atticStairsOpen == true) 
+    if (atticStairsOpen == true) {
       atticStairsButton.display();
+    }
 
     super.TransitionDisplay(delta);
   }
@@ -47,12 +43,12 @@ class Hallway2AtticScene extends SceneWithTransition {
 
     if ( samDoorsButton.isPointInside( mouseX, mouseY ) ) {
       changeState( SAM_BEDROOM_SCENE );
-      frontDoorOpenSoundClip.play();
+      soundManager.OPEN_DOOR.play();
     }
 
     if ( atticStairsOpen && atticStairsButton.isPointInside( mouseX, mouseY ) ) {
       changeState( ATTIC_SCENE );
-      frontDoorOpenSoundClip.play();
+      soundManager.OPEN_DOOR.play();
     }
 
 
@@ -64,6 +60,6 @@ class Hallway2AtticScene extends SceneWithTransition {
 
   void changeState(State state) {
     stateHandler.changeStateTo( state );
-    footStepsSoundClip.play();
+    soundManager.FOOT_STEPS.play();
   }
 }

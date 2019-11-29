@@ -4,8 +4,6 @@ class TestScene extends SceneWithTransition {
   //ImageButton samDoorsButton = new ImageButton( null, round(1132 * widthRatio), round(198 * heightRatio), "Hallway_2_Room Attic - Sam Door Overlay.png" );
   //ImageButton parentDoorsButton = new ImageButton( null, round(461 * widthRatio), round(264 * heightRatio), "Hallway_2_Room Attic - Parents Door Overlay.png" );
 
-  SoundClip footStepsSoundClip;
-
   PFont mono;
 
   boolean textBoxDisable = false;
@@ -13,7 +11,6 @@ class TestScene extends SceneWithTransition {
 
   TestScene() {
     super("Test Scene.png");
-    footStepsSoundClip = new SoundClip("footstep01 0.800 seconds.wav");
 
     // The font "andalemo.ttf" must be located in the 
     // current sketch's "data" directory to load successfully
@@ -65,7 +62,7 @@ class TestScene extends SceneWithTransition {
 
   void changeState(State state) {
     stateHandler.changeStateTo( state );
-    footStepsSoundClip.play();
+    soundManager.FOOT_STEPS.play();
     //textBoxWithFader.hide();
   }
 }

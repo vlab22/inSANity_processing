@@ -1,4 +1,4 @@
-import java.util.TreeMap; //<>// //<>// //<>// //<>// //<>// //<>// //<>//
+import java.util.TreeMap; //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>//
 import java.util.*;
 
 class NotesUsableItem extends DetailsItensScreen implements IHasHiddenLayer, IWaiter {
@@ -382,7 +382,13 @@ class NotesUsableItem extends DetailsItensScreen implements IHasHiddenLayer, IWa
     return hiddenWordsColliders.get(currentPageNumber);
   }
 
+  //Each hiddenCollider, after hit, is disable and a COUNTER (notes.hiddenWordsFound) is incremented
+  //If reachs 15, unlocks the CAR_SCENE (actually unlocks the button that navigate to CAR_SCENE)
+
+  //If hit a hiddenCollider in wordPage 5 (the final page, only avaiable inside the car) so triggers the Final
+  //Before some actions allowMousePressed is set to false to lock all mousePressed input
   void hiddenColliderHit(HiddenCollider hc) {
+
     hc.enabled = false;
 
     int wordPage = Integer.parseInt(hc.name.split(" ")[1]); //the page is the second value in string, example "page 2 0"
@@ -409,7 +415,7 @@ class NotesUsableItem extends DetailsItensScreen implements IHasHiddenLayer, IWa
         GarageScene garage = (GarageScene)GARAGE_SCENE;
         garage.carPlaceEnabled = true;
 
-        placeText.setFadeInDuration(3);
+        placeText.setFadeDuration(3);
         placeText.textBox.setText("I want to leave this house right now!\r\nI can't handle it anymore!");
         placeText.enabled = true;
         placeText.show();
@@ -434,7 +440,7 @@ class NotesUsableItem extends DetailsItensScreen implements IHasHiddenLayer, IWa
     } else if (executeId == 1) {
 
       if (stateHandler.currentState.name.equals("GarageScene") == false) {
-        placeText.textBox.setText("I need to reach the garage right now!."); //<>// //<>// //<>//
+        placeText.textBox.setText("I need to reach the garage right now!."); //<>// //<>//
         placeText.show();
 
         waiter.waitForSeconds(3, this, 2, obj); //wait text fadeout

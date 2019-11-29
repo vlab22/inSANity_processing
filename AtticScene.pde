@@ -5,8 +5,6 @@ class AtticScene extends SceneWithTransition implements IHasHiddenLayer, IWaiter
 
   UISprite atticNote = new UISprite(579, 572, "Sam_bedroom under bed note sprite.png");
 
-  SoundClip footStepsSoundClip;
-
   TextBoxWithFader placeText = new TextBoxWithFader("It's too dark, I remember to have a flashlight\r\nin the garage", false);
 
   boolean flashLightInScene = true;
@@ -20,7 +18,8 @@ class AtticScene extends SceneWithTransition implements IHasHiddenLayer, IWaiter
   boolean noteInScene = true;
 
   HiddenCollider[] hiddenColliders = new HiddenCollider[] {
-    new HiddenCollider(this, "foo", 103, 286, 398, 89)
+    new HiddenCollider(this, "5", 1428, 257, 242, 257), 
+    new HiddenCollider(this, "images", 282, 38, 1065, 565), 
   };
 
   AtticScene() {
@@ -30,8 +29,6 @@ class AtticScene extends SceneWithTransition implements IHasHiddenLayer, IWaiter
 
     hiddenImageWithoutNote = loadImage("Attic hidden 2 - without note.png");
     hiddenImageWithoutNote.resize(round(hiddenImageWithoutNote.width * widthRatio), round(hiddenImageWithoutNote.height * heightRatio));
-
-    footStepsSoundClip = new SoundClip("footstep01 0.800 seconds.wav");
 
     atticNote.enabled = false;
   }
@@ -71,10 +68,11 @@ class AtticScene extends SceneWithTransition implements IHasHiddenLayer, IWaiter
 
     if (usableItemManager.usablesMap.containsKey("flashlight_batteries_item") && usableItemManager.usablesMap.get("flashlight_batteries_item").enabled) {
 
-      if (noteInScene == true)
+      if (noteInScene == true) {
         atticNote.display(delta);
 
-      notesPlaceButton.display();
+        notesPlaceButton.display();
+      }
     } else {
       fill(1, 1, 1, blackAlpha);
       rect(0, 0, width, height);
@@ -94,11 +92,11 @@ class AtticScene extends SceneWithTransition implements IHasHiddenLayer, IWaiter
 
     if (noteInScene == true && notesPlaceButton.isPointInside( mouseX, mouseY ) ) {
       noteInScene = false;
-      
+
       //Reassing hidden image to image without the note ans reload
       hiddenImage = hiddenImageWithoutNote;
       invManager.checkAndEnableHiddenImageForFlashLight(this);
-      
+
       atticNote.enabled = true;
       invManager.PickUpItem("notes_item", new Object[] { "notes_item page 4" }, atticNote);
     }
@@ -113,7 +111,7 @@ class AtticScene extends SceneWithTransition implements IHasHiddenLayer, IWaiter
 
   void changeState(State state) {
     stateHandler.changeStateTo( state );
-    footStepsSoundClip.play();
+    soundManager.FOOT_STEPS.play();
 
     if (placeText.alpha > 0)
       placeText.hide();
@@ -126,7 +124,15 @@ class AtticScene extends SceneWithTransition implements IHasHiddenLayer, IWaiter
   HiddenCollider[] getHiddenColliders() {
     return hiddenColliders;
   }
-  
+
   void hiddenColliderHit(HiddenCollider hc) {
+    hc.enabled = false;  //allways disable the collider stop the collision detection
+
+    if (hc.name.equals("5")) {
+      textManager.showText("Five what? What does this mean?!?", 3);
+    } else if (hc.name.equals("images")) {
+      soundManager.ATTIC_MUSIC.play();
+      textManager.showText("What are those marks?", 2);
+    }
   }
 }

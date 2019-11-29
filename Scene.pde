@@ -1,11 +1,11 @@
-abstract class SceneWithTransition extends Scene //<>// //<>// //<>// //<>// //<>//
+abstract class SceneWithTransition extends Scene //<>// //<>// //<>// //<>// //<>// //<>//
 {
   SceneTransition sceneEnterTransition;
   SceneTransition sceneLeaveTransition;
 
   SceneWithTransition( String backgroundFilename ) {
     super(backgroundFilename);
-    
+
     //background = loadImage( filename );
 
     enterTransition = new SceneTransition();
@@ -28,8 +28,10 @@ abstract class SceneWithTransition extends Scene //<>// //<>// //<>// //<>// //<
   void TransitionDisplay(float delta) {
 
     usableItemManager.step(delta);
-    
+
     invPanel.display(delta);
+
+    textManager.display(delta);
 
     if (sceneLeaveTransition.enabled == true) {
       sceneLeaveTransition.display();
@@ -44,15 +46,16 @@ abstract class SceneWithTransition extends Scene //<>// //<>// //<>// //<>// //<
   }
 }
 
-abstract class Scene extends State //<>// //<>// //<>// //<>// //<>//
+abstract class Scene extends State //<>// //<>// //<>// //<>//
 {
   PImage background;
   String filename;
-  
+
   ImageButton[] imageButtons;
 
   Scene( String backgroundFilename ) {
     filename = backgroundFilename;
+    background = loadImage( filename );
   }
 
   void enterState( State oldState )

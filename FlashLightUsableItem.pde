@@ -44,6 +44,15 @@ class FlashLightUsableItem extends UsableItem implements IWaiter { //<>// //<>//
       copyApplyMask();
 
       image(masked, xPos, yPos);
+      
+      //Hack to draw note overlay in attic
+      if (stateHandler.currentState.name.equals("AtticScene")){
+        AtticScene attic = (AtticScene)ATTIC_SCENE;
+        
+        if (attic.noteInScene == true) {
+          attic.notesPlaceButton.display();
+        }
+      }
     }
 
     image(blackLightImage, mouseX, mouseY);
@@ -55,13 +64,6 @@ class FlashLightUsableItem extends UsableItem implements IWaiter { //<>// //<>//
       yPos = mouseY;
 
       //Checks if the mouse hits the hiddencollider of hidden messages
-      //TODO: Move the gameplay rules to other class
-      //Each hiddenCollider, after hit, is disable and a COUNTER (notes.hiddenWordsFound) is incremented
-      //If reachs 15, unlocks the CAR_SCENE (actually unlocks the button that navigate to CAR_SCENE)
-
-      //If hit a hiddenCollider in wordPage 5 (the final page, only avaiable inside the car) so triggers the Final
-      //Before some actions allowMousePressed is set to false to lock all mousePressed input
-
       for (int i = 0; i < hiddenColliders.length; i++) {
 
         if (hiddenColliders[i].pointInCollider(xPos, yPos)) {
@@ -73,9 +75,6 @@ class FlashLightUsableItem extends UsableItem implements IWaiter { //<>// //<>//
 
           println("inside", hiddenColliders[i].name);
         }
-
-        //fill(255, 255, 255, 10);
-        //rect(hiddenColliders[i].rect.x, hiddenColliders[i].rect.y, hiddenColliders[i].rect.w, hiddenColliders[i].rect.h);
       }
     }
 

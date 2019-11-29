@@ -13,7 +13,7 @@ class State
   public StateTransition enterTransition;
   public StateTransition leaveTransition;
 
-  boolean allowMousePressed = true;
+  boolean stateAllowMousePressed = true;
 
   protected State( String stateName )
   {
@@ -184,8 +184,12 @@ class StateHandler
 
   void handleMousePressed() { 
     if ( currentState != null ) {
-      if (currentState.allowMousePressed == true)
+      if (currentState.stateAllowMousePressed == true) {
         currentState.handleMousePressed();
+      }
+      else {
+        println("statehandler currentState.stateAllowMousePressed", currentState.stateAllowMousePressed);
+      }
     }
   }
   void handleMouseClicked() { 

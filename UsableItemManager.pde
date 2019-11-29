@@ -25,7 +25,10 @@ class UsableItemManager {
 
     switch (itemName) {
     case "notes_item":
-      NotesUsableItem notes = new NotesUsableItem();
+      NotesUsableItem notes = (NotesUsableItem)usablesMap.getOrDefault(itemName, null);
+      if (notes == null) {
+        notes = new NotesUsableItem();
+      }
 
       for (int i = 0; i < codeObjs.size(); i++) {
         notes.addPage(codeObjs.get(i));
@@ -33,7 +36,7 @@ class UsableItemManager {
 
       if (activate)
         notes.setEnabled(!notes.enabled);
-        
+
       usable = notes;
 
       break;
@@ -69,7 +72,7 @@ class UsableItemManager {
         usable.step(delta);
       }
 
-      stateHandler.currentState.allowMousePressed = !disableSceneMousePressed;
+      stateHandler.currentState.stateAllowMousePressed = !disableSceneMousePressed;
     }
   }
 

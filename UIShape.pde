@@ -35,7 +35,7 @@ abstract class UIShape {
   color c = #FFFFFF;
   color strokeColor = #111111;
   int alpha = 255;
-  
+
   int x;
   int y;
   int w;
@@ -68,7 +68,7 @@ class Rect {
   float y;
   float w;
   float h;
- 
+
   Rect(float pX, float pY, float pW, float pH) {
     x = pX * widthRatio;
     y = pY * heightRatio;

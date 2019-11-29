@@ -47,6 +47,9 @@ class ImageButton {
 
   void display() {
     if (allowMousePressed) {
+      if (buttonImage != null)
+        image( buttonImage, x, y, buttonImage.width * widthRatio, buttonImage.height * heightRatio);
+
       if (onHoverButtonImage != null) {
         if (alpha < 255 && isPointInside(mouseX, mouseY) && playDir != 1) {
           to = 255;
@@ -68,8 +71,6 @@ class ImageButton {
         popStyle();
       }
     }
-    if (buttonImage != null)
-      image( buttonImage, x, y, buttonImage.width * widthRatio, buttonImage.height * heightRatio);
   }
 
   boolean isPointInside( int px, int py ) {

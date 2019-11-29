@@ -81,7 +81,7 @@ class InventoryManager implements IWaiter {
     }
 
     if (freeSlot == -1) {
-      freeSlot = (items.size() < MAX_QUANTITY) ? items.size() : -1;
+      freeSlot = (itemsMap.size() < MAX_QUANTITY) ? itemsMap.size() : -1;
     }
 
     if (item == null && freeSlot > -1) {
@@ -116,6 +116,7 @@ class InventoryManager implements IWaiter {
       //Play pickup sound
       soundManager.playPickUpItem(item.name);
 
+      //Add item in inventory panel after animation
       waiter.waitForSeconds(PICKUP_MOVING_DURATION, this, 0, item);
     }
   }
@@ -147,7 +148,8 @@ class InventoryManager implements IWaiter {
       InventoryItem item = (InventoryItem)obj;
       inventoryPanel.addItem(item, item.slot);
 
-      if (isUsableMap.getOrDefault(item.name, false) == true) {
+      boolean isUsable = isUsableMap.getOrDefault(item.name, false);
+      if (isUsable == true) {
         usableItemManager.createItem(item.name, false, item.objs);
       }
     } else if (executeId == 1) {
@@ -170,16 +172,14 @@ class InventoryManager implements IWaiter {
         item.onOffState = true;
         item.objs.addAll(Arrays.asList(new String[]{"flashlight_batteries_item item 0"}));
 
-        inventoryPanel.panelItems[item1.slot] = null;
-        inventoryPanel.panelItems[item2.slot] = null;
+        inventoryPanel.removeItem(item1);
+        inventoryPanel.removeItem(item2);
 
         items.add(item.slot, item);
 
-        items.set(item1.slot, null);
-        items.set(item2.slot, null);
+        removeItem(item1);
+        removeItem(item2);
 
-        itemsMap.remove(item1.name);
-        itemsMap.remove(item2.name);
         itemsMap.put(item.name, item);
 
         inventoryPanel.addItem(item, item.slot);
@@ -189,6 +189,11 @@ class InventoryManager implements IWaiter {
 
       println(item1.name, item2.name);
     }
+  }
+
+  void removeItem(InventoryItem item) {
+    items.set(item.slot, null);
+    itemsMap.remove(item.name);
   }
 
   void display(float delta) {
@@ -338,6 +343,10 @@ class InventoryPanel {
     panelItems[slot] = panelItem;
   }
 
+  void removeItem(InventoryItem item) {
+    panelItems[item.slot] = null;
+  }
+
   void handleMousePressed() {
     if (isPointInsideEnableButton(mouseX, mouseY)) {
       if (opened == false) {
@@ -378,6 +387,14 @@ class InventoryPanel {
   void closepanel() {
     opened = false;
     Ani.to(this, OPEN_CLOSE_ANIM_DURATION, 0, "y", closeY, Ani.CUBIC_OUT);
+  }
+
+  PVector getItemGlobalPosition(InventoryPanelItem panelItem) {
+
+    float globalX = panelItem.sprite.x + x + 2 * widthRatio + panelItem.item.slot * panelItem.sprite.w;
+    float globalY = panelItem.sprite.y + y + 26 * heightRatio;
+
+      return new PVector(globalX, globalY);
   }
 
   boolean isPointInsideEnableButton( int px, int py ) {

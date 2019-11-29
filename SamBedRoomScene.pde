@@ -5,8 +5,6 @@ class SamBedRoomScene extends SceneWithTransition implements IWaiter {
   ImageButton paintPlaceButton = new ImageButton( null, round(537 * widthRatio), round(311 * heightRatio), "Sam_bedroom paint overlay.png");
   ImageButton underbedPlaceButton = new ImageButton( null, round(19 * widthRatio), round(662 * heightRatio), "Sam_bedroom under bed overlay.png");
 
-  SoundClip footStepsSoundClip;
-
   UISprite underBedNote = new UISprite(108, 766, "Sam_bedroom under bed note sprite.png");
 
   TextBoxWithFader placeText = new TextBoxWithFader("It's too dark, I remember to have a flashlight\r\nin the garage", false);
@@ -15,14 +13,13 @@ class SamBedRoomScene extends SceneWithTransition implements IWaiter {
 
   boolean allowUnderBed = false;  //Flag activated by mirror hiddencollider using the blacklight
   boolean noteInScene = true;
-  
+
   PImage flashLightImage;
 
   boolean firstTimeInRoom = true;
 
   SamBedRoomScene() {
     super("Sam_bedroom.png");
-    footStepsSoundClip = new SoundClip("footstep01 0.800 seconds.wav");
 
     flashLightImage = loadImage("Flashlight light alpha.png");
 
@@ -61,7 +58,7 @@ class SamBedRoomScene extends SceneWithTransition implements IWaiter {
     if ( backButton.isPointInside( mouseX, mouseY ) ) {
 
       if (firstTimeInRoom) {
-        this.allowMousePressed = false;
+        this.stateAllowMousePressed = false;
         placeText.alpha = 0;
         placeText.textBox.setText("Something happened in the Hallway");
         placeText.show();
@@ -83,6 +80,10 @@ class SamBedRoomScene extends SceneWithTransition implements IWaiter {
       changeState(SAM_BEDROOM_MIRROR_SCENE);
     }
 
+    if ( paintPlaceButton.isPointInside( mouseX, mouseY ) ) {
+      changeState(SAM_BEDROOM_PAINTING_SCENE);
+    }
+
     if (allowUnderBed == true && noteInScene == true && underbedPlaceButton.isPointInside( mouseX, mouseY ) ) {
       noteInScene = false;
       underBedNote.enabled = true;
@@ -92,7 +93,7 @@ class SamBedRoomScene extends SceneWithTransition implements IWaiter {
 
   void changeState(State state) {
     stateHandler.changeStateTo( state );
-    footStepsSoundClip.play();
+    soundManager.FOOT_STEPS.play();
 
     if (placeText.alpha > 0)
       placeText.hide();
@@ -103,7 +104,7 @@ class SamBedRoomScene extends SceneWithTransition implements IWaiter {
       placeText.hide();
     } else if (executeId == 1) {
       changeState( HALLWAY2_ATTIC_SCENE );
-      this.allowMousePressed = true;
+      this.stateAllowMousePressed = true;
     }
   }
 }
@@ -173,9 +174,76 @@ class SamBedRoomMirrorScene extends SceneWithTransition implements IHasHiddenLay
 
   void hiddenColliderHit(HiddenCollider hc) {
     hc.enabled = false;  //allways disable the collider stop the collision detection
-    
+
     //Enable the underBed overlay in SAM_B
     SamBedRoomScene samBed = (SamBedRoomScene)SAM_BEDROOM_SCENE;
     samBed.allowUnderBed = true;
+  }
+}
+
+class SamBedRoomPaintingScene extends SceneWithTransition implements IHasHiddenLayer {
+  ImageButton backButton = new ImageButton( "arrowDown.png", round(825 * widthRatio), round(997 * heightRatio), "arrowDown outline.png" );
+
+  PImage hiddenImage;
+
+  boolean firstTimeInScene = false;
+
+  HiddenCollider[] hiddenColliders = new HiddenCollider[] {
+    new HiddenCollider(this, "unlock sam under bed button", 810, 505, 191, 259)
+  };
+
+  SamBedRoomPaintingScene() {
+    super("Sam_bedroom_painting.png");
+    hiddenImage = null; //loadImage("Sam_bedroom_mirror hidden.png");
+    //hiddenImage.resize(round(hiddenImage.width * widthRatio), round(hiddenImage.height * heightRatio));
+  }
+
+  void enterState(State oldState) {
+    super.enterState(oldState);
+
+    if (firstTimeInScene == false) {
+      textManager.showText("Aah I remember my old blacklight,\r\nspend a lot of time with that thing when I was young", 5, 0.6);
+      firstTimeInScene = true;
+    }
+  }
+
+  void checkMessages() {
+  }
+
+  public void doStepWhileInState(float delta)
+  {
+    super.doStepWhileInState(delta);
+
+    backButton.display();
+
+    super.TransitionDisplay(delta);
+  }
+
+  void handleMousePressed() {
+    if ( backButton.isPointInside( mouseX, mouseY ) ) {
+      changeState(SAM_BEDROOM_SCENE);
+    }
+  }
+
+  void execute(int executeId, Object obj) {
+    if (executeId == 0) {
+    }
+  }
+
+  void changeState(State state) {
+    stateHandler.changeStateTo( state );
+    soundManager.FOOT_STEPS.play();
+  }
+
+  PImage getHiddenImage() {
+    return hiddenImage;
+  }
+
+  HiddenCollider[] getHiddenColliders() {
+    return hiddenColliders;
+  }
+
+  void hiddenColliderHit(HiddenCollider hc) {
+    hc.enabled = false;  //allways disable the collider stop the collision detection
   }
 }
