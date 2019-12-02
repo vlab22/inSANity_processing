@@ -1,4 +1,4 @@
-class FlashLightUsableItem extends UsableItem implements IWaiter { //<>// //<>// //<>// //<>// //<>//
+class FlashLightUsableItem extends UsableItem implements IWaiter { 
 
   PImage blackLightImage;
   PImage hiddenImage;

@@ -1,7 +1,7 @@
 import processing.sound.*;
 import ddf.minim.*;
 
-class SoundManager {
+class SoundManager implements IWaiter {
 
   final SoundClip LIGHT_BLINK_SOUND = new SoundClip("light blink 01.wav");
   final SoundClip INSERT_BATTERIES_SOUND = new SoundClip("insert batteries.wav");
@@ -12,6 +12,7 @@ class SoundManager {
   final SoundClip ATTIC_DOOR_FALL = new SoundClip("attic door open.wav");
   final SoundClip FOOT_STEPS = new SoundClip("footstep01 0.800 seconds.wav");
   final SoundClip OPEN_DOOR = new SoundClip("53280__the-bizniss__front-door-open.wav");
+
   final SoundClip[] PICKUP_PAGE = new SoundClip[] { 
     new SoundClip("pickup page 01.wav"), 
     new SoundClip("pickup page 02.wav")
@@ -29,16 +30,26 @@ class SoundManager {
   final SoundClip LIMBO_SOUND = new SoundClip("Lets Play Limbo (Blind) - Part 4 - Medium Speed Chase.wav");
 
   final SoundClip[] sounds = new SoundClip[] {
+    LIGHT_BLINK_SOUND, 
     INSERT_BATTERIES_SOUND, 
     PICK_UP_ITEM_01, 
     PICK_UP_ITEM_02, 
     FLASHLIGHT_ON, 
+    FLASHLIGHT_OFF, 
+    ATTIC_DOOR_FALL, 
+    FOOT_STEPS, 
+    OPEN_DOOR, 
     PICKUP_PAGE[0], 
     PICKUP_PAGE[1], 
     PAGE_FLIP[0], 
     PAGE_FLIP[1], 
-    OPEN_DOOR, 
-    ATTIC_DOOR_FALL, 
+  };
+
+  final SoundClip[] musics = new SoundClip[] {
+    BG_SOUND, 
+    LIVINGROOM_MUSIC, 
+    ATTIC_MUSIC, 
+    LIMBO_SOUND
   };
 
   HashSet<SoundClip> soundsPlaying;
@@ -47,6 +58,14 @@ class SoundManager {
     println( "new SoundManager()");
 
     soundsPlaying = new HashSet<SoundClip>();
+
+    //for (int i = 0; i < musics.length; i++) {
+    //  musics[i].amp = 0;
+    //  musics[i].play();
+    //  musics[i].player.amp(0);
+    //}
+
+    //waiter.waitForSeconds(0.5, this, 0, null);
   }
 
   void step(float delta) {
@@ -90,6 +109,14 @@ class SoundManager {
       FLASHLIGHT_OFF.play();
       break;
     default:
+    }
+  }
+
+  void execute(int executeId, Object obj) {
+    if (executeId == 0) {
+      for (int i = 0; i < musics.length; i++) {
+        musics[i].player.stop();
+      }
     }
   }
 }

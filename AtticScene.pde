@@ -132,7 +132,7 @@ class AtticScene extends SceneWithTransition implements IHasHiddenLayer, IWaiter
       textManager.showText("Five what? What does this mean?!?", 3);
     } else if (hc.name.equals("images")) {
       soundManager.ATTIC_MUSIC.play();
-      textManager.showText("What are those marks?", 2);
+      textManager.showText("What are those marks?", 3);
     }
   }
 }
